@@ -14,7 +14,7 @@ project Ravn is
          );
 
    --  Generated code
-   for Switches ("sm_generic_int_ll64_h.ads") use Standard_Switches;
+   for Switches ("asm_generic_int_ll64_h.ads") use Standard_Switches;
    for Switches ("i2c_interface_c.ads") use Standard_Switches;
 
    --  Hand-written code
