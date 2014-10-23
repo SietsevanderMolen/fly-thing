@@ -1,6 +1,24 @@
-with "raspi-i2c-ada-code/raspi_i2c_ada";
-
 project Ravn is
-    for Main use ("ravn.adb");
-    for Source_Dirs use ("src/");
+   for Main use ("ravn.adb");
+   for Source_Dirs use ("src/", "src/i2c/");
+
+   for Languages use ("Ada", "C");
+
+   package Compiler is
+   Standard_Switches :=
+      (
+         "-O2",      --  standard optimisation
+         "-gnatqQ",  --  to keep ALI files even if there are compilation errors
+         "-gnatafo", --  assertions, full reports, integer overflow
+         "-gnatwaL"  --  all standard warnings except for elaboration
+         );
+
+   --  Generated code
+   for Switches ("sm_generic_int_ll64_h.ads") use Standard_Switches;
+   for Switches ("i2c_interface_c.ads") use Standard_Switches;
+
+   --  Hand-written code
+   for Default_Switches ("ada") use
+      Standard_Switches & "-gnaty"; -- default style checks
+   end Compiler;
 end Ravn;

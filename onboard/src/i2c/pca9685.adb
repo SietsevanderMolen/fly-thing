@@ -1,41 +1,10 @@
---  This package is free software; you can redistribute it and/or
---  modify it under terms of the GNU General Public License as
---  published by the Free Software Foundation; either version 3, or
---  (at your option) any later version.  It is distributed in the
---  hope that it will be useful, but WITHOUT ANY WARRANTY; without
---  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
---  PARTICULAR PURPOSE.
---
---  As a special exception under Section 7 of GPL version 3, you are
---  granted additional permissions described in the GCC Runtime
---  Library Exception, version 3.1, as published by the Free Software
---  Foundation.
---
---  You should have received a copy of the GNU General Public License
---  and a copy of the GCC Runtime Library Exception along with this
---  program; see the files COPYING3 and COPYING.RUNTIME respectively.
---  If not, see <http://www.gnu.org/licenses/>.
---
---  Copyright Simon Wright <simon@pushface.org>
-
-pragma License (Modified_GPL);
-
---  This package interfaces to the Raspberry Pi's I2C bus.
---
---  Child packages support different chips, eg the MCP23017 I/O
---  multiplexer.
---
---  Much detail is read across from the I2C Tools package.
-
-with Ada.IO_Exceptions;
-with Ada.Strings.Fixed;
-with Interfaces.C;
-
---  Interfaces generated from i2c_interface.c with -fdump-ada-spec
-with i2c_interface_c;
-with asm_generic_int_ll64_h;
-
-package body I2C is
+package body PCA9685 is
+   not overriding
+   procedure Reset (C : in out Chip)
+   is
+   begin
+      Set (C => C, R => MODE1, To => 16#0#);
+   end Reset;
 
    not overriding
    procedure Set (C : Chip; R : Register; To : Byte)
@@ -134,4 +103,4 @@ package body I2C is
       end if;
    end Initialize;
 
-end I2C;
+end PCA9685;

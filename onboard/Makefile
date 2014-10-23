@@ -1,12 +1,11 @@
-all: i2c-ada
+all: i2c_interface force
 	gprbuild -p -P ravn.gpr
 
-i2c-ada:
-	cd ./raspi-i2c-ada-code/ && $(MAKE)
+i2c_interface: src/i2c/i2c_interface.c
+	cd src/i2c; gnatgcc -c -fdump-ada-spec -C i2c_interface.c
+
 
 clean:
 	gprclean ravn.gpr
-	cd ./raspi-i2c-ada-code/ && gprclean build.gpr
-	cd ./raspi-i2c-ada-code/ && gprclean raspi_i2c_ada.gpr
 
-.phony: all clean
+.PHONY: all force clean

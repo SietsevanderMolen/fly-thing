@@ -1,28 +1,42 @@
---  This package interfaces to the PCA9685 I/O multiplexer on the
---  Raspberry Pi's I2C bus.
+with Ada.IO_Exceptions;
+with Ada.Strings.Fixed;
+with Ada.Finalization;
+with GNAT.OS_Lib;
+with Interfaces.C;
 
-package I2C.PCA9685 is
+--  Interfaces generated from i2c_interface.c with -fdump-ada-spec
+with i2c_interface_c;
+with asm_generic_int_ll64_h;
 
-   --  A Chip is at an Address on the I2C bus On_Bus.
+package PCA9685 is
+   type Bus_Address is range 16#00000# .. 16#fffff#;
+
+   type Bus (Address : Bus_Address)
+   is tagged limited private;
+
+   type Chip_Address is range 16#03# .. 16#77#;
+
    type Chip (Address : Chip_Address; On_Bus : not null access Bus)
-      is new I2C.Chip (Address=>Chip_Address, On_Bus=>On_Bus) with null record;
+   is new Ada.Finalization.Limited_Controlled with null record;
 
    --  Reset the chip to the power-on reset state.
-   not overriding
    procedure Reset (C : in out Chip);
 private
+   type Register is range 16#00# .. 16#ff#;
+   type Byte is new Interfaces.Unsigned_8;
+
    --  Name the chip's registers
-   MODE1       : constant Register := 0;  -- Mode register 1
-   MODE2       : constant Register := 1;  -- Mode register 2
-   SUBADR1     : constant Register := 2;  -- I²C-bus subaddress 1
-   SUBADR2     : constant Register := 3;  -- I²C-bus subaddress 2
-   SUBADR3     : constant Register := 4;  -- I²C-bus subaddress 3
-   ALLCALLADR  : constant Register := 5;  -- LED All Call I²C-bus address
-   LED0_ON_L   : constant Register := 6;  -- LED0 output and brightness control byte 0
-   LED0_ON_H   : constant Register := 7;  -- LED0 output and brightness control byte 1
-   LED0_OFF_L  : constant Register := 8;  -- LED0 output and brightness control byte 2
-   LED0_OFF_H  : constant Register := 9;  -- LED0 output and brightness control byte 3
-   LED1_ON_L   : constant Register := 10; -- ""
+   MODE1       : constant Register := 0;
+   MODE2       : constant Register := 1;
+   SUBADR1     : constant Register := 2;
+   SUBADR2     : constant Register := 3;
+   SUBADR3     : constant Register := 4;
+   ALLCALLADR  : constant Register := 5;
+   LED0_ON_L   : constant Register := 6;
+   LED0_ON_H   : constant Register := 7;
+   LED0_OFF_L  : constant Register := 8;
+   LED0_OFF_H  : constant Register := 9;
+   LED1_ON_L   : constant Register := 10;
    LED1_ON_H   : constant Register := 11;
    LED1_OFF_L  : constant Register := 12;
    LED1_OFF_H  : constant Register := 13;
@@ -83,12 +97,12 @@ private
    LED15_OFF_L : constant Register := 68;
    LED15_OFF_H : constant Register := 69;
    --  69-249 reserved for future use
-   ALL_LED_ON_L  : constant Register := 250;  -- Load all the LEDn_ON registers, byte 0
-   ALL_LED_ON_H  : constant Register := 251;  -- Load all the LEDn_ON registers, byte 1
-   ALL_LED_OFF_L : constant Register := 252;  -- Load all the LEDn_OFF registers, byte 0
-   ALL_LED_OFF_H : constant Register := 253;  -- Load all the LEDn_OFF registers, byte 1
-   PRE_SCALE     : constant Register := 254;  -- Prescaler for output frequency
-   TESTMODE      : constant Register := 255;  -- Defines the test mode to be entered
+   ALL_LED_ON_L  : constant Register := 250;
+   ALL_LED_ON_H  : constant Register := 251;
+   ALL_LED_OFF_L : constant Register := 252;
+   ALL_LED_OFF_H : constant Register := 253;
+   PRE_SCALE     : constant Register := 254;
+   TESTMODE      : constant Register := 255;
 
    --  Name the MODE1 bits.
    RESTART : constant Byte := 2 ** 7;
@@ -108,6 +122,26 @@ private
    OUTNE1  : constant Byte := 2 ** 1;
    OUTNE0  : constant Byte := 2 ** 0;
 
+   type Bus (Address : Bus_Address)
+   is new Ada.Finalization.Limited_Controlled with record
+      FD : GNAT.OS_Lib.File_Descriptor := GNAT.OS_Lib.Invalid_FD;
+   end record;
+
+   overriding
+   procedure Initialize (B : in out Bus);
+
+   overriding
+   procedure Finalize (B : in out Bus);
+
+   overriding
    procedure Initialize (C : in out Chip);
-   procedure Finalize (C : in out Chip);
-end I2C.PCA9685;
+
+   --  We only need byte read/write.
+   not overriding
+   procedure Set (C : Chip; R : Register; To : Byte);
+
+   not overriding
+   function Get (C : Chip; R : Register) return Byte;
+
+
+end PCA9685;
