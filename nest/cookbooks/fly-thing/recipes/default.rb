@@ -8,7 +8,6 @@ end
 git "Checkout Code" do
   repository "git@github.com:somesocks/fly-thing.git"
   reference "master"
-  checkout_branch "master"
   user "vagrant"
   group "vagrant"
   action :sync
