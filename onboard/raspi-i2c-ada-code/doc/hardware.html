@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>Raspberry Pi I2C in Ada: Hardware</title>
+<link href="simonjwright.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+
+<div id="header">
+<a
+href="http://sourceforge.net"><img
+src="http://sourceforge.net/sflogo.php?group_id=135558&amp;type=1"
+width="88" height="31" border="0" alt="SourceForge.net Logo" /></a>
+</div>
+
+<h1><a href="https://sourceforge.net/projects/raspi-i2c-ada/">Raspberry
+Pi I2C in Ada</a>: Hardware</h1>
+
+<p>I went for
+a <a href="http://shop.ciseco.co.uk/k002-slice-of-pi-o/">Slice of
+PI/O</a> expander board
+from <a href="http://shop.ciseco.co.uk">Ciseco</a>. This brings the
+Raspberry Pi's GPIO interface out unbuffered, but you get an
+additional protected 16 I/O lines and a lot of configurability via the
+I2C interface.
+
+<p>The <a href="http://openmicros.org/index.php/articles/94-ciseco-product-documentation/raspberry-pi/223-slice-of-pio">assembly
+instructions</a> didn't then make it clear that you need to tie the
+address selection pins high or low (they do now). Leaving them
+floating has strange effects! My soldering isn't wonderful (must get
+some thinner-gauge solder!) but adequate.
+
+<p>I
+got <a href="http://www.skpang.co.uk/catalog/acrylic-case-for-raspberry-pi-designed-by-adafruit-p-1118.html">an
+acrylic
+box</a>, <a href="http://www.skpang.co.uk/catalog/5mm-green-led-pack-of-10-p-529.html">LED/resistor
+packs</a>, <a href="http://www.skpang.co.uk/catalog/mini-push-button-switch-p-540.html">switches</a>
+and <a href="http://www.skpang.co.uk/catalog/breadboard-300-contact-pack-of-2-p-1111.html">breadboard</a>
+from <a href="http://www.skpang.co.uk">S K Pang</a>.
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "chef/debian-7.6"
+
+  config.omnibus.chef_version = :latest
+
+  config.vm.provision "chef_solo" do |chef|
+    chef.custom_config_path = "Vagrantfile.chef"
+
+    chef.add_recipe "apt"
+
+    chef.add_recipe "zsh"
+    chef.add_recipe "git"
+    chef.add_recipe "vim"
+    chef.add_recipe "gnat"
+    chef.add_recipe "gprbuild"
+    chef.add_recipe "libi2c-dev"
+    chef.add_recipe "fly-thing"
+  end
+
+  config.ssh.forward_agent = true
+end

@@ -1,0 +1,14 @@
+syntax: glob
+
+.build-relocatable
+.build-static
+lib-relocatable
+lib-static
+include
+
+*~
+
+src/*.ad?
+src/*.o
+test/.build
+test/t

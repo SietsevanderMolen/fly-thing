@@ -1,0 +1,10 @@
+onboard/raspi-i2c-ada-code/.build-relocatable
+onboard/raspi-i2c-ada-code/.build-static
+onboard/raspi-i2c-ada-code/lib-relocatable
+onboard/raspi-i2c-ada-code/lib-static
+onboard/raspi-i2c-ada-code/include
+*~
+*.o
+*.ali
+.build
+.hg/
