@@ -1,12 +1,6 @@
-with Ada.IO_Exceptions;
-with Ada.Strings.Fixed;
+with Interfaces;
 with Ada.Finalization;
 with GNAT.OS_Lib;
-with Interfaces.C;
-
---  Interfaces generated from i2c_interface.c with -fdump-ada-spec
-with i2c_interface_c;
-with asm_generic_int_ll64_h;
 
 package PCA9685 is
    type Bus_Address is range 16#00000# .. 16#fffff#;

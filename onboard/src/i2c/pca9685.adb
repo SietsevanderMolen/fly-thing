@@ -1,3 +1,11 @@
+with Ada.IO_Exceptions;
+with Interfaces.C;
+with Ada.Strings.Fixed;
+
+--  Interfaces generated from i2c_interface.c with -fdump-ada-spec
+with i2c_interface_c;
+with asm_generic_int_ll64_h;
+
 package body PCA9685 is
    not overriding
    procedure Reset (C : in out Chip)
