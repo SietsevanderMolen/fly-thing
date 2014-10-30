@@ -6,6 +6,9 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "chef/debian-7.6"
 
+  #config.ssh.private_key_path = '/home/raum/.ssh/github.rsa'
+  config.ssh.forward_agent = true
+
   config.omnibus.chef_version = :latest
 
   config.vm.provision "chef_solo" do |chef|
@@ -21,6 +24,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     chef.add_recipe "libi2c-dev"
     chef.add_recipe "fly-thing"
   end
-
-  config.ssh.forward_agent = true
 end
