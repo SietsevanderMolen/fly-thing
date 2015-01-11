@@ -97,7 +97,8 @@ package body I2C is
    begin
       if ioctl (Interfaces.C.int (C.On_Bus.FD),
                 I2C_SLAVE,
-                Interfaces.C.int (C.Address)) < 0 then
+                Interfaces.C.int (C.Address)) < 0
+      then
          raise Ada.IO_Exceptions.Use_Error
            with "unable to set slave address to"
            & Chip_Address'Image (C.Address);
