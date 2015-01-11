@@ -10,4 +10,5 @@
 .build
 .hg/
 *.cgpr
-src/i2c/i2c_interface_c.ads
+*_c.ads
+*_h.ads
