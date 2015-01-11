@@ -28,7 +28,7 @@
  * so that it can be called from Ada using pragma Import.
  */
 
-#include <linux/i2c-dev.h>
+#include "i2c-dev.h"
 
 __s32 write_quick(int file, __u8 value)
 {
