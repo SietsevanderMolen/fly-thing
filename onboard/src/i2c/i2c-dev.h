@@ -27,6 +27,7 @@
 
 #include <linux/types.h>
 #include <sys/ioctl.h>
+#include <stddef.h>
 
 
 /* -- i2c.h -- */
@@ -258,7 +259,7 @@ static inline __s32 i2c_smbus_read_block_data(int file, __u8 command,
 }
 
 static inline __s32 i2c_smbus_write_block_data(int file, __u8 command, 
-                                               __u8 length, __u8 *values)
+                                               __u8 length, const __u8 *values)
 {
 	union i2c_smbus_data data;
 	int i;
@@ -296,7 +297,7 @@ static inline __s32 i2c_smbus_read_i2c_block_data(int file, __u8 command,
 }
 
 static inline __s32 i2c_smbus_write_i2c_block_data(int file, __u8 command,
-                                               __u8 length, __u8 *values)
+                                               __u8 length, const __u8 *values)
 {
 	union i2c_smbus_data data;
 	int i;
