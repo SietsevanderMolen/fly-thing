@@ -5,6 +5,15 @@ package PCA9685 is
 
    --  Reset the chip to the power-on reset state.
    procedure Reset (C : in out Chip);
+   procedure SetPWMFreq (C : in out Chip; Frequency : Float);
+   procedure SetPWM (C : in out Chip;
+                     Number : I2C.Byte;
+                     On : Integer;
+                     Off : Integer);
+   procedure SetPin (C : in out Chip;
+                     Number : I2C.Byte;
+                     Value : Integer;
+                     Invert : Boolean := False);
 private
    --  Name the chip's registers
    MODE1       : constant Register := 0;
@@ -82,7 +91,7 @@ private
    ALL_LED_ON_H  : constant Register := 251;
    ALL_LED_OFF_L : constant Register := 252;
    ALL_LED_OFF_H : constant Register := 253;
-   PRE_SCALE     : constant Register := 254;
+   PRESCALE     : constant Register := 254;
    TESTMODE      : constant Register := 255;
 
    --  Name the MODE1 bits.
@@ -102,4 +111,6 @@ private
    OUTDRV  : constant Byte := 2 ** 2;
    OUTNE1  : constant Byte := 2 ** 1;
    OUTNE0  : constant Byte := 2 ** 0;
+
+   procedure Write(C : in out Chip; Address : I2C.Byte; Value : I2C.Byte);
 end PCA9685;
