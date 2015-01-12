@@ -1,18 +1,24 @@
 with I2C; use I2C;
+with Interfaces; use Interfaces;
 
 package PCA9685 is
    type Chip is new I2C.Chip with null record;
+   Clock : constant Float := 25000000.0; --  Default oscillator freq
 
    --  Reset the chip to the power-on reset state.
    procedure Reset (C : in out Chip);
+
    procedure SetPWMFreq (C : in out Chip; Frequency : Float);
+   pragma Precondition (Frequency >= 40.0 and Frequency <= 1000.0);
+
    procedure SetPWM (C : in out Chip;
-                     Number : I2C.Byte;
-                     On : Integer;
-                     Off : Integer);
+                     Pin : Unsigned_8;
+                     On : Unsigned_16;
+                     Off : Unsigned_16);
+
    procedure SetPin (C : in out Chip;
-                     Number : I2C.Byte;
-                     Value : Integer;
+                     Pin : Unsigned_8;
+                     Value : Unsigned_16;
                      Invert : Boolean := False);
 private
    --  Name the chip's registers
@@ -95,22 +101,20 @@ private
    TESTMODE      : constant Register := 255;
 
    --  Name the MODE1 bits.
-   RESTART : constant Byte := 2 ** 7;
-   EXTCLK  : constant Byte := 2 ** 6;
-   AI      : constant Byte := 2 ** 5;
-   SLEEP   : constant Byte := 2 ** 4;
-   SUB1    : constant Byte := 2 ** 3;
-   SUB2    : constant Byte := 2 ** 2;
-   SUB3    : constant Byte := 2 ** 1;
-   ALLCALL : constant Byte := 2 ** 0;
+   RESTART : constant Unsigned_8 := 2 ** 7;
+   EXTCLK  : constant Unsigned_8 := 2 ** 6;
+   AI      : constant Unsigned_8 := 2 ** 5;
+   SLEEP   : constant Unsigned_8 := 2 ** 4;
+   SUB1    : constant Unsigned_8 := 2 ** 3;
+   SUB2    : constant Unsigned_8 := 2 ** 2;
+   SUB3    : constant Unsigned_8 := 2 ** 1;
+   ALLCALL : constant Unsigned_8 := 2 ** 0;
 
    --  Name the MODE2 bits.
    --  5-7 read only, reserved
-   INVRT   : constant Byte := 2 ** 4;
-   OCH     : constant Byte := 2 ** 3;
-   OUTDRV  : constant Byte := 2 ** 2;
-   OUTNE1  : constant Byte := 2 ** 1;
-   OUTNE0  : constant Byte := 2 ** 0;
-
-   procedure Write(C : in out Chip; Address : I2C.Byte; Value : I2C.Byte);
+   INVRT   : constant Unsigned_8 := 2 ** 4;
+   OCH     : constant Unsigned_8 := 2 ** 3;
+   OUTDRV  : constant Unsigned_8 := 2 ** 2;
+   OUTNE1  : constant Unsigned_8 := 2 ** 1;
+   OUTNE0  : constant Unsigned_8 := 2 ** 0;
 end PCA9685;

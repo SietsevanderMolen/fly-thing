@@ -8,4 +8,5 @@ procedure Ravn is
                               Address => 16#40#);
 begin
    PWM_Driver.Reset;
+   PWM_Driver.SetPWMFreq (1000.0); --  Set to max frequency
 end Ravn;

@@ -45,6 +45,21 @@ package body I2C is
       end if;
    end Get;
 
+   procedure Write_Byte (C : Chip'class; Data : Byte)
+   is
+      Status : asm_generic_int_ll64_h.uu_s32;
+      use type asm_generic_int_ll64_h.uu_s32;
+   begin
+      Status := i2c_interface_c.write_byte
+        (Interfaces.C.int (C.On_Bus.FD),
+         asm_generic_int_ll64_h.uu_u8 (Data));
+      if Status < 0 then
+         raise Ada.IO_Exceptions.Device_Error
+           with "writing to chip"
+           & Chip_Address'Image (C.Address);
+      end if;
+   end Write_Byte;
+
    overriding
    procedure Initialize (B : in out Bus)
    is
