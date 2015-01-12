@@ -50,7 +50,7 @@ package body I2C is
    is
       use type GNAT.OS_Lib.File_Descriptor;
       Which_Bus : constant String
-        := Ada.Strings.Fixed.Trim (Bus_Address'Image (B.Address),
+        := Ada.Strings.Fixed.Trim (Adapter_Number_T'Image (B.Adapter_Number),
                                    Side => Ada.Strings.Both);
    begin
       if B.FD /= GNAT.OS_Lib.Invalid_FD then

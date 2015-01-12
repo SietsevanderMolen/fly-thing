@@ -3,9 +3,9 @@ with PCA9685;
 with I2C;
 
 procedure Ravn is
-   B : aliased I2C.Bus (Address => 42);
-   C : PCA9685.Chip (Address => 16#20#, On_Bus => B'Access);
-   --  P : constant PWMDriver := PWMDrivers.Create (Address => 40);
+   I2C_Bus : aliased I2C.Bus (Adapter_Number => 1);
+   PWM_Driver : PCA9685.Chip (On_Bus => I2C_Bus'Access,
+                              Address => 16#40#);
 begin
-   C.Reset;
+   PWM_Driver.Reset;
 end Ravn;

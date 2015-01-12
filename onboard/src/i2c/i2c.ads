@@ -3,9 +3,9 @@ with Ada.Finalization;
 with GNAT.OS_Lib;
 
 package I2C is
-   type Bus_Address is range 16#00000# .. 16#fffff#;
+   type Adapter_Number_T is range 16#00000# .. 16#fffff#;
 
-   type Bus (Address : Bus_Address)
+   type Bus (Adapter_Number : Adapter_Number_T)
    is tagged limited private;
 
    type Chip_Address is range 16#03# .. 16#77#;
@@ -19,7 +19,7 @@ package I2C is
    procedure Set (C : Chip'class; R : Register; To : Byte);
    function Get (C : Chip'class; R : Register) return Byte;
 private
-   type Bus (Address : Bus_Address)
+   type Bus (Adapter_Number : Adapter_Number_T)
    is new Ada.Finalization.Limited_Controlled with record
       FD : GNAT.OS_Lib.File_Descriptor := GNAT.OS_Lib.Invalid_FD;
    end record;
