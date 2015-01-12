@@ -12,3 +12,4 @@
 *.cgpr
 *_c.ads
 *_h.ads
+object/
