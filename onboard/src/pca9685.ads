@@ -4,6 +4,7 @@ with Interfaces; use Interfaces;
 package PCA9685 is
    type Chip is new I2C.Chip with null record;
    Clock : constant Float := 25000000.0; --  Default oscillator freq
+   Resolution : constant Float := 4096.0; --  PCA9685 is 12bits
 
    --  Reset the chip to the power-on reset state.
    procedure Reset (C : in out Chip);

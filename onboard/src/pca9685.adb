@@ -9,7 +9,8 @@ package body PCA9685 is
    procedure SetPWMFreq (C : in out Chip; Frequency : Float) is
       Freq : constant Float := Frequency * 0.9;
       --  Estimated prescale
-      Prescale_Value : constant Float := (PCA9685.Clock / 4096.0 / Freq) - 1.0;
+      Prescale_Value : constant Float :=
+         (PCA9685.Clock / PCA9685.Resolution / Freq) - 1.0;
       --  Used prescale
       Prescale : constant Unsigned_8 :=
          Unsigned_8 (Float'Floor (Prescale_Value + 0.5));
