@@ -2,8 +2,7 @@ with Ada.IO_Exceptions;
 with Ada.Strings.Fixed;
 with Interfaces; use Interfaces;
 
---  Interfaces generated from i2c_interface.c with -fdump-ada-spec
-with i2c_interface_c;
+with asm_generic_int_ll64_h;
 
 package body I2C is
    not overriding
@@ -63,7 +62,7 @@ package body I2C is
    procedure Write_Array (C : Chip'class;
                           R : Register;
                           L : I2C.Byte;
-                          Values : access I2C.Byte) is
+                          Values : i2c_interface_c.Byte_Array) is
       Status : asm_generic_int_ll64_h.uu_s32;
       use type asm_generic_int_ll64_h.uu_s32;
    begin
@@ -75,8 +74,9 @@ package body I2C is
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
            with "writing "
-           & Interfaces.C.unsigned_char'Image (Values.all)
-           & " to chip "
+           & "to register "
+           & Register'Image (R)
+           & " on chip "
            & Chip_Address'Image (C.Address);
       end if;
    end Write_Array;

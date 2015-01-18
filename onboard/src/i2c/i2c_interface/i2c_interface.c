@@ -30,6 +30,8 @@
 
 #include "i2c-dev.h"
 
+typedef __u8 *  value_array;
+
 __s32 write_quick(int file, __u8 value)
 {
   return i2c_smbus_write_quick(file, value);
@@ -70,7 +72,7 @@ __s32 process_call(int file, __u8 command, __u16 value)
 }
 
 /* Returns the number of read bytes */
-__s32 read_block_data(int file, __u8 command, __u8 *values)
+__s32 read_block_data(int file, __u8 command, value_array values)
 {
   return i2c_smbus_read_block_data(file, command, values);
 }
@@ -78,7 +80,7 @@ __s32 read_block_data(int file, __u8 command, __u8 *values)
 __s32 write_block_data(int file,
                        __u8 command,
                        __u8 length,
-                       const __u8 *values)
+                       const value_array values)
 {
   return i2c_smbus_write_block_data(file, command, length, values);
 }
@@ -90,7 +92,7 @@ __s32 write_block_data(int file,
 __s32 read_i2c_block_data(int file,
                           __u8 command,
                           __u8 length,
-                          __u8 *values)
+                          value_array values)
 {
   return i2c_smbus_read_i2c_block_data(file, command, length, values);
 }
@@ -98,7 +100,7 @@ __s32 read_i2c_block_data(int file,
 __s32 write_i2c_block_data(int file,
                            __u8 command,
                            __u8 length,
-                           const __u8 *values)
+                           const value_array values)
 {
   return i2c_smbus_write_i2c_block_data(file, command, length, values);
 }
@@ -107,7 +109,7 @@ __s32 write_i2c_block_data(int file,
 __s32 block_process_call(int file,
                          __u8 command,
                          __u8 length,
-                         __u8 *values)
+                         value_array values)
 {
   return i2c_smbus_block_process_call(file, command, length, values);
 }

@@ -1,4 +1,3 @@
-*_h.ads*
 *b__*
 *~
 *.d
@@ -10,6 +9,4 @@
 .build
 .hg/
 *.cgpr
-*_c.ads
-*_h.ads
 object/
