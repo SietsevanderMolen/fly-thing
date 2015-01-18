@@ -24,7 +24,6 @@ package I2C is
    procedure Write_Byte (C : Chip'class; Data : Byte);
    procedure Write_Array (C : Chip'class;
                           R : Register;
-                          L : Byte;
                           Values : i2c_interface_c.Byte_Array);
 private
    type Bus (Adapter_Number : Adapter_Number_T)

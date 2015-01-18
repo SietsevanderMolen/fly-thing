@@ -45,7 +45,6 @@ package body PCA9685 is
                            (Shift_Right (Off, 8) and 255);
       I2C.Write_Array (C => C,
                        R => Register (Unsigned_8 (LED0_ON_L) + (4 * Pin)),
-                       L => 4,
                        Values => byteblock);
    end SetPWM;
 

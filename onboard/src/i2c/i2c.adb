@@ -61,7 +61,6 @@ package body I2C is
 
    procedure Write_Array (C : Chip'class;
                           R : Register;
-                          L : I2C.Byte;
                           Values : i2c_interface_c.Byte_Array) is
       Status : asm_generic_int_ll64_h.uu_s32;
       use type asm_generic_int_ll64_h.uu_s32;
@@ -69,12 +68,11 @@ package body I2C is
       Status := i2c_interface_c.write_i2c_block_data
         (Interfaces.C.int (C.On_Bus.FD),
          Interfaces.C.unsigned_char (R),
-         L,
+         Values'Length,
          Values);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
-           with "writing "
-           & "to register "
+           with "writing to register "
            & Register'Image (R)
            & " on chip "
            & Chip_Address'Image (C.Address);
