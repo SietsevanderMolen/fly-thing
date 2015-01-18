@@ -1,10 +1,9 @@
 with Ada.IO_Exceptions;
 with Ada.Strings.Fixed;
-with Interfaces.C;
+with Interfaces; use Interfaces;
 
 --  Interfaces generated from i2c_interface.c with -fdump-ada-spec
 with i2c_interface_c;
-with asm_generic_int_ll64_h;
 
 package body I2C is
    not overriding
@@ -55,10 +54,31 @@ package body I2C is
          asm_generic_int_ll64_h.uu_u8 (Data));
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
-           with "writing to chip"
+           with "writing"
+           & "to chip"
            & Chip_Address'Image (C.Address);
       end if;
    end Write_Byte;
+
+   procedure Write_Array (C : Chip'class;
+                          R : Register;
+                          L : I2C.Byte;
+                          Values : access I2C.Byte) is
+      Status : asm_generic_int_ll64_h.uu_s32;
+      use type asm_generic_int_ll64_h.uu_s32;
+   begin
+      Status := i2c_interface_c.write_i2c_block_data
+        (Interfaces.C.int (C.On_Bus.FD),
+         Interfaces.C.unsigned_char (R),
+         L,
+         Values);
+      if Status < 0 then
+         raise Ada.IO_Exceptions.Device_Error
+           with "writing"
+           & "to chip"
+           & Chip_Address'Image (C.Address);
+      end if;
+   end Write_Array;
 
    overriding
    procedure Initialize (B : in out Bus)

@@ -10,18 +10,18 @@ package body PCA9685 is
       Freq : constant Float := Frequency * 0.9;
       --  Estimated prescale
       Prescale_Value : constant Float :=
-         (PCA9685.Clock / PCA9685.Resolution / Freq) - 1.0;
+         (PCA9685.Clock / Resolution / Freq) - 1.0;
       --  Used prescale
       Prescale : constant Unsigned_8 :=
          Unsigned_8 (Float'Floor (Prescale_Value + 0.5));
-      Old_Mode : constant Unsigned_8 := C.Get (MODE1);
+      Old_Mode : constant Unsigned_8 := Unsigned_8 (C.Get (MODE1));
       New_Mode : constant Unsigned_8 := (Old_Mode and 16#7F#) or 16#10#;
    begin
-      C.Set (R => PCA9685.MODE1, To => New_Mode); --  Sleep
-      C.Set (R => PCA9685.PRESCALE, To => Prescale);
-      C.Set (R => PCA9685.MODE1, To => Old_Mode);
+      C.Set (R => PCA9685.MODE1, To => Byte (New_Mode)); --  Sleep
+      C.Set (R => PCA9685.PRESCALE, To => Byte (Prescale));
+      C.Set (R => PCA9685.MODE1, To => Byte (Old_Mode));
       --  Possible add a delay here TODO
-      C.Set (R => PCA9685.MODE1, To => Old_Mode or 16#A1#); --  Auto inc mode1
+      C.Set (R => PCA9685.MODE1, To => Byte (Old_Mode or 16#A1#)); --  Auto inc mode1
    end SetPWMFreq;
 
    --  Set PWM for given pin
@@ -30,11 +30,13 @@ package body PCA9685 is
                      On : Unsigned_16;
                      Off : Unsigned_16) is
    begin
-      C.Write_Byte (Data => Unsigned_8 (LED0_ON_L) + 4 * Pin);
-      C.Write_Byte (Data => Unsigned_8 (On and 255));
-      C.Write_Byte (Data => Unsigned_8 (Shift_Right (On, 8) and 255));
-      C.Write_Byte (Data => Unsigned_8 (Off and 255));
-      C.Write_Byte (Data => Unsigned_8 (Shift_Right (Off, 8) and 255));
+      null;
+      --  rewrite this. everything should be streamed at once
+      --  C.Write_Byte (Data => Unsigned_8 (LED0_ON_L) + 4 * Pin);
+      --  C.Write_Byte (Data => Unsigned_8 (On and 255));
+      --  C.Write_Byte (Data => Unsigned_8 (Shift_Right (On, 8) and 255));
+      --  C.Write_Byte (Data => Unsigned_8 (Off and 255));
+      --  C.Write_Byte (Data => Unsigned_8 (Shift_Right (Off, 8) and 255));
    end SetPWM;
 
    --  Sets pin without having to deal with on/off tick placement and properly

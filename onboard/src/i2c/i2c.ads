@@ -1,6 +1,9 @@
-with Interfaces;
 with Ada.Finalization;
 with GNAT.OS_Lib;
+with Interfaces;
+with Interfaces.C;
+
+with asm_generic_int_ll64_h;
 
 package I2C is
    type Adapter_Number_T is range 16#00000# .. 16#fffff#;
@@ -14,12 +17,17 @@ package I2C is
    is abstract new Ada.Finalization.Limited_Controlled with null record;
 
    type Register is range 16#00# .. 16#ff#;
-   subtype Byte is Interfaces.Unsigned_8;
-   type Unsigned_Short is new Interfaces.Unsigned_16;
+   subtype Byte is Interfaces.C.unsigned_char;
+   type Byte_Array is array (Positive range <>) of
+      asm_generic_int_ll64_h.uu_u8;
 
    procedure Set (C : Chip'class; R : Register; To : Byte);
    function Get (C : Chip'class; R : Register) return Byte;
    procedure Write_Byte (C : Chip'class; Data : Byte);
+   procedure Write_Array (C : Chip'class;
+                          R : Register;
+                          L : Byte;
+                          Values : access Byte);
 private
    type Bus (Adapter_Number : Adapter_Number_T)
    is new Ada.Finalization.Limited_Controlled with record
