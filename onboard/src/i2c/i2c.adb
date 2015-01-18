@@ -74,8 +74,9 @@ package body I2C is
          Values);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
-           with "writing"
-           & "to chip"
+           with "writing "
+           & Interfaces.C.unsigned_char'Image (Values.all)
+           & " to chip "
            & Chip_Address'Image (C.Address);
       end if;
    end Write_Array;
