@@ -56,23 +56,22 @@ package body PCA9685 is
                      Pin : Unsigned_8;
                      Value : Unsigned_16;
                      Invert : Boolean := False) is
-      Val : constant Unsigned_16 := Unsigned_16'Min (Value, 4095);
    begin
       if Invert then
-         if Val = 0 then --  Fully on
+         if Value = 0 then --  Fully on
             C.SetPWM (Pin => Pin, On => 4096, Off => 0);
-         elsif Val = 4095 then --  Fully off
+         elsif Value = 4095 then --  Fully off
             C.SetPWM (Pin => Pin, On => 0, Off => 4096);
          else
-            C.SetPWM (Pin => Pin, On => 0, Off => 4095-Val);
+            C.SetPWM (Pin => Pin, On => 0, Off => 4095-Value);
          end if;
       else
-         if Val = 4095 then --  Fully on
+         if Value = 4095 then --  Fully on
             C.SetPWM (Pin => Pin, On => 4096, Off => 0);
-         elsif Val = 0 then --  Fully off
+         elsif Value = 0 then --  Fully off
             C.SetPWM (Pin => Pin, On => 0, Off => 4096);
          else
-            C.SetPWM (Pin => Pin, On => 0, Off => Val);
+            C.SetPWM (Pin => Pin, On => 0, Off => Value);
          end if;
       end if;
    end SetPin;

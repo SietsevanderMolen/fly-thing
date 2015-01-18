@@ -16,11 +16,16 @@ package PCA9685 is
                      Pin : Unsigned_8;
                      On : Unsigned_16;
                      Off : Unsigned_16);
+   pragma Precondition (Pin <= 15 and
+                        On  <= 4097 and
+                        Off <= 4097);
 
    procedure SetPin (C : in out Chip;
                      Pin : Unsigned_8;
                      Value : Unsigned_16;
                      Invert : Boolean := False);
+   pragma Precondition (Pin <= 15 and
+                        Value <= 4095);
 private
    --  Name the chip's registers
    MODE1       : constant Register := 0;
