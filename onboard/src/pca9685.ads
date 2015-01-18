@@ -17,8 +17,8 @@ package PCA9685 is
                      On : Unsigned_16;
                      Off : Unsigned_16);
    pragma Precondition (Pin <= 15 and
-                        On  <= 4097 and
-                        Off <= 4097);
+                        On  <= 4096 and
+                        Off <= 4096);
 
    procedure SetPin (C : in out Chip;
                      Pin : Unsigned_8;
