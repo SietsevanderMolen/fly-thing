@@ -1,3 +1,5 @@
+with Interfaces.C;
+
 package body PCA9685 is
    procedure Reset (C : in out Chip)
    is
@@ -21,7 +23,8 @@ package body PCA9685 is
       C.Set (R => PCA9685.PRESCALE, To => Byte (Prescale));
       C.Set (R => PCA9685.MODE1, To => Byte (Old_Mode));
       --  Possible add a delay here TODO
-      C.Set (R => PCA9685.MODE1, To => Byte (Old_Mode or 16#A1#)); --  Auto inc mode1
+      --  Auto inc mode1
+      C.Set (R => PCA9685.MODE1, To => Byte (Old_Mode or 16#A1#));
    end SetPWMFreq;
 
    --  Set PWM for given pin
@@ -29,14 +32,21 @@ package body PCA9685 is
                      Pin : Unsigned_8;
                      On : Unsigned_16;
                      Off : Unsigned_16) is
+      type Block is array (1 .. 4) of aliased I2C.Byte;
+      arrayblock : Block;
    begin
-      null;
-      --  rewrite this. everything should be streamed at once
-      --  C.Write_Byte (Data => Unsigned_8 (LED0_ON_L) + 4 * Pin);
-      --  C.Write_Byte (Data => Unsigned_8 (On and 255));
-      --  C.Write_Byte (Data => Unsigned_8 (Shift_Right (On, 8) and 255));
-      --  C.Write_Byte (Data => Unsigned_8 (Off and 255));
-      --  C.Write_Byte (Data => Unsigned_8 (Shift_Right (Off, 8) and 255));
+      arrayblock (1) := Interfaces.C.unsigned_char
+                           (On and 255);
+      arrayblock (2) := Interfaces.C.unsigned_char
+                           (Shift_Right (On, 8) and 255);
+      arrayblock (3) := Interfaces.C.unsigned_char
+                           (Off and 255);
+      arrayblock (4) := Interfaces.C.unsigned_char
+                           (Shift_Right (Off, 8) and 255);
+      I2C.Write_Array (C => C,
+                       R => Register (Unsigned_8 (LED0_ON_L) + 4 * Pin),
+                       L => 4,
+                       Values => arrayblock (1)'Access);
    end SetPWM;
 
    --  Sets pin without having to deal with on/off tick placement and properly
