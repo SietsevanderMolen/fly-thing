@@ -8,7 +8,6 @@ package body PCA9685 is
       I2C.Set (C => C, R => MODE1, To => 16#0#);
    end Reset;
 
-   --  Set the PWM Frequency to use for all outputs
    procedure SetPWMFreq (C : in out Chip; Frequency : Float) is
       Freq : constant Float := Frequency * 0.9;
       --  Estimated prescale
@@ -28,30 +27,21 @@ package body PCA9685 is
       C.Set (R => PCA9685.MODE1, To => Byte (Old_Mode or 16#A1#));
    end SetPWMFreq;
 
-   --  Set PWM for given pin
    procedure SetPWM (C : in out Chip;
                      Pin : Unsigned_8;
                      On : Unsigned_16;
                      Off : Unsigned_16) is
-      byteblock : i2c_interface_c.Byte_Array (1 .. 4);
+      bytes : i2c_interface_c.Byte_Array (1 .. 4);
    begin
-      byteblock (1) := Interfaces.C.unsigned_char
-                           (On and 255);
-      byteblock (2) := Interfaces.C.unsigned_char
-                           (Shift_Right (On, 8) and 255);
-      byteblock (3) := Interfaces.C.unsigned_char
-                           (Off and 255);
-      byteblock (4) := Interfaces.C.unsigned_char
-                           (Shift_Right (Off, 8) and 255);
+      bytes (1) := Interfaces.C.unsigned_char (On and 255);
+      bytes (2) := Interfaces.C.unsigned_char (Shift_Right (On, 8) and 255);
+      bytes (3) := Interfaces.C.unsigned_char (Off and 255);
+      bytes (4) := Interfaces.C.unsigned_char (Shift_Right (Off, 8) and 255);
       I2C.Write_Array (C => C,
                        R => Register (Unsigned_8 (LED0_ON_L) + (4 * Pin)),
-                       Values => byteblock);
+                       Values => bytes);
    end SetPWM;
 
-   --  Sets pin without having to deal with on/off tick placement and properly
-   --  handles a zero value as completely off. Optional invert parameter
-   --  supports inverting the pulse for sinking to ground. Val should be a
-   --  value from 0 to 4095 inclusive.
    procedure SetPin (C : in out Chip;
                      Pin : Unsigned_8;
                      Value : Unsigned_16;

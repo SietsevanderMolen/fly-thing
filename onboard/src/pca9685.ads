@@ -9,9 +9,11 @@ package PCA9685 is
    --  Reset the chip to the power-on reset state.
    procedure Reset (C : in out Chip);
 
+   --  Set the PWM Frequency to use for all outputs
    procedure SetPWMFreq (C : in out Chip; Frequency : Float);
    pragma Precondition (Frequency >= 40.0 and Frequency <= 1000.0);
 
+   --  Set PWM for given pin
    procedure SetPWM (C : in out Chip;
                      Pin : Unsigned_8;
                      On : Unsigned_16;
@@ -20,6 +22,10 @@ package PCA9685 is
                         On  <= 4096 and
                         Off <= 4096);
 
+   --  Sets pin without having to deal with on/off tick placement and properly
+   --  handles a zero value as completely off. Optional invert parameter
+   --  supports inverting the pulse for sinking to ground. Val should be a
+   --  value from 0 to 4095 inclusive.
    procedure SetPin (C : in out Chip;
                      Pin : Unsigned_8;
                      Value : Unsigned_16;
