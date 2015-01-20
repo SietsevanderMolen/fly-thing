@@ -1,4 +1,4 @@
-all: ctags
+all:
 	gprbuild -p -P ravn.gpr
 
 ctags:
