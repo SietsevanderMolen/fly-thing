@@ -1,47 +1,23 @@
 with Ada.IO_Exceptions;
 with Ada.Strings.Fixed;
 with Interfaces; use Interfaces;
-
-with asm_generic_int_ll64_h;
+with Interfaces.C;
 
 package body I2C is
-   not overriding
-   procedure Set (C : Chip'class; R : Register; To : Byte)
-   is
-      Status : asm_generic_int_ll64_h.uu_s32;
-      use type asm_generic_int_ll64_h.uu_s32;
-   begin
-      Status := i2c_interface_c.write_byte_data
-        (Interfaces.C.int (C.On_Bus.FD),
-         asm_generic_int_ll64_h.uu_u8 (R),
-         asm_generic_int_ll64_h.uu_u8 (To));
-      if Status < 0 then
-         raise Ada.IO_Exceptions.Device_Error
-           with "writing to chip"
-           & Chip_Address'Image (C.Address)
-           & " register"
-           & Register'Image (R);
-      end if;
-   end Set;
 
-   not overriding
-   function Get (C : Chip'class; R : Register) return Byte
+   function Read_Byte (C : Chip'class) return Byte
    is
       Value : constant asm_generic_int_ll64_h.uu_s32
-        := i2c_interface_c.read_byte_data
-        (Interfaces.C.int (C.On_Bus.FD), asm_generic_int_ll64_h.uu_u8 (R));
+        := i2c_interface_c.read_byte (Interfaces.C.int (C.On_Bus.FD));
       use type asm_generic_int_ll64_h.uu_s32;
    begin
       if Value < 0 then
-         raise Ada.IO_Exceptions.Device_Error
-           with "reading from chip"
-           & Chip_Address'Image (C.Address)
-           & " register"
-           & Register'Image (R);
+         raise Ada.IO_Exceptions.Device_Error with "reading from chip"
+            & Chip_Address'Image (C.Address);
       else
          return Byte (Value);
       end if;
-   end Get;
+   end Read_Byte;
 
    procedure Write_Byte (C : Chip'class; Data : Byte)
    is
@@ -58,6 +34,82 @@ package body I2C is
            & Chip_Address'Image (C.Address);
       end if;
    end Write_Byte;
+
+   not overriding
+   function Read_Byte_Data (C : Chip'class; R : Register) return Byte
+   is
+      Value : constant asm_generic_int_ll64_h.uu_s32
+        := i2c_interface_c.read_byte_data
+        (Interfaces.C.int (C.On_Bus.FD), asm_generic_int_ll64_h.uu_u8 (R));
+      use type asm_generic_int_ll64_h.uu_s32;
+   begin
+      if Value < 0 then
+         raise Ada.IO_Exceptions.Device_Error
+           with "reading from chip"
+           & Chip_Address'Image (C.Address)
+           & " register"
+           & Register'Image (R);
+      else
+         return Byte (Value);
+      end if;
+   end Read_Byte_Data;
+
+   not overriding
+   procedure Write_Byte_Data (C : Chip'class; R : Register; To : Byte)
+   is
+      Status : asm_generic_int_ll64_h.uu_s32;
+      use type asm_generic_int_ll64_h.uu_s32;
+   begin
+      Status := i2c_interface_c.write_byte_data
+        (Interfaces.C.int (C.On_Bus.FD),
+         asm_generic_int_ll64_h.uu_u8 (R),
+         asm_generic_int_ll64_h.uu_u8 (To));
+      if Status < 0 then
+         raise Ada.IO_Exceptions.Device_Error
+           with "writing to chip"
+           & Chip_Address'Image (C.Address)
+           & " register"
+           & Register'Image (R);
+      end if;
+   end Write_Byte_Data;
+
+   not overriding
+   function Read_Word_Data (C : Chip'class; R : Register) return Word
+   is
+      Value : constant asm_generic_int_ll64_h.uu_s32
+        := i2c_interface_c.read_word_data
+        (Interfaces.C.int (C.On_Bus.FD), asm_generic_int_ll64_h.uu_u8 (R));
+      use type asm_generic_int_ll64_h.uu_s32;
+   begin
+      if Value < 0 then
+         raise Ada.IO_Exceptions.Device_Error
+           with "reading from chip"
+           & Chip_Address'Image (C.Address)
+           & " register"
+           & Register'Image (R);
+      else
+         return Word (Value);
+      end if;
+   end Read_Word_Data;
+
+   not overriding
+   procedure Write_Word_Data (C : Chip'class; R : Register; To : Word)
+   is
+      Status : asm_generic_int_ll64_h.uu_s32;
+      use type asm_generic_int_ll64_h.uu_s32;
+   begin
+      Status := i2c_interface_c.write_word_data
+        (Interfaces.C.int (C.On_Bus.FD),
+         asm_generic_int_ll64_h.uu_u8 (R),
+         asm_generic_int_ll64_h.uu_u16 (To));
+      if Status < 0 then
+         raise Ada.IO_Exceptions.Device_Error
+           with "writing to chip"
+           & Chip_Address'Image (C.Address)
+           & " register"
+           & Register'Image (R);
+      end if;
+   end Write_Word_Data;
 
    procedure Write_Array (C : Chip'class;
                           R : Register;

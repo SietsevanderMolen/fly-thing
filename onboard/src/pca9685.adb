@@ -5,7 +5,7 @@ package body PCA9685 is
    procedure Reset (C : in out Chip)
    is
    begin
-      I2C.Set (C => C, R => MODE1, To => 16#0#);
+      I2C.Write_Byte_Data (C => C, R => MODE1, To => 16#0#);
    end Reset;
 
    procedure SetPWMFreq (C : in out Chip; Frequency : Float) is
@@ -16,15 +16,15 @@ package body PCA9685 is
       --  Used prescale
       Prescale : constant Unsigned_8 :=
          Unsigned_8 (Float'Floor (Prescale_Value + 0.5));
-      Old_Mode : constant Unsigned_8 := Unsigned_8 (C.Get (MODE1));
+      Old_Mode : constant Unsigned_8 := Unsigned_8 (C.Read_Byte_Data (MODE1));
       New_Mode : constant Unsigned_8 := (Old_Mode and 16#7F#) or 16#10#;
    begin
-      C.Set (R => PCA9685.MODE1, To => Byte (New_Mode)); --  Sleep
-      C.Set (R => PCA9685.PRESCALE, To => Byte (Prescale));
-      C.Set (R => PCA9685.MODE1, To => Byte (Old_Mode));
+      C.Write_Byte_Data (R => PCA9685.MODE1, To => Byte (New_Mode)); --  Sleep
+      C.Write_Byte_Data (R => PCA9685.PRESCALE, To => Byte (Prescale));
+      C.Write_Byte_Data (R => PCA9685.MODE1, To => Byte (Old_Mode));
       --  Possible add a delay here TODO
       --  Auto inc mode1
-      C.Set (R => PCA9685.MODE1, To => Byte (Old_Mode or 16#A1#));
+      C.Write_Byte_Data (R => PCA9685.MODE1, To => Byte (Old_Mode or 16#A1#));
    end SetPWMFreq;
 
    procedure SetPWM (C : in out Chip;
