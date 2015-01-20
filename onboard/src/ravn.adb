@@ -1,4 +1,6 @@
-pragma Profile (Ravenscar);
+with Interfaces;
+with Ada.Text_IO;
+
 with PCA9685;
 with I2C;
 
@@ -13,4 +15,11 @@ procedure Ravn is
 begin
    PWM_Driver.Reset;
    PWM_Driver.SetPWMFreq (400.0); --  Max frequency as per datasheet
+   PWM_Driver.SetPin (61, 0); --  All off
+   loop
+      Ada.Text_IO.Put_Line ("Resetting loop");
+      for j in Interfaces.Unsigned_16 range 0 .. 1095 loop
+         PWM_Driver.SetPin (15, j);
+      end loop;
+   end loop;
 end Ravn;
