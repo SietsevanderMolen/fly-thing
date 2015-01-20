@@ -106,9 +106,9 @@ package body I2C is
       end if;
    end Write_Word_Data;
 
-   procedure Write_Array (C : Chip'class;
-                          R : Register;
-                          Values : i2c_interface_c.Byte_Array) is
+   procedure Write_Array_Data (C : Chip'class;
+                               R : Register;
+                               Values : i2c_interface_c.Byte_Array) is
       Status : asm_generic_int_ll64_h.uu_s32;
       use type asm_generic_int_ll64_h.uu_s32;
    begin
@@ -124,7 +124,7 @@ package body I2C is
            & " on chip "
            & Chip_Address'Image (C.Address);
       end if;
-   end Write_Array;
+   end Write_Array_Data;
 
    overriding
    procedure Initialize (B : in out Bus)

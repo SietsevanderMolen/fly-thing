@@ -33,9 +33,10 @@ package I2C is
    --  Write a word to a specific register
    procedure Write_Word_Data (C : Chip'class; R : Register; To : Word);
    --  Write an array of bytes to a specific register
-   procedure Write_Array (C : Chip'class;
-                          R : Register;
-                          Values : i2c_interface_c.Byte_Array);
+   procedure Write_Array_Data (C : Chip'class;
+                               R : Register;
+                               Values : i2c_interface_c.Byte_Array);
+   pragma Precondition (Values'Length <= 31); --  Max is 32-Register
 private
    type Bus (Adapter_Number : Adapter_Number_T)
    is new Ada.Finalization.Limited_Controlled with record

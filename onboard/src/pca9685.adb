@@ -37,9 +37,9 @@ package body PCA9685 is
       bytes (2) := Interfaces.C.unsigned_char (Shift_Right (On, 8) and 255);
       bytes (3) := Interfaces.C.unsigned_char (Off and 255);
       bytes (4) := Interfaces.C.unsigned_char (Shift_Right (Off, 8) and 255);
-      I2C.Write_Array (C => C,
-                       R => Register (Unsigned_8 (LED0_ON_L) + (4 * Pin)),
-                       Values => bytes);
+      I2C.Write_Array_Data (C => C,
+                            R => Register (Unsigned_8 (LED0_ON_L) + (4 * Pin)),
+                            Values => bytes);
    end SetPWM;
 
    procedure SetPin (C : in out Chip;
