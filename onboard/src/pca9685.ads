@@ -18,7 +18,7 @@ package PCA9685 is
                      Pin : Unsigned_8;
                      On : Unsigned_16;
                      Off : Unsigned_16);
-   pragma Precondition (Pin <= 15 and
+   pragma Precondition ((Pin <= 15 or Pin = 61) and --  61 is ALL_LED_ON_L
                         On  <= 4096 and
                         Off <= 4096);
 
@@ -30,7 +30,7 @@ package PCA9685 is
                      Pin : Unsigned_8;
                      Value : Unsigned_16;
                      Invert : Boolean := False);
-   pragma Precondition (Pin <= 15 or Pin = 61 and --  61 is ALL_LED_ON_L
+   pragma Precondition ((Pin <= 15 or Pin = 61) and --  61 is ALL_LED_ON_L
                         Value <= 4095);
 private
    --  Name the chip's registers
