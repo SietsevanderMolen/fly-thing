@@ -1,0 +1,389 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.7	//
+(B	src/i2c/i2c.adb	/^   procedure Initialize (B : in out Bus)$/;"	v	package:I2C	file:
+(B	src/i2c/i2c.ads	/^   procedure Finalize (B : in out Bus);$/;"	v	packspec:I2C	file:
+(B	src/i2c/i2c.ads	/^   procedure Initialize (B : in out Bus);$/;"	v	packspec:I2C	file:
+(C	src/i2c/i2c.ads	/^   procedure Initialize (C : in out Chip);$/;"	v	packspec:I2C	file:
+AI	src/pca9685.ads	/^   AI      : constant Unsigned_8 := 2 ** 5;$/;"	n	packspec:PCA9685	file:
+ALLCALL	src/pca9685.ads	/^   ALLCALL : constant Unsigned_8 := 2 ** 0;$/;"	n	packspec:PCA9685	file:
+ALLCALLADR	src/pca9685.ads	/^   ALLCALLADR  : constant Register := 5;$/;"	n	packspec:PCA9685	file:
+ALL_LED_OFF_H	src/pca9685.ads	/^   ALL_LED_OFF_H : constant Register := 253;$/;"	n	packspec:PCA9685	file:
+ALL_LED_OFF_L	src/pca9685.ads	/^   ALL_LED_OFF_L : constant Register := 252;$/;"	n	packspec:PCA9685	file:
+ALL_LED_ON_H	src/pca9685.ads	/^   ALL_LED_ON_H  : constant Register := 251;$/;"	n	packspec:PCA9685	file:
+ALL_LED_ON_L	src/pca9685.ads	/^   ALL_LED_ON_L  : constant Register := 250;$/;"	n	packspec:PCA9685	file:
+Adapter_Number_T	src/i2c/i2c.ads	/^   type Adapter_Number_T is range 16#00000# .. 16#fffff#;$/;"	t	packspec:I2C
+Bus	src/i2c/i2c.ads	/^   type Bus (Adapter_Number : Adapter_Number_T)$/;"	t	packspec:I2C
+Bus	src/i2c/i2c.ads	/^   type Bus (Adapter_Number : Adapter_Number_T)$/;"	t	packspec:I2C	file:
+Byte	src/i2c/i2c.ads	/^   subtype Byte is asm_generic_int_ll64_h.uu_u8;$/;"	u	packspec:I2C
+Byte_Array	src/i2c/i2c_interface/i2c_interface_c.ads	/^   type Byte_Array is array (Integer range <>) of$/;"	t	packspec:i2c_interface_c
+Chip	src/i2c/i2c.ads	/^   type Chip (Address : Chip_Address; On_Bus : not null access Bus)$/;"	t	packspec:I2C
+Chip	src/pca9685.ads	/^   type Chip is new I2C.Chip with null record;$/;"	t	packspec:PCA9685
+Chip_Address	src/i2c/i2c.ads	/^   type Chip_Address is range 16#03# .. 16#77#;$/;"	t	packspec:I2C
+Clock	src/pca9685.ads	/^   Clock : constant Float := 25000000.0; --  Default oscillator freq$/;"	n	packspec:PCA9685
+EXTCLK	src/pca9685.ads	/^   EXTCLK  : constant Unsigned_8 := 2 ** 6;$/;"	n	packspec:PCA9685	file:
+Finalize	src/i2c/i2c.ads	/^   procedure Finalize (B : in out Bus);$/;"	v	packspec:I2C	file:
+Freq	src/pca9685.adb	/^      Freq : constant Float := Frequency * 0.9;$/;"	n	subprogram:SetPWMFreq	file:
+I2C	src/i2c/i2c.adb	/^package body I2C is$/;"	p	file:
+I2C	src/i2c/i2c.ads	/^package I2C is$/;"	P
+I2C_Bus	src/ravn.adb	/^   I2C_Bus : aliased I2C.Bus (Adapter_Number => 1); --  \/dev\/i2c-1$/;"	v	subprogram:Ravn	file:
+I2C_FUNCS	src/i2c/i2c_interface/i2c-dev.h	136;"	d
+I2C_FUNC_10BIT_ADDR	src/i2c/i2c_interface/i2c-dev.h	55;"	d
+I2C_FUNC_I2C	src/i2c/i2c_interface/i2c-dev.h	54;"	d
+I2C_FUNC_PROTOCOL_MANGLING	src/i2c/i2c_interface/i2c-dev.h	56;"	d
+I2C_FUNC_SMBUS_BLOCK_DATA	src/i2c/i2c_interface/i2c-dev.h	78;"	d
+I2C_FUNC_SMBUS_BLOCK_PROC_CALL	src/i2c/i2c_interface/i2c-dev.h	58;"	d
+I2C_FUNC_SMBUS_BYTE	src/i2c/i2c_interface/i2c-dev.h	72;"	d
+I2C_FUNC_SMBUS_BYTE_DATA	src/i2c/i2c_interface/i2c-dev.h	74;"	d
+I2C_FUNC_SMBUS_HWPEC_CALC	src/i2c/i2c_interface/i2c-dev.h	84;"	d
+I2C_FUNC_SMBUS_I2C_BLOCK	src/i2c/i2c_interface/i2c-dev.h	80;"	d
+I2C_FUNC_SMBUS_PEC	src/i2c/i2c_interface/i2c-dev.h	57;"	d
+I2C_FUNC_SMBUS_PROC_CALL	src/i2c/i2c_interface/i2c-dev.h	66;"	d
+I2C_FUNC_SMBUS_QUICK	src/i2c/i2c_interface/i2c-dev.h	59;"	d
+I2C_FUNC_SMBUS_READ_BLOCK_DATA	src/i2c/i2c_interface/i2c-dev.h	67;"	d
+I2C_FUNC_SMBUS_READ_BYTE	src/i2c/i2c_interface/i2c-dev.h	60;"	d
+I2C_FUNC_SMBUS_READ_BYTE_DATA	src/i2c/i2c_interface/i2c-dev.h	62;"	d
+I2C_FUNC_SMBUS_READ_I2C_BLOCK	src/i2c/i2c_interface/i2c-dev.h	69;"	d
+I2C_FUNC_SMBUS_READ_WORD_DATA	src/i2c/i2c_interface/i2c-dev.h	64;"	d
+I2C_FUNC_SMBUS_WORD_DATA	src/i2c/i2c_interface/i2c-dev.h	76;"	d
+I2C_FUNC_SMBUS_WRITE_BLOCK_DATA	src/i2c/i2c_interface/i2c-dev.h	68;"	d
+I2C_FUNC_SMBUS_WRITE_BYTE	src/i2c/i2c_interface/i2c-dev.h	61;"	d
+I2C_FUNC_SMBUS_WRITE_BYTE_DATA	src/i2c/i2c_interface/i2c-dev.h	63;"	d
+I2C_FUNC_SMBUS_WRITE_I2C_BLOCK	src/i2c/i2c_interface/i2c-dev.h	70;"	d
+I2C_FUNC_SMBUS_WRITE_WORD_DATA	src/i2c/i2c_interface/i2c-dev.h	65;"	d
+I2C_M_IGNORE_NAK	src/i2c/i2c_interface/i2c-dev.h	46;"	d
+I2C_M_NOSTART	src/i2c/i2c_interface/i2c-dev.h	44;"	d
+I2C_M_NO_RD_ACK	src/i2c/i2c_interface/i2c-dev.h	47;"	d
+I2C_M_RD	src/i2c/i2c_interface/i2c-dev.h	43;"	d
+I2C_M_REV_DIR_ADDR	src/i2c/i2c_interface/i2c-dev.h	45;"	d
+I2C_M_TEN	src/i2c/i2c_interface/i2c-dev.h	42;"	d
+I2C_PEC	src/i2c/i2c_interface/i2c-dev.h	138;"	d
+I2C_RDWR	src/i2c/i2c_interface/i2c-dev.h	137;"	d
+I2C_RETRIES	src/i2c/i2c_interface/i2c-dev.h	121;"	d
+I2C_SLAVE	src/i2c/i2c_interface/i2c-dev.h	128;"	d
+I2C_SLAVE_FORCE	src/i2c/i2c_interface/i2c-dev.h	130;"	d
+I2C_SMBUS	src/i2c/i2c_interface/i2c-dev.h	140;"	d
+I2C_SMBUS_BLOCK_DATA	src/i2c/i2c_interface/i2c-dev.h	109;"	d
+I2C_SMBUS_BLOCK_MAX	src/i2c/i2c_interface/i2c-dev.h	89;"	d
+I2C_SMBUS_BLOCK_PROC_CALL	src/i2c/i2c_interface/i2c-dev.h	111;"	d
+I2C_SMBUS_BYTE	src/i2c/i2c_interface/i2c-dev.h	105;"	d
+I2C_SMBUS_BYTE_DATA	src/i2c/i2c_interface/i2c-dev.h	106;"	d
+I2C_SMBUS_I2C_BLOCK_BROKEN	src/i2c/i2c_interface/i2c-dev.h	110;"	d
+I2C_SMBUS_I2C_BLOCK_DATA	src/i2c/i2c_interface/i2c-dev.h	112;"	d
+I2C_SMBUS_I2C_BLOCK_MAX	src/i2c/i2c_interface/i2c-dev.h	90;"	d
+I2C_SMBUS_PROC_CALL	src/i2c/i2c_interface/i2c-dev.h	108;"	d
+I2C_SMBUS_QUICK	src/i2c/i2c_interface/i2c-dev.h	104;"	d
+I2C_SMBUS_READ	src/i2c/i2c_interface/i2c-dev.h	99;"	d
+I2C_SMBUS_WORD_DATA	src/i2c/i2c_interface/i2c-dev.h	107;"	d
+I2C_SMBUS_WRITE	src/i2c/i2c_interface/i2c-dev.h	100;"	d
+I2C_TENBIT	src/i2c/i2c_interface/i2c-dev.h	134;"	d
+I2C_TIMEOUT	src/i2c/i2c_interface/i2c-dev.h	124;"	d
+INVRT	src/pca9685.ads	/^   INVRT   : constant Unsigned_8 := 2 ** 4;$/;"	n	packspec:PCA9685	file:
+Initialize	src/i2c/i2c.adb	/^   procedure Initialize (B : in out Bus)$/;"	v	package:I2C	file:
+Initialize	src/i2c/i2c.ads	/^   procedure Initialize (B : in out Bus);$/;"	v	packspec:I2C	file:
+Initialize	src/i2c/i2c.ads	/^   procedure Initialize (C : in out Chip);$/;"	v	packspec:I2C	file:
+LED0_OFF_H	src/pca9685.ads	/^   LED0_OFF_H  : constant Register := 9;$/;"	n	packspec:PCA9685	file:
+LED0_OFF_L	src/pca9685.ads	/^   LED0_OFF_L  : constant Register := 8;$/;"	n	packspec:PCA9685	file:
+LED0_ON_H	src/pca9685.ads	/^   LED0_ON_H   : constant Register := 7;$/;"	n	packspec:PCA9685	file:
+LED0_ON_L	src/pca9685.ads	/^   LED0_ON_L   : constant Register := 6;$/;"	n	packspec:PCA9685	file:
+LED10_OFF_H	src/pca9685.ads	/^   LED10_OFF_H : constant Register := 49;$/;"	n	packspec:PCA9685	file:
+LED10_OFF_L	src/pca9685.ads	/^   LED10_OFF_L : constant Register := 48;$/;"	n	packspec:PCA9685	file:
+LED10_ON_H	src/pca9685.ads	/^   LED10_ON_H  : constant Register := 47;$/;"	n	packspec:PCA9685	file:
+LED10_ON_L	src/pca9685.ads	/^   LED10_ON_L  : constant Register := 46;$/;"	n	packspec:PCA9685	file:
+LED11_OFF_H	src/pca9685.ads	/^   LED11_OFF_H : constant Register := 53;$/;"	n	packspec:PCA9685	file:
+LED11_OFF_L	src/pca9685.ads	/^   LED11_OFF_L : constant Register := 52;$/;"	n	packspec:PCA9685	file:
+LED11_ON_H	src/pca9685.ads	/^   LED11_ON_H  : constant Register := 51;$/;"	n	packspec:PCA9685	file:
+LED11_ON_L	src/pca9685.ads	/^   LED11_ON_L  : constant Register := 50;$/;"	n	packspec:PCA9685	file:
+LED12_OFF_H	src/pca9685.ads	/^   LED12_OFF_H : constant Register := 57;$/;"	n	packspec:PCA9685	file:
+LED12_OFF_L	src/pca9685.ads	/^   LED12_OFF_L : constant Register := 56;$/;"	n	packspec:PCA9685	file:
+LED12_ON_H	src/pca9685.ads	/^   LED12_ON_H  : constant Register := 55;$/;"	n	packspec:PCA9685	file:
+LED12_ON_L	src/pca9685.ads	/^   LED12_ON_L  : constant Register := 54;$/;"	n	packspec:PCA9685	file:
+LED13_OFF_H	src/pca9685.ads	/^   LED13_OFF_H : constant Register := 61;$/;"	n	packspec:PCA9685	file:
+LED13_OFF_L	src/pca9685.ads	/^   LED13_OFF_L : constant Register := 60;$/;"	n	packspec:PCA9685	file:
+LED13_ON_H	src/pca9685.ads	/^   LED13_ON_H  : constant Register := 59;$/;"	n	packspec:PCA9685	file:
+LED13_ON_L	src/pca9685.ads	/^   LED13_ON_L  : constant Register := 58;$/;"	n	packspec:PCA9685	file:
+LED14_OFF_H	src/pca9685.ads	/^   LED14_OFF_H : constant Register := 65;$/;"	n	packspec:PCA9685	file:
+LED14_OFF_L	src/pca9685.ads	/^   LED14_OFF_L : constant Register := 64;$/;"	n	packspec:PCA9685	file:
+LED14_ON_H	src/pca9685.ads	/^   LED14_ON_H  : constant Register := 63;$/;"	n	packspec:PCA9685	file:
+LED14_ON_L	src/pca9685.ads	/^   LED14_ON_L  : constant Register := 62;$/;"	n	packspec:PCA9685	file:
+LED15_OFF_H	src/pca9685.ads	/^   LED15_OFF_H : constant Register := 69;$/;"	n	packspec:PCA9685	file:
+LED15_OFF_L	src/pca9685.ads	/^   LED15_OFF_L : constant Register := 68;$/;"	n	packspec:PCA9685	file:
+LED15_ON_H	src/pca9685.ads	/^   LED15_ON_H  : constant Register := 67;$/;"	n	packspec:PCA9685	file:
+LED15_ON_L	src/pca9685.ads	/^   LED15_ON_L  : constant Register := 66;$/;"	n	packspec:PCA9685	file:
+LED1_OFF_H	src/pca9685.ads	/^   LED1_OFF_H  : constant Register := 13;$/;"	n	packspec:PCA9685	file:
+LED1_OFF_L	src/pca9685.ads	/^   LED1_OFF_L  : constant Register := 12;$/;"	n	packspec:PCA9685	file:
+LED1_ON_H	src/pca9685.ads	/^   LED1_ON_H   : constant Register := 11;$/;"	n	packspec:PCA9685	file:
+LED1_ON_L	src/pca9685.ads	/^   LED1_ON_L   : constant Register := 10;$/;"	n	packspec:PCA9685	file:
+LED2_OFF_H	src/pca9685.ads	/^   LED2_OFF_H  : constant Register := 17;$/;"	n	packspec:PCA9685	file:
+LED2_OFF_L	src/pca9685.ads	/^   LED2_OFF_L  : constant Register := 16;$/;"	n	packspec:PCA9685	file:
+LED2_ON_H	src/pca9685.ads	/^   LED2_ON_H   : constant Register := 15;$/;"	n	packspec:PCA9685	file:
+LED2_ON_L	src/pca9685.ads	/^   LED2_ON_L   : constant Register := 14;$/;"	n	packspec:PCA9685	file:
+LED3_OFF_H	src/pca9685.ads	/^   LED3_OFF_H  : constant Register := 21;$/;"	n	packspec:PCA9685	file:
+LED3_OFF_L	src/pca9685.ads	/^   LED3_OFF_L  : constant Register := 20;$/;"	n	packspec:PCA9685	file:
+LED3_ON_H	src/pca9685.ads	/^   LED3_ON_H   : constant Register := 19;$/;"	n	packspec:PCA9685	file:
+LED3_ON_L	src/pca9685.ads	/^   LED3_ON_L   : constant Register := 18;$/;"	n	packspec:PCA9685	file:
+LED4_OFF_H	src/pca9685.ads	/^   LED4_OFF_H  : constant Register := 25;$/;"	n	packspec:PCA9685	file:
+LED4_OFF_L	src/pca9685.ads	/^   LED4_OFF_L  : constant Register := 24;$/;"	n	packspec:PCA9685	file:
+LED4_ON_H	src/pca9685.ads	/^   LED4_ON_H   : constant Register := 23;$/;"	n	packspec:PCA9685	file:
+LED4_ON_L	src/pca9685.ads	/^   LED4_ON_L   : constant Register := 22;$/;"	n	packspec:PCA9685	file:
+LED5_OFF_H	src/pca9685.ads	/^   LED5_OFF_H  : constant Register := 29;$/;"	n	packspec:PCA9685	file:
+LED5_OFF_L	src/pca9685.ads	/^   LED5_OFF_L  : constant Register := 28;$/;"	n	packspec:PCA9685	file:
+LED5_ON_H	src/pca9685.ads	/^   LED5_ON_H   : constant Register := 27;$/;"	n	packspec:PCA9685	file:
+LED5_ON_L	src/pca9685.ads	/^   LED5_ON_L   : constant Register := 26;$/;"	n	packspec:PCA9685	file:
+LED6_OFF_H	src/pca9685.ads	/^   LED6_OFF_H  : constant Register := 33;$/;"	n	packspec:PCA9685	file:
+LED6_OFF_L	src/pca9685.ads	/^   LED6_OFF_L  : constant Register := 32;$/;"	n	packspec:PCA9685	file:
+LED6_ON_H	src/pca9685.ads	/^   LED6_ON_H   : constant Register := 31;$/;"	n	packspec:PCA9685	file:
+LED6_ON_L	src/pca9685.ads	/^   LED6_ON_L   : constant Register := 30;$/;"	n	packspec:PCA9685	file:
+LED7_OFF_H	src/pca9685.ads	/^   LED7_OFF_H  : constant Register := 37;$/;"	n	packspec:PCA9685	file:
+LED7_OFF_L	src/pca9685.ads	/^   LED7_OFF_L  : constant Register := 36;$/;"	n	packspec:PCA9685	file:
+LED7_ON_H	src/pca9685.ads	/^   LED7_ON_H   : constant Register := 35;$/;"	n	packspec:PCA9685	file:
+LED7_ON_L	src/pca9685.ads	/^   LED7_ON_L   : constant Register := 34;$/;"	n	packspec:PCA9685	file:
+LED8_OFF_H	src/pca9685.ads	/^   LED8_OFF_H  : constant Register := 41;$/;"	n	packspec:PCA9685	file:
+LED8_OFF_L	src/pca9685.ads	/^   LED8_OFF_L  : constant Register := 40;$/;"	n	packspec:PCA9685	file:
+LED8_ON_H	src/pca9685.ads	/^   LED8_ON_H   : constant Register := 39;$/;"	n	packspec:PCA9685	file:
+LED8_ON_L	src/pca9685.ads	/^   LED8_ON_L   : constant Register := 38;$/;"	n	packspec:PCA9685	file:
+LED9_OFF_H	src/pca9685.ads	/^   LED9_OFF_H  : constant Register := 45;$/;"	n	packspec:PCA9685	file:
+LED9_OFF_L	src/pca9685.ads	/^   LED9_OFF_L  : constant Register := 44;$/;"	n	packspec:PCA9685	file:
+LED9_ON_H	src/pca9685.ads	/^   LED9_ON_H   : constant Register := 43;$/;"	n	packspec:PCA9685	file:
+LED9_ON_L	src/pca9685.ads	/^   LED9_ON_L   : constant Register := 42;$/;"	n	packspec:PCA9685	file:
+LIB_I2CDEV_H	src/i2c/i2c_interface/i2c-dev.h	26;"	d
+MODE1	src/pca9685.ads	/^   MODE1       : constant Register := 0;$/;"	n	packspec:PCA9685	file:
+MODE2	src/pca9685.ads	/^   MODE2       : constant Register := 1;$/;"	n	packspec:PCA9685	file:
+Motor_NE_Pin	src/ravn.adb	/^   Motor_NE_Pin : Integer := 0;$/;"	v	subprogram:Ravn	file:
+Motor_NW_Pin	src/ravn.adb	/^   Motor_NW_Pin : Integer := 3;$/;"	v	subprogram:Ravn	file:
+Motor_SE_Pin	src/ravn.adb	/^   Motor_SE_Pin : Integer := 1;$/;"	v	subprogram:Ravn	file:
+Motor_SW_Pin	src/ravn.adb	/^   Motor_SW_Pin : Integer := 2;$/;"	v	subprogram:Ravn	file:
+New_Mode	src/pca9685.adb	/^      New_Mode : constant Unsigned_8 := (Old_Mode and 16#7F#) or 16#10#;$/;"	n	subprogram:SetPWMFreq	file:
+OCH	src/pca9685.ads	/^   OCH     : constant Unsigned_8 := 2 ** 3;$/;"	n	packspec:PCA9685	file:
+OUTDRV	src/pca9685.ads	/^   OUTDRV  : constant Unsigned_8 := 2 ** 2;$/;"	n	packspec:PCA9685	file:
+OUTNE0	src/pca9685.ads	/^   OUTNE0  : constant Unsigned_8 := 2 ** 0;$/;"	n	packspec:PCA9685	file:
+OUTNE1	src/pca9685.ads	/^   OUTNE1  : constant Unsigned_8 := 2 ** 1;$/;"	n	packspec:PCA9685	file:
+Old_Mode	src/pca9685.adb	/^      Old_Mode : constant Unsigned_8 := Unsigned_8 (C.Read_Byte_Data (MODE1));$/;"	n	subprogram:SetPWMFreq	file:
+PCA9685	src/pca9685.adb	/^package body PCA9685 is$/;"	p	file:
+PCA9685	src/pca9685.ads	/^package PCA9685 is$/;"	P	file:
+PRESCALE	src/pca9685.ads	/^   PRESCALE     : constant Register := 254;$/;"	n	packspec:PCA9685	file:
+PWM_Driver	src/ravn.adb	/^   PWM_Driver : PCA9685.Chip (On_Bus => I2C_Bus'Access,$/;"	v	subprogram:Ravn	file:
+Prescale	src/pca9685.adb	/^      Prescale : constant Unsigned_8 :=$/;"	n	subprogram:SetPWMFreq	file:
+Prescale_Value	src/pca9685.adb	/^      Prescale_Value : constant Float :=$/;"	n	subprogram:SetPWMFreq	file:
+RESTART	src/pca9685.ads	/^   RESTART : constant Unsigned_8 := 2 ** 7;$/;"	n	packspec:PCA9685	file:
+Ravn	src/ravn.adb	/^procedure Ravn is$/;"	r	file:
+Read_Byte	src/i2c/i2c.adb	/^   function Read_Byte (C : Chip'class) return Byte$/;"	r	package:I2C	file:
+Read_Byte	src/i2c/i2c.ads	/^   function Read_Byte (C : Chip'Class) return Byte;$/;"	R	packspec:I2C
+Read_Byte_Data	src/i2c/i2c.adb	/^   function Read_Byte_Data (C : Chip'class; R : Register) return Byte$/;"	r	package:I2C	file:
+Read_Byte_Data	src/i2c/i2c.ads	/^   function Read_Byte_Data (C : Chip'class; R : Register) return Byte;$/;"	R	packspec:I2C
+Read_Word_Data	src/i2c/i2c.adb	/^   function Read_Word_Data (C : Chip'class; R : Register) return Word$/;"	r	package:I2C	file:
+Read_Word_Data	src/i2c/i2c.ads	/^   function Read_Word_Data (C : Chip'class; R : Register) return Word;$/;"	R	packspec:I2C
+Register	src/i2c/i2c.ads	/^   type Register is range 16#00# .. 16#ff#;$/;"	t	packspec:I2C
+Reset	src/pca9685.adb	/^   procedure Reset (C : in out Chip)$/;"	r	package:PCA9685	file:
+Reset	src/pca9685.ads	/^   procedure Reset (C : in out Chip);$/;"	R	packspec:PCA9685
+Resolution	src/pca9685.ads	/^   Resolution : constant Float := 4096.0; --  PCA9685 is 12bits$/;"	n	packspec:PCA9685
+SLEEP	src/pca9685.ads	/^   SLEEP   : constant Unsigned_8 := 2 ** 4;$/;"	n	packspec:PCA9685	file:
+SUB1	src/pca9685.ads	/^   SUB1    : constant Unsigned_8 := 2 ** 3;$/;"	n	packspec:PCA9685	file:
+SUB2	src/pca9685.ads	/^   SUB2    : constant Unsigned_8 := 2 ** 2;$/;"	n	packspec:PCA9685	file:
+SUB3	src/pca9685.ads	/^   SUB3    : constant Unsigned_8 := 2 ** 1;$/;"	n	packspec:PCA9685	file:
+SUBADR1	src/pca9685.ads	/^   SUBADR1     : constant Register := 2;$/;"	n	packspec:PCA9685	file:
+SUBADR2	src/pca9685.ads	/^   SUBADR2     : constant Register := 3;$/;"	n	packspec:PCA9685	file:
+SUBADR3	src/pca9685.ads	/^   SUBADR3     : constant Register := 4;$/;"	n	packspec:PCA9685	file:
+SetPWM	src/pca9685.adb	/^   procedure SetPWM (C : in out Chip;$/;"	r	package:PCA9685	file:
+SetPWM	src/pca9685.ads	/^   procedure SetPWM (C : in out Chip;$/;"	R	packspec:PCA9685
+SetPWMFreq	src/pca9685.adb	/^   procedure SetPWMFreq (C : in out Chip; Frequency : Float) is$/;"	r	package:PCA9685	file:
+SetPWMFreq	src/pca9685.ads	/^   procedure SetPWMFreq (C : in out Chip; Frequency : Float);$/;"	R	packspec:PCA9685
+SetPin	src/pca9685.adb	/^   procedure SetPin (C : in out Chip;$/;"	r	package:PCA9685	file:
+SetPin	src/pca9685.ads	/^   procedure SetPin (C : in out Chip;$/;"	R	packspec:PCA9685
+Status	src/i2c/i2c.adb	/^      Status : asm_generic_int_ll64_h.uu_s32;$/;"	v	subprogram:Write_Array	file:
+Status	src/i2c/i2c.adb	/^      Status : asm_generic_int_ll64_h.uu_s32;$/;"	v	subprogram:Write_Byte	file:
+Status	src/i2c/i2c.adb	/^      Status : asm_generic_int_ll64_h.uu_s32;$/;"	v	subprogram:Write_Byte_Data	file:
+Status	src/i2c/i2c.adb	/^      Status : asm_generic_int_ll64_h.uu_s32;$/;"	v	subprogram:Write_Word_Data	file:
+TESTMODE	src/pca9685.ads	/^   TESTMODE      : constant Register := 255;$/;"	n	packspec:PCA9685	file:
+Value	src/i2c/i2c.adb	/^      Value : constant asm_generic_int_ll64_h.uu_s32$/;"	n	subprogram:Read_Byte	file:
+Value	src/i2c/i2c.adb	/^      Value : constant asm_generic_int_ll64_h.uu_s32$/;"	n	subprogram:Read_Byte_Data	file:
+Value	src/i2c/i2c.adb	/^      Value : constant asm_generic_int_ll64_h.uu_s32$/;"	n	subprogram:Read_Word_Data	file:
+Which_Bus	src/i2c/i2c.adb	/^      Which_Bus : constant String$/;"	n	package:I2C	file:
+Word	src/i2c/i2c.ads	/^   subtype Word is asm_generic_int_ll64_h.uu_u16;$/;"	u	packspec:I2C
+Write_Array	src/i2c/i2c.adb	/^   procedure Write_Array (C : Chip'class;$/;"	r	package:I2C	file:
+Write_Array	src/i2c/i2c.ads	/^   procedure Write_Array (C : Chip'class;$/;"	R	packspec:I2C
+Write_Byte	src/i2c/i2c.adb	/^   procedure Write_Byte (C : Chip'class; Data : Byte)$/;"	r	package:I2C	file:
+Write_Byte	src/i2c/i2c.ads	/^   procedure Write_Byte (C : Chip'class; Data : Byte);$/;"	R	packspec:I2C
+Write_Byte_Data	src/i2c/i2c.adb	/^   procedure Write_Byte_Data (C : Chip'class; R : Register; To : Byte)$/;"	r	package:I2C	file:
+Write_Byte_Data	src/i2c/i2c.ads	/^   procedure Write_Byte_Data (C : Chip'class; R : Register; To : Byte);$/;"	R	packspec:I2C
+Write_Word_Data	src/i2c/i2c.adb	/^   procedure Write_Word_Data (C : Chip'class; R : Register; To : Word)$/;"	r	package:I2C	file:
+Write_Word_Data	src/i2c/i2c.ads	/^   procedure Write_Word_Data (C : Chip'class; R : Register; To : Word);$/;"	R	packspec:I2C
+addr	src/i2c/i2c_interface/i2c-dev.h	/^	__u16 addr;	\/* slave address			*\/$/;"	m	struct:i2c_msg
+addr	src/i2c/i2c_interface/i2c_dev_h.ads	/^      addr : aliased asm_generic_int_ll64_h.uu_u16;  -- i2c-dev.h:40$/;"	c	type:i2c_msg	file:
+anon969_anon971_array	src/i2c/i2c_interface/bits_ioctl_types_h.ads	/^   type anon969_anon971_array is array (0 .. 7) of aliased unsigned_char;$/;"	t	packspec:bits_ioctl_types_h
+anon978_anon980_array	src/i2c/i2c_interface/i2c_dev_h.ads	/^   type anon978_anon980_array is array (0 .. 33) of aliased asm_generic_int_ll64_h.uu_u8;$/;"	t	packspec:i2c_dev_h
+asm_generic_int_ll64_h	src/i2c/i2c_interface/asm_generic_int_ll64_h.ads	/^package asm_generic_int_ll64_h is$/;"	P	file:
+asm_generic_posix_types_h	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^package asm_generic_posix_types_h is$/;"	P	file:
+asm_posix_types_64_h	src/i2c/i2c_interface/asm_posix_types_64_h.ads	/^package asm_posix_types_64_h is$/;"	P	file:
+bits_ioctl_types_h	src/i2c/i2c_interface/bits_ioctl_types_h.ads	/^package bits_ioctl_types_h is$/;"	P	file:
+block	src/i2c/i2c_interface/i2c-dev.h	/^	__u8 block[I2C_SMBUS_BLOCK_MAX + 2]; \/* block[0] is used for length *\/$/;"	m	union:i2c_smbus_data
+block	src/i2c/i2c_interface/i2c_dev_h.ads	/^            block : aliased anon978_anon980_array;  -- i2c-dev.h:94$/;"	c	type:i2c_smbus_data	file:
+block_process_call	src/i2c/i2c_interface/i2c_interface.c	/^__s32 block_process_call(int file,$/;"	f
+block_process_call	src/i2c/i2c_interface/i2c_interface_c.ads	/^   function block_process_call$/;"	R	packspec:i2c_interface_c
+buf	src/i2c/i2c_interface/i2c-dev.h	/^	char *buf;		\/* pointer to msg data			*\/$/;"	m	struct:i2c_msg
+buf	src/i2c/i2c_interface/i2c_dev_h.ads	/^      buf : Interfaces.C.Strings.chars_ptr;  -- i2c-dev.h:49$/;"	c	type:i2c_msg	file:
+byte	src/i2c/i2c_interface/i2c-dev.h	/^	__u8 byte;$/;"	m	union:i2c_smbus_data
+byte	src/i2c/i2c_interface/i2c_dev_h.ads	/^            byte : aliased asm_generic_int_ll64_h.uu_u8;  -- i2c-dev.h:92$/;"	c	type:i2c_smbus_data	file:
+bytes	src/pca9685.adb	/^      bytes : i2c_interface_c.Byte_Array (1 .. 4);$/;"	v	subprogram:SetPWM	file:
+c_cc	src/i2c/i2c_interface/bits_ioctl_types_h.ads	/^      c_cc : aliased anon969_anon971_array;  -- \/usr\/include\/bits\/ioctl-types.h:43$/;"	c	type:termio	file:
+c_cflag	src/i2c/i2c_interface/bits_ioctl_types_h.ads	/^      c_cflag : aliased unsigned_short;  -- \/usr\/include\/bits\/ioctl-types.h:40$/;"	c	type:termio	file:
+c_iflag	src/i2c/i2c_interface/bits_ioctl_types_h.ads	/^      c_iflag : aliased unsigned_short;  -- \/usr\/include\/bits\/ioctl-types.h:38$/;"	c	type:termio	file:
+c_lflag	src/i2c/i2c_interface/bits_ioctl_types_h.ads	/^      c_lflag : aliased unsigned_short;  -- \/usr\/include\/bits\/ioctl-types.h:41$/;"	c	type:termio	file:
+c_line	src/i2c/i2c_interface/bits_ioctl_types_h.ads	/^      c_line : aliased unsigned_char;  -- \/usr\/include\/bits\/ioctl-types.h:42$/;"	c	type:termio	file:
+c_oflag	src/i2c/i2c_interface/bits_ioctl_types_h.ads	/^      c_oflag : aliased unsigned_short;  -- \/usr\/include\/bits\/ioctl-types.h:39$/;"	c	type:termio	file:
+command	src/i2c/i2c_interface/i2c-dev.h	/^	__u8 command;$/;"	m	struct:i2c_smbus_ioctl_data
+command	src/i2c/i2c_interface/i2c_dev_h.ads	/^      command : aliased asm_generic_int_ll64_h.uu_u8;  -- i2c-dev.h:150$/;"	c	type:i2c_smbus_ioctl_data	file:
+data	src/i2c/i2c_interface/i2c-dev.h	/^	union i2c_smbus_data *data;$/;"	m	struct:i2c_smbus_ioctl_data	typeref:union:i2c_smbus_ioctl_data::i2c_smbus_data
+data	src/i2c/i2c_interface/i2c_dev_h.ads	/^      data : access i2c_smbus_data;  -- i2c-dev.h:152$/;"	c	type:i2c_smbus_ioctl_data	file:
+fds_bits	src/i2c/i2c_interface/linux_posix_types_h.ads	/^      fds_bits : aliased uu_kernel_fd_set_fds_bits_array;  -- \/usr\/include\/linux\/posix_types.h:25$/;"	c	type:uu_kernel_fd_set	file:
+flags	src/i2c/i2c_interface/i2c-dev.h	/^	unsigned short flags;		$/;"	m	struct:i2c_msg
+flags	src/i2c/i2c_interface/i2c_dev_h.ads	/^      flags : aliased unsigned_short;  -- i2c-dev.h:41$/;"	c	type:i2c_msg	file:
+i2c_dev_h	src/i2c/i2c_interface/i2c_dev_h.ads	/^package i2c_dev_h is$/;"	P	file:
+i2c_interface_c	src/i2c/i2c_interface/i2c_interface_c.ads	/^package i2c_interface_c is$/;"	P	file:
+i2c_msg	src/i2c/i2c_interface/i2c-dev.h	/^struct i2c_msg {$/;"	s
+i2c_msg	src/i2c/i2c_interface/i2c_dev_h.ads	/^   type i2c_msg is record$/;"	t	packspec:i2c_dev_h
+i2c_rdwr_ioctl_data	src/i2c/i2c_interface/i2c-dev.h	/^struct i2c_rdwr_ioctl_data {$/;"	s
+i2c_rdwr_ioctl_data	src/i2c/i2c_interface/i2c_dev_h.ads	/^   type i2c_rdwr_ioctl_data is record$/;"	t	packspec:i2c_dev_h
+i2c_smbus_access	src/i2c/i2c_interface/i2c-dev.h	/^static inline __s32 i2c_smbus_access(int file, char read_write, __u8 command, $/;"	f
+i2c_smbus_access	src/i2c/i2c_interface/i2c_dev_h.ads	/^   function i2c_smbus_access$/;"	R	packspec:i2c_dev_h
+i2c_smbus_block_process_call	src/i2c/i2c_interface/i2c-dev.h	/^static inline __s32 i2c_smbus_block_process_call(int file, __u8 command,$/;"	f
+i2c_smbus_block_process_call	src/i2c/i2c_interface/i2c_dev_h.ads	/^   function i2c_smbus_block_process_call$/;"	R	packspec:i2c_dev_h
+i2c_smbus_data	src/i2c/i2c_interface/i2c-dev.h	/^union i2c_smbus_data {$/;"	u
+i2c_smbus_data	src/i2c/i2c_interface/i2c_dev_h.ads	/^   type i2c_smbus_data (discr : unsigned := 0) is record$/;"	t	packspec:i2c_dev_h
+i2c_smbus_ioctl_data	src/i2c/i2c_interface/i2c-dev.h	/^struct i2c_smbus_ioctl_data {$/;"	s
+i2c_smbus_ioctl_data	src/i2c/i2c_interface/i2c_dev_h.ads	/^   type i2c_smbus_ioctl_data is record$/;"	t	packspec:i2c_dev_h
+i2c_smbus_process_call	src/i2c/i2c_interface/i2c-dev.h	/^static inline __s32 i2c_smbus_process_call(int file, __u8 command, __u16 value)$/;"	f
+i2c_smbus_process_call	src/i2c/i2c_interface/i2c_dev_h.ads	/^   function i2c_smbus_process_call$/;"	R	packspec:i2c_dev_h
+i2c_smbus_read_block_data	src/i2c/i2c_interface/i2c-dev.h	/^static inline __s32 i2c_smbus_read_block_data(int file, __u8 command, $/;"	f
+i2c_smbus_read_block_data	src/i2c/i2c_interface/i2c_dev_h.ads	/^   function i2c_smbus_read_block_data$/;"	R	packspec:i2c_dev_h
+i2c_smbus_read_byte	src/i2c/i2c_interface/i2c-dev.h	/^static inline __s32 i2c_smbus_read_byte(int file)$/;"	f
+i2c_smbus_read_byte	src/i2c/i2c_interface/i2c_dev_h.ads	/^   function i2c_smbus_read_byte (file : int) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:180$/;"	R	packspec:i2c_dev_h
+i2c_smbus_read_byte_data	src/i2c/i2c_interface/i2c-dev.h	/^static inline __s32 i2c_smbus_read_byte_data(int file, __u8 command)$/;"	f
+i2c_smbus_read_byte_data	src/i2c/i2c_interface/i2c_dev_h.ads	/^   function i2c_smbus_read_byte_data (file : int; command : asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:195$/;"	R	packspec:i2c_dev_h
+i2c_smbus_read_i2c_block_data	src/i2c/i2c_interface/i2c-dev.h	/^static inline __s32 i2c_smbus_read_i2c_block_data(int file, __u8 command,$/;"	f
+i2c_smbus_read_i2c_block_data	src/i2c/i2c_interface/i2c_dev_h.ads	/^   function i2c_smbus_read_i2c_block_data$/;"	R	packspec:i2c_dev_h
+i2c_smbus_read_word_data	src/i2c/i2c_interface/i2c-dev.h	/^static inline __s32 i2c_smbus_read_word_data(int file, __u8 command)$/;"	f
+i2c_smbus_read_word_data	src/i2c/i2c_interface/i2c_dev_h.ads	/^   function i2c_smbus_read_word_data (file : int; command : asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:214$/;"	R	packspec:i2c_dev_h
+i2c_smbus_write_block_data	src/i2c/i2c_interface/i2c-dev.h	/^static inline __s32 i2c_smbus_write_block_data(int file, __u8 command, $/;"	f
+i2c_smbus_write_block_data	src/i2c/i2c_interface/i2c_dev_h.ads	/^   function i2c_smbus_write_block_data$/;"	R	packspec:i2c_dev_h
+i2c_smbus_write_byte	src/i2c/i2c_interface/i2c-dev.h	/^static inline __s32 i2c_smbus_write_byte(int file, __u8 value)$/;"	f
+i2c_smbus_write_byte	src/i2c/i2c_interface/i2c_dev_h.ads	/^   function i2c_smbus_write_byte (file : int; value : asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:189$/;"	R	packspec:i2c_dev_h
+i2c_smbus_write_byte_data	src/i2c/i2c_interface/i2c-dev.h	/^static inline __s32 i2c_smbus_write_byte_data(int file, __u8 command, $/;"	f
+i2c_smbus_write_byte_data	src/i2c/i2c_interface/i2c_dev_h.ads	/^   function i2c_smbus_write_byte_data$/;"	R	packspec:i2c_dev_h
+i2c_smbus_write_i2c_block_data	src/i2c/i2c_interface/i2c-dev.h	/^static inline __s32 i2c_smbus_write_i2c_block_data(int file, __u8 command,$/;"	f
+i2c_smbus_write_i2c_block_data	src/i2c/i2c_interface/i2c_dev_h.ads	/^   function i2c_smbus_write_i2c_block_data$/;"	R	packspec:i2c_dev_h
+i2c_smbus_write_quick	src/i2c/i2c_interface/i2c-dev.h	/^static inline __s32 i2c_smbus_write_quick(int file, __u8 value)$/;"	f
+i2c_smbus_write_quick	src/i2c/i2c_interface/i2c_dev_h.ads	/^   function i2c_smbus_write_quick (file : int; value : asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:175$/;"	R	packspec:i2c_dev_h
+i2c_smbus_write_word_data	src/i2c/i2c_interface/i2c-dev.h	/^static inline __s32 i2c_smbus_write_word_data(int file, __u8 command, $/;"	f
+i2c_smbus_write_word_data	src/i2c/i2c_interface/i2c_dev_h.ads	/^   function i2c_smbus_write_word_data$/;"	R	packspec:i2c_dev_h
+ioctl	src/i2c/i2c_interface/sys_ioctl_h.ads	/^   function ioctl (arg1 : int; arg2 : unsigned_long  -- , ...$/;"	R	packspec:sys_ioctl_h
+len	src/i2c/i2c_interface/i2c-dev.h	/^	short len;		\/* msg length				*\/$/;"	m	struct:i2c_msg
+len	src/i2c/i2c_interface/i2c_dev_h.ads	/^      len : aliased short;  -- i2c-dev.h:48$/;"	c	type:i2c_msg	file:
+linux_posix_types_h	src/i2c/i2c_interface/linux_posix_types_h.ads	/^package linux_posix_types_h is$/;"	P	file:
+linux_types_h	src/i2c/i2c_interface/linux_types_h.ads	/^package linux_types_h is$/;"	P	file:
+msgs	src/i2c/i2c_interface/i2c-dev.h	/^	struct i2c_msg *msgs;	\/* pointers to i2c_msgs *\/$/;"	m	struct:i2c_rdwr_ioctl_data	typeref:struct:i2c_rdwr_ioctl_data::i2c_msg
+msgs	src/i2c/i2c_interface/i2c_dev_h.ads	/^      msgs : access i2c_msg;  -- i2c-dev.h:157$/;"	c	type:i2c_rdwr_ioctl_data	file:
+nmsgs	src/i2c/i2c_interface/i2c-dev.h	/^	int nmsgs;		\/* number of i2c_msgs *\/$/;"	m	struct:i2c_rdwr_ioctl_data
+nmsgs	src/i2c/i2c_interface/i2c_dev_h.ads	/^      nmsgs : aliased int;  -- i2c-dev.h:158$/;"	c	type:i2c_rdwr_ioctl_data	file:
+overriding	src/i2c/i2c.adb	/^   overriding$/;"	v	package:I2C	file:
+overriding	src/i2c/i2c.ads	/^   overriding$/;"	v	packspec:I2C	file:
+procedure	src/i2c/i2c.adb	/^   procedure Initialize (B : in out Bus)$/;"	v	package:I2C	file:
+procedure	src/i2c/i2c.ads	/^   procedure Finalize (B : in out Bus);$/;"	v	packspec:I2C	file:
+procedure	src/i2c/i2c.ads	/^   procedure Initialize (B : in out Bus);$/;"	v	packspec:I2C	file:
+procedure	src/i2c/i2c.ads	/^   procedure Initialize (C : in out Chip);$/;"	v	packspec:I2C	file:
+process_call	src/i2c/i2c_interface/i2c_interface.c	/^__s32 process_call(int file, __u8 command, __u16 value)$/;"	f
+process_call	src/i2c/i2c_interface/i2c_interface_c.ads	/^   function process_call$/;"	R	packspec:i2c_interface_c
+ptrdiff_t	src/i2c/i2c_interface/stddef_h.ads	/^   subtype ptrdiff_t is long;  -- \/usr\/lib\/gcc\/x86_64-unknown-linux-gnu\/4.9.2\/include\/stddef.h:147$/;"	u	packspec:stddef_h
+read_block_data	src/i2c/i2c_interface/i2c_interface.c	/^__s32 read_block_data(int file, __u8 command, value_array values)$/;"	f
+read_block_data	src/i2c/i2c_interface/i2c_interface_c.ads	/^   function read_block_data$/;"	R	packspec:i2c_interface_c
+read_byte	src/i2c/i2c_interface/i2c_interface.c	/^__s32 read_byte(int file) {$/;"	f
+read_byte	src/i2c/i2c_interface/i2c_interface_c.ads	/^   function read_byte (file : int) return asm_generic_int_ll64_h.uu_s32;  -- i2c_interface.c:40$/;"	R	packspec:i2c_interface_c
+read_byte_data	src/i2c/i2c_interface/i2c_interface.c	/^__s32 read_byte_data(int file, __u8 command)$/;"	f
+read_byte_data	src/i2c/i2c_interface/i2c_interface_c.ads	/^   function read_byte_data (file : int; command : asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c_interface.c:49$/;"	R	packspec:i2c_interface_c
+read_i2c_block_data	src/i2c/i2c_interface/i2c_interface.c	/^__s32 read_i2c_block_data(int file,$/;"	f
+read_i2c_block_data	src/i2c/i2c_interface/i2c_interface_c.ads	/^   function read_i2c_block_data$/;"	R	packspec:i2c_interface_c
+read_word_data	src/i2c/i2c_interface/i2c_interface.c	/^__s32 read_word_data(int file, __u8 command)$/;"	f
+read_word_data	src/i2c/i2c_interface/i2c_interface_c.ads	/^   function read_word_data (file : int; command : asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c_interface.c:59$/;"	R	packspec:i2c_interface_c
+read_write	src/i2c/i2c_interface/i2c-dev.h	/^	char read_write;$/;"	m	struct:i2c_smbus_ioctl_data
+read_write	src/i2c/i2c_interface/i2c_dev_h.ads	/^      read_write : aliased char;  -- i2c-dev.h:149$/;"	c	type:i2c_smbus_ioctl_data	file:
+size	src/i2c/i2c_interface/i2c-dev.h	/^	int size;$/;"	m	struct:i2c_smbus_ioctl_data
+size	src/i2c/i2c_interface/i2c_dev_h.ads	/^      size : aliased int;  -- i2c-dev.h:151$/;"	c	type:i2c_smbus_ioctl_data	file:
+size_t	src/i2c/i2c_interface/stddef_h.ads	/^   subtype size_t is unsigned_long;  -- \/usr\/lib\/gcc\/x86_64-unknown-linux-gnu\/4.9.2\/include\/stddef.h:212$/;"	u	packspec:stddef_h
+stddef_h	src/i2c/i2c_interface/stddef_h.ads	/^package stddef_h is$/;"	P	file:
+sys_ioctl_h	src/i2c/i2c_interface/sys_ioctl_h.ads	/^package sys_ioctl_h is$/;"	P	file:
+termio	src/i2c/i2c_interface/bits_ioctl_types_h.ads	/^   type termio is record$/;"	t	packspec:bits_ioctl_types_h
+uu_be16	src/i2c/i2c_interface/linux_types_h.ads	/^   subtype uu_be16 is asm_generic_int_ll64_h.uu_u16;  -- \/usr\/include\/linux\/types.h:28$/;"	u	packspec:linux_types_h
+uu_be32	src/i2c/i2c_interface/linux_types_h.ads	/^   subtype uu_be32 is asm_generic_int_ll64_h.uu_u32;  -- \/usr\/include\/linux\/types.h:30$/;"	u	packspec:linux_types_h
+uu_be64	src/i2c/i2c_interface/linux_types_h.ads	/^   subtype uu_be64 is asm_generic_int_ll64_h.uu_u64;  -- \/usr\/include\/linux\/types.h:32$/;"	u	packspec:linux_types_h
+uu_kernel_caddr_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   type uu_kernel_caddr_t is new Interfaces.C.Strings.chars_ptr;  -- \/usr\/include\/asm-generic\/posix_types.h:92$/;"	t	packspec:asm_generic_posix_types_h
+uu_kernel_clock_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_clock_t is uu_kernel_long_t;  -- \/usr\/include\/asm-generic\/posix_types.h:89$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_clockid_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_clockid_t is int;  -- \/usr\/include\/asm-generic\/posix_types.h:91$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_daddr_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_daddr_t is int;  -- \/usr\/include\/asm-generic\/posix_types.h:44$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_fd_set	src/i2c/i2c_interface/linux_posix_types_h.ads	/^   type uu_kernel_fd_set is record$/;"	t	packspec:linux_posix_types_h
+uu_kernel_fd_set_fds_bits_array	src/i2c/i2c_interface/linux_posix_types_h.ads	/^   type uu_kernel_fd_set_fds_bits_array is array (0 .. 15) of aliased unsigned_long;$/;"	t	packspec:linux_posix_types_h
+uu_kernel_fsid_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   type uu_kernel_fsid_t is record$/;"	t	packspec:asm_generic_posix_types_h
+uu_kernel_fsid_t_val_array	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   type uu_kernel_fsid_t_val_array is array (0 .. 1) of aliased int;$/;"	t	packspec:asm_generic_posix_types_h
+uu_kernel_gid16_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_gid16_t is unsigned_short;  -- \/usr\/include\/asm-generic\/posix_types.h:94$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_gid32_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_gid32_t is unsigned;  -- \/usr\/include\/asm-generic\/posix_types.h:49$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_gid_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_gid_t is unsigned;  -- \/usr\/include\/asm-generic\/posix_types.h:36$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_ino_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_ino_t is uu_kernel_ulong_t;  -- \/usr\/include\/asm-generic\/posix_types.h:19$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_ipc_pid_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_ipc_pid_t is int;  -- \/usr\/include\/asm-generic\/posix_types.h:31$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_key_t	src/i2c/i2c_interface/linux_posix_types_h.ads	/^   subtype uu_kernel_key_t is int;  -- \/usr\/include\/linux\/posix_types.h:32$/;"	u	packspec:linux_posix_types_h
+uu_kernel_loff_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_loff_t is Long_Long_Integer;  -- \/usr\/include\/asm-generic\/posix_types.h:87$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_long_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_long_t is long;  -- \/usr\/include\/asm-generic\/posix_types.h:14$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_mode_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_mode_t is unsigned;  -- \/usr\/include\/asm-generic\/posix_types.h:23$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_mqd_t	src/i2c/i2c_interface/linux_posix_types_h.ads	/^   subtype uu_kernel_mqd_t is int;  -- \/usr\/include\/linux\/posix_types.h:33$/;"	u	packspec:linux_posix_types_h
+uu_kernel_off_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_off_t is uu_kernel_long_t;  -- \/usr\/include\/asm-generic\/posix_types.h:86$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_old_dev_t	src/i2c/i2c_interface/asm_posix_types_64_h.ads	/^   subtype uu_kernel_old_dev_t is unsigned_long;  -- \/usr\/include\/asm\/posix_types_64.h:14$/;"	u	packspec:asm_posix_types_64_h
+uu_kernel_old_gid_t	src/i2c/i2c_interface/asm_posix_types_64_h.ads	/^   subtype uu_kernel_old_gid_t is unsigned_short;  -- \/usr\/include\/asm\/posix_types_64.h:11$/;"	u	packspec:asm_posix_types_64_h
+uu_kernel_old_uid_t	src/i2c/i2c_interface/asm_posix_types_64_h.ads	/^   subtype uu_kernel_old_uid_t is unsigned_short;  -- \/usr\/include\/asm\/posix_types_64.h:10$/;"	u	packspec:asm_posix_types_64_h
+uu_kernel_pid_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_pid_t is int;  -- \/usr\/include\/asm-generic\/posix_types.h:27$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_ptrdiff_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_ptrdiff_t is uu_kernel_long_t;  -- \/usr\/include\/asm-generic\/posix_types.h:73$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_sighandler_t	src/i2c/i2c_interface/linux_posix_types_h.ads	/^   type uu_kernel_sighandler_t is access procedure (arg1 : int);$/;"	t	packspec:linux_posix_types_h
+uu_kernel_size_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_size_t is uu_kernel_ulong_t;  -- \/usr\/include\/asm-generic\/posix_types.h:71$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_ssize_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_ssize_t is uu_kernel_long_t;  -- \/usr\/include\/asm-generic\/posix_types.h:72$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_suseconds_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_suseconds_t is uu_kernel_long_t;  -- \/usr\/include\/asm-generic\/posix_types.h:40$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_time_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_time_t is uu_kernel_long_t;  -- \/usr\/include\/asm-generic\/posix_types.h:88$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_timer_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_timer_t is int;  -- \/usr\/include\/asm-generic\/posix_types.h:90$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_uid16_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_uid16_t is unsigned_short;  -- \/usr\/include\/asm-generic\/posix_types.h:93$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_uid32_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_uid32_t is unsigned;  -- \/usr\/include\/asm-generic\/posix_types.h:48$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_uid_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_uid_t is unsigned;  -- \/usr\/include\/asm-generic\/posix_types.h:35$/;"	u	packspec:asm_generic_posix_types_h
+uu_kernel_ulong_t	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^   subtype uu_kernel_ulong_t is unsigned_long;  -- \/usr\/include\/asm-generic\/posix_types.h:15$/;"	u	packspec:asm_generic_posix_types_h
+uu_le16	src/i2c/i2c_interface/linux_types_h.ads	/^   subtype uu_le16 is asm_generic_int_ll64_h.uu_u16;  -- \/usr\/include\/linux\/types.h:27$/;"	u	packspec:linux_types_h
+uu_le32	src/i2c/i2c_interface/linux_types_h.ads	/^   subtype uu_le32 is asm_generic_int_ll64_h.uu_u32;  -- \/usr\/include\/linux\/types.h:29$/;"	u	packspec:linux_types_h
+uu_le64	src/i2c/i2c_interface/linux_types_h.ads	/^   subtype uu_le64 is asm_generic_int_ll64_h.uu_u64;  -- \/usr\/include\/linux\/types.h:31$/;"	u	packspec:linux_types_h
+uu_s16	src/i2c/i2c_interface/asm_generic_int_ll64_h.ads	/^   subtype uu_s16 is short;  -- \/usr\/include\/asm-generic\/int-ll64.h:22$/;"	u	packspec:asm_generic_int_ll64_h
+uu_s32	src/i2c/i2c_interface/asm_generic_int_ll64_h.ads	/^   subtype uu_s32 is int;  -- \/usr\/include\/asm-generic\/int-ll64.h:25$/;"	u	packspec:asm_generic_int_ll64_h
+uu_s64	src/i2c/i2c_interface/asm_generic_int_ll64_h.ads	/^   subtype uu_s64 is Long_Long_Integer;  -- \/usr\/include\/asm-generic\/int-ll64.h:29$/;"	u	packspec:asm_generic_int_ll64_h
+uu_s8	src/i2c/i2c_interface/asm_generic_int_ll64_h.ads	/^   subtype uu_s8 is signed_char;  -- \/usr\/include\/asm-generic\/int-ll64.h:19$/;"	u	packspec:asm_generic_int_ll64_h
+uu_sum16	src/i2c/i2c_interface/linux_types_h.ads	/^   subtype uu_sum16 is asm_generic_int_ll64_h.uu_u16;  -- \/usr\/include\/linux\/types.h:34$/;"	u	packspec:linux_types_h
+uu_u16	src/i2c/i2c_interface/asm_generic_int_ll64_h.ads	/^   subtype uu_u16 is unsigned_short;  -- \/usr\/include\/asm-generic\/int-ll64.h:23$/;"	u	packspec:asm_generic_int_ll64_h
+uu_u32	src/i2c/i2c_interface/asm_generic_int_ll64_h.ads	/^   subtype uu_u32 is unsigned;  -- \/usr\/include\/asm-generic\/int-ll64.h:26$/;"	u	packspec:asm_generic_int_ll64_h
+uu_u64	src/i2c/i2c_interface/asm_generic_int_ll64_h.ads	/^   subtype uu_u64 is Extensions.unsigned_long_long;  -- \/usr\/include\/asm-generic\/int-ll64.h:30$/;"	u	packspec:asm_generic_int_ll64_h
+uu_u8	src/i2c/i2c_interface/asm_generic_int_ll64_h.ads	/^   subtype uu_u8 is unsigned_char;  -- \/usr\/include\/asm-generic\/int-ll64.h:20$/;"	u	packspec:asm_generic_int_ll64_h
+uu_wsum	src/i2c/i2c_interface/linux_types_h.ads	/^   subtype uu_wsum is asm_generic_int_ll64_h.uu_u32;  -- \/usr\/include\/linux\/types.h:35$/;"	u	packspec:linux_types_h
+val	src/i2c/i2c_interface/asm_generic_posix_types_h.ads	/^      val : aliased uu_kernel_fsid_t_val_array;  -- \/usr\/include\/asm-generic\/posix_types.h:79$/;"	c	type:uu_kernel_fsid_t	file:
+value_array	src/i2c/i2c_interface/i2c_interface.c	/^typedef __u8 *  value_array;$/;"	t	file:
+wchar_t	src/i2c/i2c_interface/stddef_h.ads	/^   subtype wchar_t is int;  -- \/usr\/lib\/gcc\/x86_64-unknown-linux-gnu\/4.9.2\/include\/stddef.h:324$/;"	u	packspec:stddef_h
+winsize	src/i2c/i2c_interface/bits_ioctl_types_h.ads	/^   type winsize is record$/;"	t	packspec:bits_ioctl_types_h
+word	src/i2c/i2c_interface/i2c-dev.h	/^	__u16 word;$/;"	m	union:i2c_smbus_data
+word	src/i2c/i2c_interface/i2c_dev_h.ads	/^            word : aliased asm_generic_int_ll64_h.uu_u16;  -- i2c-dev.h:93$/;"	c	type:i2c_smbus_data	file:
+write_block_data	src/i2c/i2c_interface/i2c_interface.c	/^__s32 write_block_data(int file,$/;"	f
+write_block_data	src/i2c/i2c_interface/i2c_interface_c.ads	/^   function write_block_data$/;"	R	packspec:i2c_interface_c
+write_byte	src/i2c/i2c_interface/i2c_interface.c	/^__s32 write_byte(int file, __u8 value)$/;"	f
+write_byte	src/i2c/i2c_interface/i2c_interface_c.ads	/^   function write_byte (file : int; value : asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c_interface.c:44$/;"	R	packspec:i2c_interface_c
+write_byte_data	src/i2c/i2c_interface/i2c_interface.c	/^__s32 write_byte_data(int file, __u8 command, __u8 value)$/;"	f
+write_byte_data	src/i2c/i2c_interface/i2c_interface_c.ads	/^   function write_byte_data$/;"	R	packspec:i2c_interface_c
+write_i2c_block_data	src/i2c/i2c_interface/i2c_interface.c	/^__s32 write_i2c_block_data(int file,$/;"	f
+write_i2c_block_data	src/i2c/i2c_interface/i2c_interface_c.ads	/^   function write_i2c_block_data$/;"	R	packspec:i2c_interface_c
+write_quick	src/i2c/i2c_interface/i2c_interface.c	/^__s32 write_quick(int file, __u8 value)$/;"	f
+write_quick	src/i2c/i2c_interface/i2c_interface_c.ads	/^   function write_quick (file : int; value : asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c_interface.c:35$/;"	R	packspec:i2c_interface_c
+write_word_data	src/i2c/i2c_interface/i2c_interface.c	/^__s32 write_word_data(int file, __u8 command, __u16 value)$/;"	f
+write_word_data	src/i2c/i2c_interface/i2c_interface_c.ads	/^   function write_word_data$/;"	R	packspec:i2c_interface_c
+ws_col	src/i2c/i2c_interface/bits_ioctl_types_h.ads	/^      ws_col : aliased unsigned_short;  -- \/usr\/include\/bits\/ioctl-types.h:30$/;"	c	type:winsize	file:
+ws_row	src/i2c/i2c_interface/bits_ioctl_types_h.ads	/^      ws_row : aliased unsigned_short;  -- \/usr\/include\/bits\/ioctl-types.h:29$/;"	c	type:winsize	file:
+ws_xpixel	src/i2c/i2c_interface/bits_ioctl_types_h.ads	/^      ws_xpixel : aliased unsigned_short;  -- \/usr\/include\/bits\/ioctl-types.h:31$/;"	c	type:winsize	file:
+ws_ypixel	src/i2c/i2c_interface/bits_ioctl_types_h.ads	/^      ws_ypixel : aliased unsigned_short;  -- \/usr\/include\/bits\/ioctl-types.h:32$/;"	c	type:winsize	file:

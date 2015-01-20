@@ -4,7 +4,6 @@ with Interfaces; use Interfaces;
 with Interfaces.C;
 
 package body I2C is
-
    function Read_Byte (C : Chip'class) return Byte
    is
       Value : constant asm_generic_int_ll64_h.uu_s32
@@ -35,7 +34,6 @@ package body I2C is
       end if;
    end Write_Byte;
 
-   not overriding
    function Read_Byte_Data (C : Chip'class; R : Register) return Byte
    is
       Value : constant asm_generic_int_ll64_h.uu_s32
@@ -54,7 +52,6 @@ package body I2C is
       end if;
    end Read_Byte_Data;
 
-   not overriding
    procedure Write_Byte_Data (C : Chip'class; R : Register; To : Byte)
    is
       Status : asm_generic_int_ll64_h.uu_s32;
@@ -73,7 +70,6 @@ package body I2C is
       end if;
    end Write_Byte_Data;
 
-   not overriding
    function Read_Word_Data (C : Chip'class; R : Register) return Word
    is
       Value : constant asm_generic_int_ll64_h.uu_s32
@@ -92,7 +88,6 @@ package body I2C is
       end if;
    end Read_Word_Data;
 
-   not overriding
    procedure Write_Word_Data (C : Chip'class; R : Register; To : Word)
    is
       Status : asm_generic_int_ll64_h.uu_s32;
@@ -190,5 +185,4 @@ package body I2C is
            & Chip_Address'Image (C.Address);
       end if;
    end Initialize;
-
 end I2C;

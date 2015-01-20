@@ -17,7 +17,7 @@ package I2C is
 
    type Register is range 16#00# .. 16#ff#;
    subtype Byte is asm_generic_int_ll64_h.uu_u8;
-   subtype Word is asm_generic_int_ll64_h.uu_s32;
+   subtype Word is asm_generic_int_ll64_h.uu_u16;
 
 
    --  Read a byte
@@ -32,7 +32,7 @@ package I2C is
    function Read_Word_Data (C : Chip'class; R : Register) return Word;
    --  Write a word to a specific register
    procedure Write_Word_Data (C : Chip'class; R : Register; To : Word);
-
+   --  Write an array of bytes to a specific register
    procedure Write_Array (C : Chip'class;
                           R : Register;
                           Values : i2c_interface_c.Byte_Array);
