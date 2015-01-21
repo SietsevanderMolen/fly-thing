@@ -1,7 +1,6 @@
 with Interfaces; use Interfaces;
 with Ada.Text_IO;
-with Ada.Real_Time;
-with Ada.Execution_Time; use Ada.Execution_Time;
+with Ada.Real_Time; use Ada.Real_Time;
 
 with PCA9685;
 with I2C;
@@ -42,9 +41,8 @@ begin
    loop
       Ada.Text_IO.Put_Line ("Running update loop 1000 times afap");
       declare
-         Finish_Time : Ada.Execution_Time.CPU_Time;
-         Start_Time : constant Ada.Execution_Time.CPU_Time
-            := Ada.Execution_Time.Clock;
+         Finish_Time : Time;
+         Start_Time : constant Time := Clock;
       begin
 
          for j in Integer range 0 .. 1000 loop
@@ -53,10 +51,10 @@ begin
                                   Values => bytes);
          end loop;
 
-         Finish_Time := Ada.Execution_Time.Clock;
+         Finish_Time := Clock;
          Ada.Text_IO.Put_Line ("Ops: " &
             Integer'Image (1000 / Integer (
-               Ada.Real_Time.To_Duration (Finish_Time - Start_Time)
+               To_Duration (Finish_Time - Start_Time)
             ))
          );
       end;
