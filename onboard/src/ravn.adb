@@ -1,6 +1,7 @@
 with Interfaces; use Interfaces;
 with Ada.Text_IO;
-with Ada.Calendar; use Ada.Calendar;
+with Ada.Real_Time;
+with Ada.Execution_Time; use Ada.Execution_Time;
 
 with PCA9685;
 with I2C;
@@ -41,19 +42,23 @@ begin
    loop
       Ada.Text_IO.Put_Line ("Running update loop 1000 times afap");
       declare
-         Start_Time : constant Time := Clock;
-         Finish_Time : Time;
+         Finish_Time : Ada.Execution_Time.CPU_Time;
+         Start_Time : constant Ada.Execution_Time.CPU_Time
+            := Ada.Execution_Time.Clock;
       begin
 
          for j in Integer range 0 .. 1000 loop
             I2C.Write_Array_Data (C => PWM_Driver,
-            R => I2C.Register (Unsigned_8 (50)), --  P 11
-            Values => bytes);
+                                  R => I2C.Register (50), --  Pin 11 .. 15
+                                  Values => bytes);
          end loop;
 
-         Finish_Time := Clock;
+         Finish_Time := Ada.Execution_Time.Clock;
          Ada.Text_IO.Put_Line ("Ops: " &
-            Integer'Image (1000 / Integer (Finish_Time - Start_Time)));
+            Integer'Image (1000 / Integer (
+               Ada.Real_Time.To_Duration (Finish_Time - Start_Time)
+            ))
+         );
       end;
    end loop;
 end Ravn;
