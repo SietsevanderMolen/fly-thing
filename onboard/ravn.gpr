@@ -1,6 +1,6 @@
 project Ravn is
-   for Main use ("ravn.adb");
-   for Source_Dirs use ("./src/i2c/i2c_interface/", "src/i2c", "src/");
+   for Main use ("./src/ravn.adb");
+   for Source_Dirs use ("./src/i2c/i2c_interface/", "./src/i2c", "./src/");
    for Object_Dir use "object/";
 
    for Languages use ("Ada", "C");
@@ -10,6 +10,7 @@ project Ravn is
       (
          "-O2",      --  standard optimisation
          "-gnatqQ",  --  to keep ALI files even if there are compilation errors
+         "-t",
          "-gnatafo", --  assertions, full reports, integer overflow
          "-gnatwaL"  --  all standard warnings except for elaboration
          );
