@@ -1,6 +1,7 @@
 with Interfaces; use Interfaces;
 with Ada.Text_IO;
 with Ada.Real_Time; use Ada.Real_Time;
+with Ada.Float_Text_IO; use Ada.Float_Text_IO;
 
 with PCA9685;
 with I2C;
@@ -52,11 +53,12 @@ begin
          end loop;
 
          Finish_Time := Clock;
-         Ada.Text_IO.Put_Line ("Ops: " &
-            Float'Image (1000.0 / Float (
-               To_Duration (Finish_Time - Start_Time)
-            ))
+         Ada.Text_IO.Put ("Ops: ");
+         Ada.Float_Text_IO.Put (
+            1000.0 / Float (To_Duration (Finish_Time - Start_Time)),
+            Fore => 4, Aft => 2, Exp => 0
          );
+         Ada.Text_IO.New_Line;
       end;
    end loop;
 end Ravn;
