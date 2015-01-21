@@ -53,7 +53,7 @@ begin
 
          Finish_Time := Clock;
          Ada.Text_IO.Put_Line ("Ops: " &
-            Integer'Image (1000 / Integer (
+            Float'Image (1000.0 / Float (
                To_Duration (Finish_Time - Start_Time)
             ))
          );
