@@ -39,8 +39,8 @@ begin
    bytes (15) := Interfaces.C.unsigned_char (0);
    bytes (16) := Interfaces.C.unsigned_char (0);
 
+   Ada.Text_IO.Put_Line ("Setting 4 I2C outputs to 0 afap, ops per second:");
    loop
-      Ada.Text_IO.Put_Line ("Running update loop 1000 times afap");
       declare
          Finish_Time : Time;
          Start_Time : constant Time := Clock;
@@ -53,12 +53,11 @@ begin
          end loop;
 
          Finish_Time := Clock;
-         Ada.Text_IO.Put ("Ops: ");
          Ada.Float_Text_IO.Put (
             1000.0 / Float (To_Duration (Finish_Time - Start_Time)),
             Fore => 4, Aft => 2, Exp => 0
          );
-         Ada.Text_IO.New_Line;
+         Ada.Text_IO.Put (",");
       end;
    end loop;
 end Ravn;
