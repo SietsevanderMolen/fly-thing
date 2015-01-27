@@ -2,13 +2,36 @@ with Ada.IO_Exceptions;
 with Ada.Strings.Fixed;
 with Interfaces; use Interfaces;
 with Interfaces.C;
+with asm_generic_int_ll64_h;
 
 package body I2C is
+   function Read_Bit (C : Chip'class;
+                      R : Register;
+                      Bit_Num : Integer) return Byte
+   is
+      Value : constant Integer
+        := i2c_interface_c.read_byte_data
+              (Integer (C.On_Bus.FD),
+               Byte (R));
+      use type asm_generic_int_ll64_h.uu_s32;
+      --  Data : Byte :=
+         --  Byte (Value) and
+         --  Byte (
+            --  Shift_Right (1, Bit_Num)
+         --  );
+   begin
+      if Value < 0 then
+         raise Ada.IO_Exceptions.Device_Error with "reading from chip"
+            & Chip_Address'Image (C.Address);
+      else
+         return Byte (Value);
+      end if;
+   end Read_Bit;
+
    function Read_Byte (C : Chip'class) return Byte
    is
-      Value : constant asm_generic_int_ll64_h.uu_s32
+      Value : constant Integer
         := i2c_interface_c.read_byte (Interfaces.C.int (C.On_Bus.FD));
-      use type asm_generic_int_ll64_h.uu_s32;
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error with "reading from chip"
@@ -20,12 +43,11 @@ package body I2C is
 
    procedure Write_Byte (C : Chip'class; Data : Byte)
    is
-      Status : asm_generic_int_ll64_h.uu_s32;
-      use type asm_generic_int_ll64_h.uu_s32;
+      Status : Integer;
    begin
       Status := i2c_interface_c.write_byte
-        (Interfaces.C.int (C.On_Bus.FD),
-         asm_generic_int_ll64_h.uu_u8 (Data));
+        (Integer (C.On_Bus.FD),
+         Data);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
            with "writing"
@@ -36,9 +58,9 @@ package body I2C is
 
    function Read_Byte_Data (C : Chip'class; R : Register) return Byte
    is
-      Value : constant asm_generic_int_ll64_h.uu_s32
+      Value : constant Integer
         := i2c_interface_c.read_byte_data
-        (Interfaces.C.int (C.On_Bus.FD), asm_generic_int_ll64_h.uu_u8 (R));
+        (Integer (C.On_Bus.FD), Byte (R));
       use type asm_generic_int_ll64_h.uu_s32;
    begin
       if Value < 0 then
@@ -54,13 +76,12 @@ package body I2C is
 
    procedure Write_Byte_Data (C : Chip'class; R : Register; To : Byte)
    is
-      Status : asm_generic_int_ll64_h.uu_s32;
-      use type asm_generic_int_ll64_h.uu_s32;
+      Status : Integer;
    begin
       Status := i2c_interface_c.write_byte_data
-        (Interfaces.C.int (C.On_Bus.FD),
-         asm_generic_int_ll64_h.uu_u8 (R),
-         asm_generic_int_ll64_h.uu_u8 (To));
+        (Integer (C.On_Bus.FD),
+         Byte (R),
+         To);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
            with "writing to chip"
@@ -72,10 +93,9 @@ package body I2C is
 
    function Read_Word_Data (C : Chip'class; R : Register) return Word
    is
-      Value : constant asm_generic_int_ll64_h.uu_s32
+      Value : constant Integer
         := i2c_interface_c.read_word_data
-        (Interfaces.C.int (C.On_Bus.FD), asm_generic_int_ll64_h.uu_u8 (R));
-      use type asm_generic_int_ll64_h.uu_s32;
+        (Integer (C.On_Bus.FD), Byte (R));
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error
@@ -90,13 +110,12 @@ package body I2C is
 
    procedure Write_Word_Data (C : Chip'class; R : Register; To : Word)
    is
-      Status : asm_generic_int_ll64_h.uu_s32;
-      use type asm_generic_int_ll64_h.uu_s32;
+      Status : Integer;
    begin
       Status := i2c_interface_c.write_word_data
-        (Interfaces.C.int (C.On_Bus.FD),
-         asm_generic_int_ll64_h.uu_u8 (R),
-         asm_generic_int_ll64_h.uu_u16 (To));
+        (Integer (C.On_Bus.FD),
+         Byte (R),
+         Interfaces.Unsigned_16 (To));
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
            with "writing to chip"
@@ -108,13 +127,12 @@ package body I2C is
 
    procedure Write_Array_Data (C : Chip'class;
                                R : Register;
-                               Values : i2c_interface_c.Byte_Array) is
-      Status : asm_generic_int_ll64_h.uu_s32;
-      use type asm_generic_int_ll64_h.uu_s32;
+                               Values : Byte_Array) is
+      Status : Integer;
    begin
       Status := i2c_interface_c.write_i2c_block_data
-        (Interfaces.C.int (C.On_Bus.FD),
-         Interfaces.C.unsigned_char (R),
+        (Integer (C.On_Bus.FD),
+         Byte (R),
          Values'Length,
          Values);
       if Status < 0 then

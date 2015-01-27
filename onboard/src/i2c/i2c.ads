@@ -1,7 +1,6 @@
 with Ada.Finalization;
 with GNAT.OS_Lib;
 
-with asm_generic_int_ll64_h;
 with i2c_interface_c;
 
 package I2C is
@@ -16,10 +15,21 @@ package I2C is
    is abstract new Ada.Finalization.Limited_Controlled with null record;
 
    type Register is range 16#00# .. 16#ff#;
-   subtype Byte is asm_generic_int_ll64_h.uu_u8;
-   subtype Word is asm_generic_int_ll64_h.uu_u16;
+   subtype Byte is i2c_interface_c.Byte;
+   subtype Byte_Array is i2c_interface_c.Byte_Array;
+   subtype Word is i2c_interface_c.Word;
 
-
+   function Read_Bit (C : Chip'Class;
+                      R : Register;
+                      Bit_Num : Integer) return Byte;
+   pragma Precondition (Bit_Num >= 0 and Bit_Num <= 7);
+   --  Read multiple bits from 8 bit register
+   --  function Read_Bits (C : Chip'Class;
+                       --  R : Register;
+                       --  Start_Bit : Integer;
+                       --  Length : Integer) return Byte;
+   --  pragma Precondition (Start_Bit >= 0 and Start_Bit <= 7 and
+                        --  Length >= 0 and Length <= 7);
    --  Read a byte
    function Read_Byte (C : Chip'Class) return Byte;
    --  Write a byte
@@ -35,7 +45,7 @@ package I2C is
    --  Write an array of bytes to a specific register
    procedure Write_Array_Data (C : Chip'class;
                                R : Register;
-                               Values : i2c_interface_c.Byte_Array);
+                               Values : Byte_Array);
    pragma Precondition (Values'Length <= 31); --  Max is 32-Register
 private
    type Bus (Adapter_Number : Adapter_Number_T)

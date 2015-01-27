@@ -1,6 +1,3 @@
-with Interfaces.C;
-with i2c_interface_c;
-
 package body PCA9685 is
    procedure Reset (C : in out Chip)
    is
@@ -31,12 +28,12 @@ package body PCA9685 is
                      Pin : Unsigned_8;
                      On : Unsigned_16;
                      Off : Unsigned_16) is
-      bytes : i2c_interface_c.Byte_Array (1 .. 4);
+      bytes : I2C.Byte_Array (1 .. 4);
    begin
-      bytes (1) := Interfaces.C.unsigned_char (On and 255);
-      bytes (2) := Interfaces.C.unsigned_char (Shift_Right (On, 8) and 255);
-      bytes (3) := Interfaces.C.unsigned_char (Off and 255);
-      bytes (4) := Interfaces.C.unsigned_char (Shift_Right (Off, 8) and 255);
+      bytes (1) := I2C.Byte (On and 255);
+      bytes (2) := I2C.Byte (Shift_Right (On, 8) and 255);
+      bytes (3) := I2C.Byte (Off and 255);
+      bytes (4) := I2C.Byte (Shift_Right (Off, 8) and 255);
       I2C.Write_Array_Data (C => C,
                             R => Register (Unsigned_8 (LED0_ON_L) + (4 * Pin)),
                             Values => bytes);
