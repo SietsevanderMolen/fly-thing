@@ -4,9 +4,9 @@ with Interfaces; use Interfaces;
 with Interfaces.C;
 
 package body I2C is
-   function Read_Bit (C : Chip'class;
-                      R : Register;
-                      Bit_Num : Integer) return Byte
+   function Read_Bit_Data (C : Chip'class;
+                           R : Register;
+                           Bit_Num : Integer) return Byte
    is
       Value : constant Integer
         := i2c_interface_c.read_byte_data (Integer (C.On_Bus.FD), R);
@@ -21,12 +21,12 @@ package body I2C is
             return Data;
          end;
       end if;
-   end Read_Bit;
+   end Read_Bit_Data;
 
-   function Read_Bits (C : Chip'class;
-                      R : Register;
-                      Start_Bit : Integer;
-                      Length : Integer) return Byte
+   function Read_Bits_Data (C : Chip'class;
+                            R : Register;
+                            Start_Bit : Integer;
+                            Length : Integer) return Byte
    is
       Value : constant Integer
         := i2c_interface_c.read_byte_data (Integer (C.On_Bus.FD), R);
@@ -50,7 +50,7 @@ package body I2C is
             return Shifted_Data;
          end;
       end if;
-   end Read_Bits;
+   end Read_Bits_Data;
 
    function Read_Byte (C : Chip'class) return Byte
    is

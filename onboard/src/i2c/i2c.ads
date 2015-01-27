@@ -19,15 +19,15 @@ package I2C is
    subtype Word is i2c_interface_c.Word;
    subtype Register is Byte range 16#00# .. 16#ff#;
 
-   function Read_Bit (C : Chip'Class;
-                      R : Register;
-                      Bit_Num : Integer) return Byte;
+   function Read_Bit_Data (C : Chip'Class;
+                           R : Register;
+                           Bit_Num : Integer) return Byte;
    pragma Precondition (Bit_Num >= 0 and Bit_Num <= 7);
    --  Read multiple bits from 8 bit register
-   function Read_Bits (C : Chip'Class;
-                       R : Register;
-                       Start_Bit : Integer;
-                       Length : Integer) return Byte;
+   function Read_Bits_Data (C : Chip'Class;
+                            R : Register;
+                            Start_Bit : Integer;
+                            Length : Integer) return Byte;
    pragma Precondition (Start_Bit >= 0 and Start_Bit <= 7 and
                         Length >= 0 and Length <= 7);
    --  Read a byte
