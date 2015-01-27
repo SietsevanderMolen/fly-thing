@@ -6,9 +6,11 @@ generic
    with function "*" (L, R : T) return T is <>;
 
    with function ">" (L, R : T) return Boolean is <>;
+   pragma Unreferenced (">");
    with function "<" (L, R : T) return Boolean is <>;
    with function ">=" (L, R : T) return Boolean is <>;
    with function "<=" (L, R : T) return Boolean is <>;
+   pragma Unreferenced ("<=");
 package Generic_Vector_Math is
    function Min (a, b : T) return T;
    function Max (a, b : T) return T;

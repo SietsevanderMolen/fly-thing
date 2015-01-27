@@ -22,7 +22,7 @@ package body PCA9685 is
       C.Write_Byte_Data (R => PCA9685.MODE1, To => Byte (New_Mode)); --  Sleep
       C.Write_Byte_Data (R => PCA9685.PRESCALE, To => Byte (Prescale));
       C.Write_Byte_Data (R => PCA9685.MODE1, To => Byte (Old_Mode));
-      --  Possible add a delay here TODO
+      --  Possibly add a delay here TODO
       --  Auto inc mode1
       C.Write_Byte_Data (R => PCA9685.MODE1, To => Byte (Old_Mode or 16#A1#));
    end SetPWMFreq;
