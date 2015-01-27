@@ -24,12 +24,12 @@ package I2C is
                       Bit_Num : Integer) return Byte;
    pragma Precondition (Bit_Num >= 0 and Bit_Num <= 7);
    --  Read multiple bits from 8 bit register
-   --  function Read_Bits (C : Chip'Class;
-                       --  R : Register;
-                       --  Start_Bit : Integer;
-                       --  Length : Integer) return Byte;
-   --  pragma Precondition (Start_Bit >= 0 and Start_Bit <= 7 and
-                        --  Length >= 0 and Length <= 7);
+   function Read_Bits (C : Chip'Class;
+                       R : Register;
+                       Start_Bit : Integer;
+                       Length : Integer) return Byte;
+   pragma Precondition (Start_Bit >= 0 and Start_Bit <= 7 and
+                        Length >= 0 and Length <= 7);
    --  Read a byte
    function Read_Byte (C : Chip'Class) return Byte;
    --  Write a byte

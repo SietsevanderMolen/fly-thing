@@ -1,7 +1,7 @@
 with Ada.IO_Exceptions;
 with Ada.Strings.Fixed;
+with Interfaces; use Interfaces;
 with Interfaces.C;
-with asm_generic_int_ll64_h;
 
 package body I2C is
    function Read_Bit (C : Chip'class;
@@ -10,20 +10,47 @@ package body I2C is
    is
       Value : constant Integer
         := i2c_interface_c.read_byte_data (Integer (C.On_Bus.FD), R);
-      use type asm_generic_int_ll64_h.uu_s32;
-      --  Data : Byte :=
-         --  Byte (Value) and
-         --  Byte (
-            --  Shift_Right (1, Bit_Num)
-         --  );
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error with "reading from chip"
             & Chip_Address'Image (C.Address);
       else
-         return Byte (Value);
+         declare
+            Data : constant Byte := Byte (Value) and Shift_Left (1, Bit_Num);
+         begin
+            return Data;
+         end;
       end if;
    end Read_Bit;
+
+   function Read_Bits (C : Chip'class;
+                      R : Register;
+                      Start_Bit : Integer;
+                      Length : Integer) return Byte
+   is
+      Value : constant Integer
+        := i2c_interface_c.read_byte_data (Integer (C.On_Bus.FD), R);
+   begin
+      if Value < 0 then
+         raise Ada.IO_Exceptions.Device_Error with "reading from chip"
+            & Chip_Address'Image (C.Address);
+      else
+         --  01101001 read byte
+         --  76543210 bit numbers
+         --  xxx args: bitStart=4, length=3
+         --  010 masked
+         --  -> 010 shifted
+         declare
+            Mask : constant Byte := Shift_Left (((Shift_Left (1, Length)) - 1),
+                                                 (Start_Bit - Length + 1));
+            Masked_Data : constant Byte := Byte (Value) and Mask;
+            Shifted_Data : constant Byte :=
+               Shift_Right (Masked_Data, Start_Bit - Length + 1);
+         begin
+            return Shifted_Data;
+         end;
+      end if;
+   end Read_Bits;
 
    function Read_Byte (C : Chip'class) return Byte
    is
@@ -55,7 +82,6 @@ package body I2C is
    is
       Value : constant Integer
         := i2c_interface_c.read_byte_data (Integer (C.On_Bus.FD), R);
-      use type asm_generic_int_ll64_h.uu_s32;
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error
