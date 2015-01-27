@@ -1,6 +1,5 @@
 with Ada.IO_Exceptions;
 with Ada.Strings.Fixed;
-with Interfaces; use Interfaces;
 with Interfaces.C;
 with asm_generic_int_ll64_h;
 
@@ -10,9 +9,7 @@ package body I2C is
                       Bit_Num : Integer) return Byte
    is
       Value : constant Integer
-        := i2c_interface_c.read_byte_data
-              (Integer (C.On_Bus.FD),
-               Byte (R));
+        := i2c_interface_c.read_byte_data (Integer (C.On_Bus.FD), R);
       use type asm_generic_int_ll64_h.uu_s32;
       --  Data : Byte :=
          --  Byte (Value) and
@@ -45,9 +42,7 @@ package body I2C is
    is
       Status : Integer;
    begin
-      Status := i2c_interface_c.write_byte
-        (Integer (C.On_Bus.FD),
-         Data);
+      Status := i2c_interface_c.write_byte (Integer (C.On_Bus.FD), Data);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
            with "writing"
@@ -59,8 +54,7 @@ package body I2C is
    function Read_Byte_Data (C : Chip'class; R : Register) return Byte
    is
       Value : constant Integer
-        := i2c_interface_c.read_byte_data
-        (Integer (C.On_Bus.FD), Byte (R));
+        := i2c_interface_c.read_byte_data (Integer (C.On_Bus.FD), R);
       use type asm_generic_int_ll64_h.uu_s32;
    begin
       if Value < 0 then
@@ -78,10 +72,8 @@ package body I2C is
    is
       Status : Integer;
    begin
-      Status := i2c_interface_c.write_byte_data
-        (Integer (C.On_Bus.FD),
-         Byte (R),
-         To);
+      Status :=
+         i2c_interface_c.write_byte_data (Integer (C.On_Bus.FD), R, To);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
            with "writing to chip"
@@ -94,8 +86,7 @@ package body I2C is
    function Read_Word_Data (C : Chip'class; R : Register) return Word
    is
       Value : constant Integer
-        := i2c_interface_c.read_word_data
-        (Integer (C.On_Bus.FD), Byte (R));
+        := i2c_interface_c.read_word_data (Integer (C.On_Bus.FD), R);
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error
@@ -113,9 +104,7 @@ package body I2C is
       Status : Integer;
    begin
       Status := i2c_interface_c.write_word_data
-        (Integer (C.On_Bus.FD),
-         Byte (R),
-         Interfaces.Unsigned_16 (To));
+        (Integer (C.On_Bus.FD), R, To);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
            with "writing to chip"
@@ -131,10 +120,7 @@ package body I2C is
       Status : Integer;
    begin
       Status := i2c_interface_c.write_i2c_block_data
-        (Integer (C.On_Bus.FD),
-         Byte (R),
-         Values'Length,
-         Values);
+        (Integer (C.On_Bus.FD), R, Values'Length, Values);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
            with "writing to register "

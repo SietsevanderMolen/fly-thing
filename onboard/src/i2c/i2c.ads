@@ -14,10 +14,10 @@ package I2C is
    type Chip (Address : Chip_Address; On_Bus : not null access Bus)
    is abstract new Ada.Finalization.Limited_Controlled with null record;
 
-   type Register is range 16#00# .. 16#ff#;
    subtype Byte is i2c_interface_c.Byte;
    subtype Byte_Array is i2c_interface_c.Byte_Array;
    subtype Word is i2c_interface_c.Word;
+   subtype Register is Byte range 16#00# .. 16#ff#;
 
    function Read_Bit (C : Chip'Class;
                       R : Register;
