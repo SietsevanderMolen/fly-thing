@@ -28,7 +28,7 @@ package body I2C is
    function Read_Byte (C : Chip'class) return Byte
    is
       Value : constant Integer
-        := i2c_interface_c.read_byte (Interfaces.C.int (C.On_Bus.FD));
+        := i2c_interface_c.read_byte (Integer (C.On_Bus.FD));
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error with "reading from chip"

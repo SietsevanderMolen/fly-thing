@@ -1,7 +1,6 @@
 pragma Ada_2005;
 pragma Style_Checks (Off);
 
-with Interfaces.C; use Interfaces.C;
 with Interfaces; use Interfaces;
 
 package i2c_interface_c is
@@ -41,7 +40,7 @@ package i2c_interface_c is
    function write_quick (file : Integer; value : Interfaces.Unsigned_8) return Integer;  -- i2c_interface.c:35
    pragma Import (C, write_quick, "write_quick");
 
-   function read_byte (file : int) return Integer;  -- i2c_interface.c:40
+   function read_byte (file : Integer) return Integer;  -- i2c_interface.c:40
    pragma Import (C, read_byte, "read_byte");
 
    function write_byte (file : Integer; value : Interfaces.Unsigned_8) return Integer;  -- i2c_interface.c:44
