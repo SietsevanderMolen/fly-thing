@@ -42,11 +42,16 @@ package I2C is
    function Read_Word_Data (C : Chip'class; R : Register) return Word;
    --  Write a word to a specific register
    procedure Write_Word_Data (C : Chip'class; R : Register; To : Word);
+   --  Read an array of bytes from a specific register
+   function Read_Array_Data (C : Chip'class;
+                             R : Register;
+                             L : Integer) return Byte_Array;
+   pragma Precondition (L < 32); --  max according to i2c-dev.h
    --  Write an array of bytes to a specific register
    procedure Write_Array_Data (C : Chip'class;
                                R : Register;
                                Values : Byte_Array);
-   pragma Precondition (Values'Length <= 31); --  Max is 32-Register
+   pragma Precondition (Values'Length < 32); --  max according to i2c-dev.h
 private
    type Bus (Adapter_Number : Adapter_Number_T)
    is new Ada.Finalization.Limited_Controlled with record

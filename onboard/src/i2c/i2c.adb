@@ -156,6 +156,25 @@ package body I2C is
       end if;
    end Write_Array_Data;
 
+   function Read_Array_Data (C : Chip'class;
+                             R : Register;
+                             L : Integer) return Byte_Array is
+      Status : Integer;
+      Values : Byte_Array (0 .. L);
+   begin
+      Status := i2c_interface_c.read_i2c_block_data
+        (Integer (C.On_Bus.FD), R, Byte (L), Values);
+      if Status < 0 then
+         raise Ada.IO_Exceptions.Device_Error
+           with "writing to register "
+           & Register'Image (R)
+           & " on chip "
+           & Chip_Address'Image (C.Address);
+      else
+         return Values;
+      end if;
+   end Read_Array_Data;
+
    overriding
    procedure Initialize (B : in out Bus)
    is
