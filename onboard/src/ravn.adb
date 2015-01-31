@@ -42,6 +42,8 @@ begin
                1000.0 / Float (To_Duration (Finish_Time - Start_Time)),
                Fore => 4, Aft => 2, Exp => 0
             );
+            Ada.Text_IO.Put (Integer'Image (compass_output.x) & ", ");
+            Ada.Text_IO.Put (Integer'Image (compass_output.y) & ", ");
             Ada.Text_IO.Put (Integer'Image (compass_output.x));
             Ada.Text_IO.Put (",");
          end;

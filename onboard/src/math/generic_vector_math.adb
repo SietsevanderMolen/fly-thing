@@ -3,7 +3,7 @@ with Ada.Numerics.Generic_Elementary_Functions;
 use Ada.Numerics;
 
 package body Generic_Vector_Math is
-   package Float_Functions is new Generic_Elementary_Functions (float);
+   package Float_Functions is new Generic_Elementary_Functions (Float);
    use Float_Functions;
 
    function Min (a, b : T) return T is

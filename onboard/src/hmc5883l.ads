@@ -4,9 +4,9 @@ with Vector_Math;
 package HMC5883L is
    type Chip is new I2C.Chip with null record;
 
-   function Self_Test (C : in out Chip) return Boolean;
+   function Self_Test (C : in Chip) return Boolean;
 
-   function Get_Axes (C : in out Chip) return Vector_Math.Int3;
+   function Get_Axes (C : in Chip) return Vector_Math.Int3;
 private
    ConfigurationA  : constant Register := 16#00#;
    ConfigurationB  : constant Register := 16#01#;
