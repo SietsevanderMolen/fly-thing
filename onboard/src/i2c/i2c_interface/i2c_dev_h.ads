@@ -2,7 +2,6 @@ pragma Ada_2005;
 pragma Style_Checks (Off);
 
 with Interfaces.C; use Interfaces.C;
-with asm_generic_int_ll64_h;
 with Interfaces.C.Strings;
 
 package i2c_dev_h is
@@ -82,7 +81,7 @@ package i2c_dev_h is
 
   -- slave address			 
    type i2c_msg is record
-      addr : aliased asm_generic_int_ll64_h.uu_u16;  -- i2c-dev.h:40
+      addr : aliased Interfaces.Unsigned_16;  -- i2c-dev.h:40
       flags : aliased unsigned_short;  -- i2c-dev.h:41
       len : aliased short;  -- i2c-dev.h:48
       buf : Interfaces.C.Strings.chars_ptr;  -- i2c-dev.h:49
@@ -97,13 +96,13 @@ package i2c_dev_h is
   -- * Data for SMBus Messages 
   --  
 
-   type anon978_anon980_array is array (0 .. 33) of aliased asm_generic_int_ll64_h.uu_u8;
+   type anon978_anon980_array is array (0 .. 33) of aliased Interfaces.Unsigned_8;
    type i2c_smbus_data (discr : unsigned := 0) is record
       case discr is
          when 0 =>
-            byte : aliased asm_generic_int_ll64_h.uu_u8;  -- i2c-dev.h:92
+            byte : aliased Interfaces.Unsigned_8;  -- i2c-dev.h:92
          when 1 =>
-            word : aliased asm_generic_int_ll64_h.uu_u16;  -- i2c-dev.h:93
+            word : aliased Interfaces.Unsigned_16;  -- i2c-dev.h:93
          when others =>
             block : aliased anon978_anon980_array;  -- i2c-dev.h:94
       end case;
@@ -136,8 +135,8 @@ package i2c_dev_h is
   -- This is the structure as used in the I2C_SMBUS ioctl call  
    type i2c_smbus_ioctl_data is record
       read_write : aliased char;  -- i2c-dev.h:149
-      command : aliased asm_generic_int_ll64_h.uu_u8;  -- i2c-dev.h:150
-      size : aliased int;  -- i2c-dev.h:151
+      command : aliased Interfaces.Unsigned_8;  -- i2c-dev.h:150
+      size : aliased Integer;  -- i2c-dev.h:151
       data : access i2c_smbus_data;  -- i2c-dev.h:152
    end record;
    pragma Convention (C_Pass_By_Copy, i2c_smbus_ioctl_data);  -- i2c-dev.h:148
@@ -146,64 +145,64 @@ package i2c_dev_h is
   -- pointers to i2c_msgs  
    type i2c_rdwr_ioctl_data is record
       msgs : access i2c_msg;  -- i2c-dev.h:157
-      nmsgs : aliased int;  -- i2c-dev.h:158
+      nmsgs : aliased Integer;  -- i2c-dev.h:158
    end record;
    pragma Convention (C_Pass_By_Copy, i2c_rdwr_ioctl_data);  -- i2c-dev.h:156
 
   -- number of i2c_msgs  
    function i2c_smbus_access
-     (file : int;
+     (file : Integer;
       read_write : char;
-      command : asm_generic_int_ll64_h.uu_u8;
-      size : int;
-      data : access i2c_smbus_data) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:162
+      command : Interfaces.Unsigned_8;
+      size : Integer;
+      data : access i2c_smbus_data) return Integer;  -- i2c-dev.h:162
    pragma Import (C, i2c_smbus_access, "i2c_smbus_access");
 
-   function i2c_smbus_write_quick (file : int; value : asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:175
+   function i2c_smbus_write_quick (file : Integer; value : Interfaces.Unsigned_8) return Integer;  -- i2c-dev.h:175
    pragma Import (C, i2c_smbus_write_quick, "i2c_smbus_write_quick");
 
-   function i2c_smbus_read_byte (file : int) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:180
+   function i2c_smbus_read_byte (file : Integer) return Integer;  -- i2c-dev.h:180
    pragma Import (C, i2c_smbus_read_byte, "i2c_smbus_read_byte");
 
-   function i2c_smbus_write_byte (file : int; value : asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:189
+   function i2c_smbus_write_byte (file : Integer; value : Interfaces.Unsigned_8) return Integer;  -- i2c-dev.h:189
    pragma Import (C, i2c_smbus_write_byte, "i2c_smbus_write_byte");
 
-   function i2c_smbus_read_byte_data (file : int; command : asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:195
+   function i2c_smbus_read_byte_data (file : Integer; command : Interfaces.Unsigned_8) return Integer;  -- i2c-dev.h:195
    pragma Import (C, i2c_smbus_read_byte_data, "i2c_smbus_read_byte_data");
 
    function i2c_smbus_write_byte_data
-     (file : int;
-      command : asm_generic_int_ll64_h.uu_u8;
-      value : asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:205
+     (file : Integer;
+      command : Interfaces.Unsigned_8;
+      value : Interfaces.Unsigned_8) return Integer;  -- i2c-dev.h:205
    pragma Import (C, i2c_smbus_write_byte_data, "i2c_smbus_write_byte_data");
 
-   function i2c_smbus_read_word_data (file : int; command : asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:214
+   function i2c_smbus_read_word_data (file : Integer; command : Interfaces.Unsigned_8) return Integer;  -- i2c-dev.h:214
    pragma Import (C, i2c_smbus_read_word_data, "i2c_smbus_read_word_data");
 
    function i2c_smbus_write_word_data
-     (file : int;
-      command : asm_generic_int_ll64_h.uu_u8;
-      value : asm_generic_int_ll64_h.uu_u16) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:224
+     (file : Integer;
+      command : Interfaces.Unsigned_8;
+      value : Interfaces.Unsigned_16) return Integer;  -- i2c-dev.h:224
    pragma Import (C, i2c_smbus_write_word_data, "i2c_smbus_write_word_data");
 
    function i2c_smbus_process_call
-     (file : int;
-      command : asm_generic_int_ll64_h.uu_u8;
-      value : asm_generic_int_ll64_h.uu_u16) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:233
+     (file : Integer;
+      command : Interfaces.Unsigned_8;
+      value : Interfaces.Unsigned_16) return Integer;  -- i2c-dev.h:233
    pragma Import (C, i2c_smbus_process_call, "i2c_smbus_process_call");
 
   -- Returns the number of read bytes  
    function i2c_smbus_read_block_data
-     (file : int;
-      command : asm_generic_int_ll64_h.uu_u8;
-      values : access asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:246
+     (file : Integer;
+      command : Interfaces.Unsigned_8;
+      values : access Interfaces.Unsigned_8) return Integer;  -- i2c-dev.h:246
    pragma Import (C, i2c_smbus_read_block_data, "i2c_smbus_read_block_data");
 
    function i2c_smbus_write_block_data
-     (file : int;
-      command : asm_generic_int_ll64_h.uu_u8;
-      length : asm_generic_int_ll64_h.uu_u8;
-      values : access asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:261
+     (file : Integer;
+      command : Interfaces.Unsigned_8;
+      length : Interfaces.Unsigned_8;
+      values : access Interfaces.Unsigned_8) return Integer;  -- i2c-dev.h:261
    pragma Import (C, i2c_smbus_write_block_data, "i2c_smbus_write_block_data");
 
   -- Returns the number of read bytes  
@@ -212,25 +211,25 @@ package i2c_dev_h is
   --   2.6.23 and later.  
 
    function i2c_smbus_read_i2c_block_data
-     (file : int;
-      command : asm_generic_int_ll64_h.uu_u8;
-      length : asm_generic_int_ll64_h.uu_u8;
-      values : access asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:279
+     (file : Integer;
+      command : Interfaces.Unsigned_8;
+      length : Interfaces.Unsigned_8;
+      values : access Interfaces.Unsigned_8) return Integer;  -- i2c-dev.h:279
    pragma Import (C, i2c_smbus_read_i2c_block_data, "i2c_smbus_read_i2c_block_data");
 
    function i2c_smbus_write_i2c_block_data
-     (file : int;
-      command : asm_generic_int_ll64_h.uu_u8;
-      length : asm_generic_int_ll64_h.uu_u8;
-      values : access asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:299
+     (file : Integer;
+      command : Interfaces.Unsigned_8;
+      length : Interfaces.Unsigned_8;
+      values : access Interfaces.Unsigned_8) return Integer;  -- i2c-dev.h:299
    pragma Import (C, i2c_smbus_write_i2c_block_data, "i2c_smbus_write_i2c_block_data");
 
   -- Returns the number of read bytes  
    function i2c_smbus_block_process_call
-     (file : int;
-      command : asm_generic_int_ll64_h.uu_u8;
-      length : asm_generic_int_ll64_h.uu_u8;
-      values : access asm_generic_int_ll64_h.uu_u8) return asm_generic_int_ll64_h.uu_s32;  -- i2c-dev.h:314
+     (file : Integer;
+      command : Interfaces.Unsigned_8;
+      length : Interfaces.Unsigned_8;
+      values : access Interfaces.Unsigned_8) return Integer;  -- i2c-dev.h:314
    pragma Import (C, i2c_smbus_block_process_call, "i2c_smbus_block_process_call");
 
 end i2c_dev_h;

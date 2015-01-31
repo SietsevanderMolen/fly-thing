@@ -6,21 +6,22 @@ project Ravn is
    for Languages use ("Ada", "C");
 
    package Compiler is
-   Standard_Switches :=
-      (
-         "-O2",      --  standard optimisation
-         "-gnatqQ",  --  to keep ALI files even if there are compilation errors
-         "-t",
-         "-gnatafo", --  assertions, full reports, integer overflow
-         "-gnatwaL"  --  all standard warnings except for elaboration
-         );
+      for Driver ("Ada") use "colorgcc";
+      Standard_Switches :=
+         (
+            "-O3",      --  standard optimisation
+            "-gnatqQ",  --  to keep ALI files even if there are compilation errors
+            "-t",
+            "-gnatafo", --  assertions, full reports, integer overflow
+            "-gnatwaL"  --  all standard warnings except for elaboration
+            );
 
-   --  Generated code
-   for Switches ("asm_generic_int_ll64_h.ads") use Standard_Switches;
-   for Switches ("i2c_interface_c.ads") use Standard_Switches;
+      --  Generated code
+      for Switches ("asm_generic_int_ll64_h.ads") use Standard_Switches;
+      for Switches ("i2c_interface_c.ads") use Standard_Switches;
 
-   --  Hand-written code
-   for Default_Switches ("ada") use
-      Standard_Switches & "-gnaty"; -- default style checks
-   end Compiler;
+      --  Hand-written code
+      for Default_Switches ("ada") use
+         Standard_Switches & "-gnaty"; -- default style checks
+      end Compiler;
 end Ravn;
