@@ -18,6 +18,7 @@ begin
    PWM_Driver.SetPWMFreq (1000.0); --  Max frequency as per datasheet
    PWM_Driver.SetPin (61, 0); --  Initialize with all off
    Compass.Reset;
+   Compass.Set_Declination (Degrees => 72, Minutes => 44); --  Oslo/NO
    if Compass.Self_Test then
       declare
          bytes : constant I2C.Byte_Array (1 .. 16) := (others => I2C.Byte (0));

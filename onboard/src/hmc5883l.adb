@@ -3,6 +3,8 @@ with Ada.IO_Exceptions;
 with Ada.Real_Time; use Ada.Real_Time;
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 
+with Ada.Text_IO;
+
 package body HMC5883L is
    procedure Reset (C : in Chip) is
    begin
@@ -10,6 +12,15 @@ package body HMC5883L is
       C.Write_Byte_Data (ConfigurationB, 16#20#);
       C.Write_Byte_Data (Mode, 16#00#); --  Continous mode
    end Reset;
+
+   procedure Set_Declination (C : in Chip;
+                              Degrees : in Degree;
+                              Minutes : in Minute) is
+   begin
+      Declination := Float ((Degrees + Minutes / 60)) *
+                     Float ((Ada.Numerics.Pi / 180));
+      Ada.Text_IO.Put_Line (Float'Image (Declination));
+   end Set_Declination;
 
    function Self_Test (C : in Chip) return Boolean is
       Values : Vector_Math.Int3;
@@ -37,8 +48,8 @@ package body HMC5883L is
       Heading : Float := Arctan (Y => Float (Axes.y),
                                  X => Float (Axes.x),
                                  Cycle => 2.0*Ada.Numerics.Pi); --  use radians
-      --  TODO add declination to Heading
    begin
+      Heading := Heading + Declination; --  Correct for declination
       if Heading < 0.0 then --  Correct for reversed heading
          Heading := Heading + (2.0*Ada.Numerics.Pi);
       end if;

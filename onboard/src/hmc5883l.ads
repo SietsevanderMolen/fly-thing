@@ -6,6 +6,20 @@ with Ada.Unchecked_Conversion;
 package HMC5883L is
    type Chip is new I2C.Chip with null record;
 
+   subtype Degree is Integer range 0 .. 359;
+   subtype Minute is Integer range 0 .. 59;
+
+   --  Reset the HMC5883L to default settings
+   procedure Reset (C : in Chip);
+   --  Run the self test procedure, return True if passed
+   function Self_Test (C : in Chip) return Boolean;
+   --  Return the current heading in deg as a Float
+   function Get_Heading (C : in Chip) return Float;
+   --  Set the current declination
+   procedure Set_Declination (C : in Chip;
+                              Degrees : in Degree;
+                              Minutes : in Minute);
+private
    type Axis_Reading is
       record
          L : Byte;
@@ -17,13 +31,6 @@ package HMC5883L is
          H at 0 range 8 .. 15;
       end record;
 
-   --  Reset the HMC5883L to default settings
-   procedure Reset (C : in Chip);
-   --  Run the self test procedure, return True if passed
-   function Self_Test (C : in Chip) return Boolean;
-   --  Return the current heading in deg as a Float
-   function Get_Heading (C : in Chip) return Float;
-private
    ConfigurationA  : constant Register := 16#00#;
    ConfigurationB  : constant Register := 16#01#;
    Mode            : constant Register := 16#02#;
@@ -37,6 +44,8 @@ private
    IdentificationA : constant Register := 16#10#;
    IdentificationB : constant Register := 16#11#;
    IdentificationC : constant Register := 16#12#;
+
+   Declination : Float;
 
    function Get_Axes (C : in Chip) return Vector_Math.Int3;
    function To_Integer is
