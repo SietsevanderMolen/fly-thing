@@ -19,6 +19,11 @@ begin
    PWM_Driver.SetPWMFreq (1000.0); --  Max frequency as per datasheet
    PWM_Driver.SetPin (61, 0); --  Initialize with all off
    Compass.Reset;
+   if Compass.Self_Test then
+      Ada.Text_IO.Put_Line ("HMC5883L Self test passed");
+   else
+      Ada.Text_IO.Put_Line ("HMC5883L Self test failed");
+   end if;
 
    declare
       bytes : constant I2C.Byte_Array (1 .. 16) := (others => I2C.Byte (0));
