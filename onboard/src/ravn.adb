@@ -18,23 +18,24 @@ begin
    PWM_Driver.Reset;
    PWM_Driver.SetPWMFreq (1000.0); --  Max frequency as per datasheet
    PWM_Driver.SetPin (61, 0); --  Initialize with all off
+   Compass.Reset;
 
    declare
       bytes : constant I2C.Byte_Array (1 .. 16) := (others => I2C.Byte (0));
-      compass_output : Vector_Math.Int3;
    begin
       Ada.Text_IO.Put_Line ("Setting 4 I2C outputs to 0 afap, op/s:");
       loop
          declare
             Finish_Time : Time;
             Start_Time : constant Time := Clock;
+            Compass_Output : Vector_Math.Int3;
          begin
 
             for j in Integer range 0 .. 1000 loop
                I2C.Write_Array_Data (C => PWM_Driver,
                                      R => I2C.Register (50), --  Pin 11 .. 15
                                      Values => bytes);
-               compass_output := Compass.Get_Axes;
+               Compass_Output := Compass.Get_Axes;
             end loop;
 
             Finish_Time := Clock;
@@ -42,10 +43,11 @@ begin
                1000.0 / Float (To_Duration (Finish_Time - Start_Time)),
                Fore => 4, Aft => 2, Exp => 0
             );
-            Ada.Text_IO.Put (Integer'Image (compass_output.x) & ", ");
-            Ada.Text_IO.Put (Integer'Image (compass_output.y) & ", ");
-            Ada.Text_IO.Put (Integer'Image (compass_output.x));
-            Ada.Text_IO.Put (",");
+            Ada.Text_IO.New_Line;
+            Ada.Text_IO.Put (Integer'Image (Compass_Output.x) & ", ");
+            Ada.Text_IO.Put (Integer'Image (Compass_Output.y) & ", ");
+            Ada.Text_IO.Put (Integer'Image (Compass_Output.x));
+            Ada.Text_IO.New_Line;
          end;
       end loop;
    end;

@@ -12,8 +12,10 @@ package body I2C is
         := i2c_interface_c.read_byte_data (Integer (C.On_Bus.FD), R);
    begin
       if Value < 0 then
-         raise Ada.IO_Exceptions.Device_Error with "reading from chip"
-            & Chip_Address'Image (C.Address);
+         raise Ada.IO_Exceptions.Device_Error with "reading bit from chip"
+            & Chip_Address'Image (C.Address) & " at register "
+            & Register'Image (R) & " and bit number "
+            & Integer'Image (Bit_Num);
       else
          declare
             Data : constant Byte := Byte (Value) and Shift_Left (1, Bit_Num);
@@ -59,7 +61,7 @@ package body I2C is
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error with "reading from chip"
-            & Chip_Address'Image (C.Address);
+             & Chip_Address'Image (C.Address);
       else
          return Byte (Value);
       end if;
@@ -72,9 +74,8 @@ package body I2C is
       Status := i2c_interface_c.write_byte (Integer (C.On_Bus.FD), Data);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
-           with "writing"
-           & "to chip"
-           & Chip_Address'Image (C.Address);
+            with "writing" & Byte'Image (Data) &
+            & "to chip" & Chip_Address'Image (C.Address);
       end if;
    end Write_Byte;
 
@@ -85,10 +86,8 @@ package body I2C is
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error
-           with "reading from chip"
-           & Chip_Address'Image (C.Address)
-           & " register"
-           & Register'Image (R);
+            with "reading from chip" & Chip_Address'Image (C.Address)
+            & " register" & Register'Image (R);
       else
          return Byte (Value);
       end if;
@@ -102,10 +101,8 @@ package body I2C is
          i2c_interface_c.write_byte_data (Integer (C.On_Bus.FD), R, To);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
-           with "writing to chip"
-           & Chip_Address'Image (C.Address)
-           & " register"
-           & Register'Image (R);
+            with "writing to chip" & Chip_Address'Image (C.Address)
+            & " register" & Register'Image (R);
       end if;
    end Write_Byte_Data;
 
@@ -116,10 +113,8 @@ package body I2C is
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error
-           with "reading from chip"
-           & Chip_Address'Image (C.Address)
-           & " register"
-           & Register'Image (R);
+            with "reading from chip" & Chip_Address'Image (C.Address)
+            & " register" & Register'Image (R);
       else
          return Word (Value);
       end if;
@@ -133,10 +128,8 @@ package body I2C is
         (Integer (C.On_Bus.FD), R, To);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
-           with "writing to chip"
-           & Chip_Address'Image (C.Address)
-           & " register"
-           & Register'Image (R);
+            with "writing to chip" & Chip_Address'Image (C.Address)
+            & " register" & Register'Image (R);
       end if;
    end Write_Word_Data;
 
@@ -149,10 +142,8 @@ package body I2C is
         (Integer (C.On_Bus.FD), R, Values'Length, Values);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
-           with "writing to register "
-           & Register'Image (R)
-           & " on chip "
-           & Chip_Address'Image (C.Address);
+            with "writing to register " & Register'Image (R)
+            & " on chip " & Chip_Address'Image (C.Address);
       end if;
    end Write_Array_Data;
 
@@ -160,16 +151,15 @@ package body I2C is
                              R : Register;
                              L : Integer) return Byte_Array is
       Status : Integer;
-      Values : Byte_Array (0 .. L);
+      Values : Byte_Array (0 .. L-1);
    begin
       Status := i2c_interface_c.read_i2c_block_data
         (Integer (C.On_Bus.FD), R, Byte (L), Values);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
-           with "writing to register "
-           & Register'Image (R)
-           & " on chip "
-           & Chip_Address'Image (C.Address);
+            with "reading from register " & Register'Image (R)
+            & " on chip " & Chip_Address'Image (C.Address)
+            & " status was " & Integer'Image (Status);
       else
          return Values;
       end if;
@@ -185,20 +175,20 @@ package body I2C is
    begin
       if B.FD /= GNAT.OS_Lib.Invalid_FD then
          raise Ada.IO_Exceptions.Use_Error
-           with "I2C bus " & Which_Bus & " already open";
+            with "I2C bus " & Which_Bus & " already open";
       end if;
       B.FD := GNAT.OS_Lib.Open_Read_Write
         (Name => "/dev/i2c/" & Which_Bus,
          Fmode => GNAT.OS_Lib.Binary);
       if B.FD = GNAT.OS_Lib.Invalid_FD then
          B.FD := GNAT.OS_Lib.Open_Read_Write
-           (Name => "/dev/i2c-" & Which_Bus,
-            Fmode => GNAT.OS_Lib.Binary);
+            (Name => "/dev/i2c-" & Which_Bus,
+             Fmode => GNAT.OS_Lib.Binary);
       end if;
       if B.FD = GNAT.OS_Lib.Invalid_FD then
          raise Ada.IO_Exceptions.Name_Error
-           with "unable to open either /dev/i2c/" & Which_Bus
-           & " or /dev/i2c-" & Which_Bus;
+            with "unable to open either /dev/i2c/" & Which_Bus
+            & " or /dev/i2c-" & Which_Bus;
       end if;
    end Initialize;
 
@@ -216,12 +206,11 @@ package body I2C is
    overriding
    procedure Initialize (C : in out Chip)
    is
-      --  See i2cbusses::set_slave_addr()
       I2C_SLAVE : constant := 16#0703#;
       function ioctl (FD : Interfaces.C.int;
                       Request : Interfaces.C.unsigned_long;
                       Address : Interfaces.C.int)
-                     return Interfaces.C.int;
+         return Interfaces.C.int;
       pragma Import (C, ioctl, "ioctl");
       use type Interfaces.C.int;
    begin
@@ -230,8 +219,8 @@ package body I2C is
                 Interfaces.C.int (C.Address)) < 0
       then
          raise Ada.IO_Exceptions.Use_Error
-           with "unable to set slave address to"
-           & Chip_Address'Image (C.Address);
+            with "unable to set slave address to"
+            & Chip_Address'Image (C.Address);
       end if;
    end Initialize;
 end I2C;

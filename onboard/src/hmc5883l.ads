@@ -4,6 +4,8 @@ with Vector_Math;
 package HMC5883L is
    type Chip is new I2C.Chip with null record;
 
+   procedure Reset (C : in Chip);
+
    function Self_Test (C : in Chip) return Boolean;
 
    function Get_Axes (C : in Chip) return Vector_Math.Int3;
