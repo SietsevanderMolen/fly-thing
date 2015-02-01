@@ -3,15 +3,19 @@ with Ada.IO_Exceptions;
 with Ada.Real_Time; use Ada.Real_Time;
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 
-with Ada.Text_IO;
-
 package body HMC5883L is
    procedure Reset (C : in Chip) is
    begin
       C.Write_Byte_Data (ConfigurationA, 16#70#);
-      C.Write_Byte_Data (ConfigurationB, 16#20#);
+      C.Set_Gain (Gain_1);
       C.Write_Byte_Data (Mode, 16#00#); --  Continous mode
    end Reset;
+
+   procedure Set_Gain (C : in Chip; G : in Gain) is
+      Data : constant Byte := Shift_Left (Gain'Pos (G), 5);
+   begin
+      C.Write_Byte_Data (ConfigurationB, Data);
+   end Set_Gain;
 
    procedure Set_Declination (C : in Chip;
                               Degrees : in Degree;
@@ -19,28 +23,57 @@ package body HMC5883L is
    begin
       Declination := Float ((Degrees + Minutes / 60)) *
                      Float ((Ada.Numerics.Pi / 180));
-      Ada.Text_IO.Put_Line (Float'Image (Declination));
    end Set_Declination;
 
+   --  A self test feature is incorporated in which the sensor offset straps
+   --  are excited to create a nominal field strength (bias field) to be
+   --  measured.  To implement self test, the least significant bits (MS1 and
+   --  MS0) of configuration register A are changed from 00 to 01 (positive
+   --  bias) or 10 (negative bias).  Then, by placing the mode register into
+   --  single or continuous - measurement mode, two data acquisition cycles
+   --  will be made on each magnetic vector. The first acquisition will be a
+   --  set pulse followed shortly by measurement data of the external field.
+   --  The second acquisition will have the offset strap excited (about 10 mA)
+   --  in the positive bias mode for X, Y, and Z axes to create about a 1.1
+   --  gauss self test field plus the external field. The first acquisition
+   --  values will be subtracted from the second acquisition, and the net
+   --  measurement will be placed into the data output registers
    function Self_Test (C : in Chip) return Boolean is
-      Values : Vector_Math.Int3;
+      Old_A : constant Byte := C.Read_Byte_Data (ConfigurationA);
+      Old_B : constant Byte := C.Read_Byte_Data (ConfigurationB);
+      Old_Mode : constant Byte := C.Read_Byte_Data (Mode);
    begin
       C.Write_Byte_Data (ConfigurationA, 16#71#); --  8avg, 15hz, test
-      C.Write_Byte_Data (ConfigurationB, 16#A0#); --  gain 5
-      C.Write_Byte_Data (Mode, 16#01#); --  oneshot mode, init selftest
+      C.Write_Byte_Data (Mode, 16#00#); --  continuous mode, init selftest
 
-      C.Wait_Ready;
-      Values := C.Get_Axes;
-      C.Reset;
+      for G in Gain'Range loop
+         declare
+            Values : Vector_Math.Int3; --  hold the values that are returned
+            --  Take the current Gain setting and finds the right LSb/Gauss
+            LSb_Per_Gauss : constant Float :=
+               LSb_Per_Gauss_List (Gain'Pos (G));
+            --  Minimum value to be considered
+            Lo_Limit : constant Integer :=
+               Integer (243.0 * (LSb_Per_Gauss / 390.0));
+            Hi_Limit : constant Integer :=
+               Integer (575.0 * (LSb_Per_Gauss / 390.0));
+         begin
+            C.Set_Gain (G);
+            C.Wait_Ready; --  wait until values with new gain are written
+            Values := C.Get_Axes;
 
-      if (Values.x >= 243 and Values.x <= 575) then
-         if (Values.y >= 243 and Values.y <= 575) then
-            if (Values.z >= 243 and Values.z <= 575) then
-               return True;
+            if (Values.x >= Lo_Limit and Values.x <= Hi_Limit) and
+               (Values.y >= Lo_Limit and Values.y <= Hi_Limit) and
+               (Values.z >= Lo_Limit and Values.z <= Hi_Limit)
+            then
+               C.Write_Byte_Data (ConfigurationA, Old_A);
+               C.Write_Byte_Data (ConfigurationB, Old_B);
+               C.Write_Byte_Data (Mode, Old_Mode);
+               return True; --  Self test complete
             end if;
-         end if;
-      end if;
-      return False;
+         end;
+      end loop;
+      return False; --  Self test failed
    end Self_Test;
 
    function Get_Heading (C : in Chip) return Float is
@@ -79,7 +112,7 @@ package body HMC5883L is
 
    procedure Wait_Ready (C : in Chip;
                          Timeout : in Duration := 1.0) is
-      Ready : Byte := 2;
+      Ready : Byte := 1;
       Finish_Time : Time;
       Start_Time : constant Time := Clock;
       Taken_Time : Duration;
