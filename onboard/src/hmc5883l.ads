@@ -8,7 +8,9 @@ package HMC5883L is
 
    function Self_Test (C : in Chip) return Boolean;
 
-   function Get_Axes (C : in Chip) return Vector_Math.Int3;
+   function Get_Heading (C : in Chip) return Float;
+
+   function Get_Axes (C : in Chip) return Vector_Math.Float3;
 private
    ConfigurationA  : constant Register := 16#00#;
    ConfigurationB  : constant Register := 16#01#;
@@ -25,5 +27,6 @@ private
    IdentificationC : constant Register := 16#12#;
 
    function To_Int (V : Word) return Integer;
-   procedure Wait_Ready (C : in Chip);
+   procedure Wait_Ready (C : in Chip;
+                         Timeout : in Duration := 1.0);
 end HMC5883L;
