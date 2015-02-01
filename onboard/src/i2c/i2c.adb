@@ -74,8 +74,8 @@ package body I2C is
       Status := i2c_interface_c.write_byte (Integer (C.On_Bus.FD), Data);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
-            with "writing" & Byte'Image (Data) &
-            & "to chip" & Chip_Address'Image (C.Address);
+            with "writing " & Byte'Image (Data)
+            & " to chip " & Chip_Address'Image (C.Address);
       end if;
    end Write_Byte;
 
@@ -86,7 +86,7 @@ package body I2C is
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error
-            with "reading from chip" & Chip_Address'Image (C.Address)
+            with "reading from chip " & Chip_Address'Image (C.Address)
             & " register" & Register'Image (R);
       else
          return Byte (Value);
@@ -101,7 +101,7 @@ package body I2C is
          i2c_interface_c.write_byte_data (Integer (C.On_Bus.FD), R, To);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
-            with "writing to chip" & Chip_Address'Image (C.Address)
+            with "writing to chip " & Chip_Address'Image (C.Address)
             & " register" & Register'Image (R);
       end if;
    end Write_Byte_Data;
@@ -151,7 +151,7 @@ package body I2C is
                              R : Register;
                              L : Integer) return Byte_Array is
       Status : Integer;
-      Values : Byte_Array (0 .. L-1);
+      Values : Byte_Array (0 .. L - 1);
    begin
       Status := i2c_interface_c.read_i2c_block_data
         (Integer (C.On_Bus.FD), R, Byte (L), Values);
