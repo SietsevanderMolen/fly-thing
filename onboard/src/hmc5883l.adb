@@ -36,7 +36,7 @@ package body HMC5883L is
       Axes : constant Vector_Math.Float3 := C.Get_Axes;
       Heading : Float := Arctan (Y => Axes.y,
                                  X => Axes.x,
-                                 Cycle => Ada.Numerics.Pi); --  use radians
+                                 Cycle => 2.0*Ada.Numerics.Pi); --  use radians
       --  TODO add declination to Heading
    begin
       if Heading < 0.0 then --  Correct for reversed heading

@@ -41,7 +41,7 @@ private
    function Get_Axes (C : in Chip) return Vector_Math.Float3;
    function To_Integer is
       new Ada.Unchecked_Conversion (Source => Axis_Reading,
-                                    Target => Interfaces.Unsigned_16);
+                                    Target => Interfaces.Integer_16);
    procedure Wait_Ready (C : in Chip;
                          Timeout : in Duration := 1.0);
 end HMC5883L;
