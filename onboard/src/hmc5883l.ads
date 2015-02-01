@@ -24,5 +24,6 @@ private
    IdentificationB : constant Register := 16#11#;
    IdentificationC : constant Register := 16#12#;
 
+   function To_Int (V : Word) return Integer;
    procedure Wait_Ready (C : in Chip);
 end HMC5883L;
