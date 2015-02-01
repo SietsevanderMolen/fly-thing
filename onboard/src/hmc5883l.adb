@@ -49,29 +49,22 @@ package body HMC5883L is
    end Get_Heading;
 
    function Get_Axes (C : in Chip) return Vector_Math.Float3 is
-      Values : Byte_Array (0 .. 5);
+      Values : constant Byte_Array (0 .. 5) := C.Read_Array_Data (X_L, 6);
       Output : Vector_Math.Float3;
-      X, Y, Z : Word;
+      X, Y, Z : Axis_Reading;
    begin
-      Values := C.Read_Array_Data (X_L, 6);
-      X := Shift_Left (Word (Values (0)), 8) or Word (Values (1));
-      Z := Shift_Left (Word (Values (2)), 8) or Word (Values (3));
-      Y := Shift_Left (Word (Values (4)), 8) or Word (Values (5));
-      Output.x := Float (To_Int (X));
-      Output.z := Float (To_Int (Z));
-      Output.y := Float (To_Int (Y));
+      X.H := Values (0);
+      X.L := Values (1);
+      Z.H := Values (2);
+      Z.L := Values (3);
+      Y.H := Values (4);
+      Y.L := Values (5);
+
+      Output.x := Float (To_Integer (X));
+      Output.z := Float (To_Integer (Z));
+      Output.y := Float (To_Integer (Y));
       return Output;
    end Get_Axes;
-
-   function To_Int (V : Word) return Integer is
-      Output : Integer;
-   begin
-      if V >= 32768 then
-         Output := Integer ((not V)+1);
-         return Output;
-      end if;
-      return Integer (V);
-   end To_Int;
 
    procedure Wait_Ready (C : in Chip;
                          Timeout : in Duration := 1.0) is
