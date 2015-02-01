@@ -38,7 +38,7 @@ private
    IdentificationB : constant Register := 16#11#;
    IdentificationC : constant Register := 16#12#;
 
-   function Get_Axes (C : in Chip) return Vector_Math.Float3;
+   function Get_Axes (C : in Chip) return Vector_Math.Int3;
    function To_Integer is
       new Ada.Unchecked_Conversion (Source => Axis_Reading,
                                     Target => Interfaces.Integer_16);

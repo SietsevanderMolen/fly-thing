@@ -12,7 +12,7 @@ package body HMC5883L is
    end Reset;
 
    function Self_Test (C : in Chip) return Boolean is
-      Values : Vector_Math.Float3;
+      Values : Vector_Math.Int3;
    begin
       C.Write_Byte_Data (ConfigurationA, 16#71#); --  8avg, 15hz, test
       C.Write_Byte_Data (ConfigurationB, 16#A0#); --  gain 5
@@ -22,9 +22,9 @@ package body HMC5883L is
       Values := C.Get_Axes;
       C.Reset;
 
-      if (Values.x >= 243.0 and Values.x <= 575.0) then
-         if (Values.y >= 243.0 and Values.y <= 575.0) then
-            if (Values.z >= 243.0 and Values.z <= 575.0) then
+      if (Values.x >= 243 and Values.x <= 575) then
+         if (Values.y >= 243 and Values.y <= 575) then
+            if (Values.z >= 243 and Values.z <= 575) then
                return True;
             end if;
          end if;
@@ -33,9 +33,9 @@ package body HMC5883L is
    end Self_Test;
 
    function Get_Heading (C : in Chip) return Float is
-      Axes : constant Vector_Math.Float3 := C.Get_Axes;
-      Heading : Float := Arctan (Y => Axes.y,
-                                 X => Axes.x,
+      Axes : constant Vector_Math.Int3 := C.Get_Axes;
+      Heading : Float := Arctan (Y => Float (Axes.y),
+                                 X => Float (Axes.x),
                                  Cycle => 2.0*Ada.Numerics.Pi); --  use radians
       --  TODO add declination to Heading
    begin
@@ -48,9 +48,9 @@ package body HMC5883L is
       return Heading * (180.0/Ada.Numerics.Pi);
    end Get_Heading;
 
-   function Get_Axes (C : in Chip) return Vector_Math.Float3 is
+   function Get_Axes (C : in Chip) return Vector_Math.Int3 is
       Values : constant Byte_Array (0 .. 5) := C.Read_Array_Data (X_L, 6);
-      Output : Vector_Math.Float3;
+      Output : Vector_Math.Int3;
       X, Y, Z : Axis_Reading;
    begin
       X.H := Values (0);
@@ -60,9 +60,9 @@ package body HMC5883L is
       Y.H := Values (4);
       Y.L := Values (5);
 
-      Output.x := Float (To_Integer (X));
-      Output.z := Float (To_Integer (Z));
-      Output.y := Float (To_Integer (Y));
+      Output.x := Integer (To_Integer (X));
+      Output.z := Integer (To_Integer (Z));
+      Output.y := Integer (To_Integer (Y));
       return Output;
    end Get_Axes;
 
