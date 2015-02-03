@@ -32,56 +32,97 @@
 
 typedef __u8 *  value_array;
 
-__s32 write_quick(int file, __u8 value)
+__s32 write_quick(int file, __u8 address, __u8 value)
 {
+  __s32 ret;
+  if((ret = ioctl(file, I2C_SLAVE, address)) < 0) {
+    return ret;
+  }
   return i2c_smbus_write_quick(file, value);
 }
 
-__s32 read_byte(int file) {
+__s32 read_byte(int file, __u8 address) {
+  __s32 ret;
+  if((ret = ioctl(file, I2C_SLAVE, address)) < 0) {
+    return ret;
+  }
   return i2c_smbus_read_byte(file);
 }
 
-__s32 write_byte(int file, __u8 value)
+__s32 write_byte(int file, __u8 address, __u8 value)
 {
+  __s32 ret;
+  if((ret = ioctl(file, I2C_SLAVE, address)) < 0) {
+    return ret;
+  }
   return i2c_smbus_write_byte(file, value);
 }
 
-__s32 read_byte_data(int file, __u8 command)
+__s32 read_byte_data(int file, __u8 address, __u8 command)
 {
+  __s32 ret;
+  if((ret = ioctl(file, I2C_SLAVE, address)) < 0) {
+    return ret;
+  }
   return i2c_smbus_read_byte_data(file, command);
 }
 
-__s32 write_byte_data(int file, __u8 command, __u8 value)
+__s32 write_byte_data(int file, __u8 address, __u8 command, __u8 value)
 {
+  __s32 ret;
+  if((ret = ioctl(file, I2C_SLAVE, address)) < 0) {
+    return ret;
+  }
   return i2c_smbus_write_byte_data(file, command, value);
 }
 
-__s32 read_word_data(int file, __u8 command)
+__s32 read_word_data(int file, __u8 address, __u8 command)
 {
+  __s32 ret;
+  if((ret = ioctl(file, I2C_SLAVE, address)) < 0) {
+    return ret;
+  }
   return i2c_smbus_read_word_data(file, command);
 }
 
-__s32 write_word_data(int file, __u8 command, __u16 value)
+__s32 write_word_data(int file, __u8 address, __u8 command, __u16 value)
 {
+  __s32 ret;
+  if((ret = ioctl(file, I2C_SLAVE, address)) < 0) {
+    return ret;
+  }
   return i2c_smbus_write_word_data(file, command, value);
 }
 
-__s32 process_call(int file, __u8 command, __u16 value)
+__s32 process_call(int file, __u8 address, __u8 command, __u16 value)
 {
+  __s32 ret;
+  if((ret = ioctl(file, I2C_SLAVE, address)) < 0) {
+    return ret;
+  }
   return i2c_smbus_process_call(file, command, value);
 }
 
 /* Returns the number of read bytes */
-__s32 read_block_data(int file, __u8 command, value_array values)
+__s32 read_block_data(int file, __u8 address, __u8 command, value_array values)
 {
+  __s32 ret;
+  if((ret = ioctl(file, I2C_SLAVE, address)) < 0) {
+    return ret;
+  }
   return i2c_smbus_read_block_data(file, command, values);
 }
 
 __s32 write_block_data(int file,
+                       __u8 address,
                        __u8 command,
                        __u8 length,
                        const value_array values)
 {
+  __s32 ret;
+  if((ret = ioctl(file, I2C_SLAVE, address)) < 0) {
+    return ret;
+  }
   return i2c_smbus_write_block_data(file, command, length, values);
 }
 
@@ -90,26 +131,41 @@ __s32 write_block_data(int file,
    ask for less than 32 bytes, your code will only work with kernels
    2.6.23 and later. */
 __s32 read_i2c_block_data(int file,
+                          __u8 address,
                           __u8 command,
                           __u8 length,
                           value_array values)
 {
+  __s32 ret;
+  if((ret = ioctl(file, I2C_SLAVE, address)) < 0) {
+    return ret;
+  }
   return i2c_smbus_read_i2c_block_data(file, command, length, values);
 }
 
 __s32 write_i2c_block_data(int file,
+                           __u8 address,
                            __u8 command,
                            __u8 length,
                            const value_array values)
 {
+  __s32 ret;
+  if((ret = ioctl(file, I2C_SLAVE, address)) < 0) {
+    return ret;
+  }
   return i2c_smbus_write_i2c_block_data(file, command, length, values);
 }
 
 /* Returns the number of read bytes */
 __s32 block_process_call(int file,
+                         __u8 address,
                          __u8 command,
                          __u8 length,
                          value_array values)
 {
+  __s32 ret;
+  if((ret = ioctl(file, I2C_SLAVE, address)) < 0) {
+    return ret;
+  }
   return i2c_smbus_block_process_call(file, command, length, values);
 }

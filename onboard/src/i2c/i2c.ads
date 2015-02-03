@@ -4,20 +4,20 @@ with GNAT.OS_Lib;
 with i2c_interface_c;
 
 package I2C is
+   subtype Byte is i2c_interface_c.Byte;
+   subtype Byte_Array is i2c_interface_c.Byte_Array;
+   subtype Word is i2c_interface_c.Word;
+   subtype Register is Byte range 16#00# .. 16#ff#;
+
    type Adapter_Number_T is range 16#00000# .. 16#fffff#;
 
    type Bus (Adapter_Number : Adapter_Number_T)
    is tagged limited private;
 
-   type Chip_Address is range 16#03# .. 16#77#;
+   subtype Chip_Address is Byte range 16#03# .. 16#77#;
 
    type Chip (Address : Chip_Address; On_Bus : not null access Bus)
    is abstract new Ada.Finalization.Limited_Controlled with null record;
-
-   subtype Byte is i2c_interface_c.Byte;
-   subtype Byte_Array is i2c_interface_c.Byte_Array;
-   subtype Word is i2c_interface_c.Word;
-   subtype Register is Byte range 16#00# .. 16#ff#;
 
    function Read_Bit_Data (C : Chip'Class;
                            R : Register;
@@ -66,4 +66,7 @@ private
 
    overriding
    procedure Initialize (C : in out Chip);
+
+   --  Set the IOCTL slave address
+   procedure Set_Slave_Address_To (C : in Chip);
 end I2C;

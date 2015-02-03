@@ -8,8 +8,8 @@ package body I2C is
                            R : Register;
                            Bit_Num : Integer) return Byte
    is
-      Value : constant Integer
-        := i2c_interface_c.read_byte_data (Integer (C.On_Bus.FD), R);
+      Value : constant Integer := i2c_interface_c.read_byte_data
+         (Integer (C.On_Bus.FD), C.Address, R);
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error with "reading bit from chip"
@@ -30,8 +30,8 @@ package body I2C is
                             Start_Bit : Integer;
                             Length : Integer) return Byte
    is
-      Value : constant Integer
-        := i2c_interface_c.read_byte_data (Integer (C.On_Bus.FD), R);
+      Value : constant Integer := i2c_interface_c.read_byte_data
+         (Integer (C.On_Bus.FD), C.Address, R);
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error with "reading from chip"
@@ -56,8 +56,8 @@ package body I2C is
 
    function Read_Byte (C : Chip'class) return Byte
    is
-      Value : constant Integer
-        := i2c_interface_c.read_byte (Integer (C.On_Bus.FD));
+      Value : constant Integer := i2c_interface_c.read_byte
+         (Integer (C.On_Bus.FD), C.Address);
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error with "reading from chip"
@@ -71,7 +71,8 @@ package body I2C is
    is
       Status : Integer;
    begin
-      Status := i2c_interface_c.write_byte (Integer (C.On_Bus.FD), Data);
+      Status := i2c_interface_c.write_byte
+         (Integer (C.On_Bus.FD), C.Address, Data);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
             with "writing " & Byte'Image (Data)
@@ -81,8 +82,8 @@ package body I2C is
 
    function Read_Byte_Data (C : Chip'class; R : Register) return Byte
    is
-      Value : constant Integer
-        := i2c_interface_c.read_byte_data (Integer (C.On_Bus.FD), R);
+      Value : constant Integer := i2c_interface_c.read_byte_data
+         (Integer (C.On_Bus.FD), C.Address, R);
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error
@@ -98,7 +99,8 @@ package body I2C is
       Status : Integer;
    begin
       Status :=
-         i2c_interface_c.write_byte_data (Integer (C.On_Bus.FD), R, To);
+         i2c_interface_c.write_byte_data
+            (Integer (C.On_Bus.FD), C.Address, R, To);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
             with "writing to chip " & Chip_Address'Image (C.Address)
@@ -108,8 +110,8 @@ package body I2C is
 
    function Read_Word_Data (C : Chip'class; R : Register) return Word
    is
-      Value : constant Integer
-        := i2c_interface_c.read_word_data (Integer (C.On_Bus.FD), R);
+      Value : constant Integer := i2c_interface_c.read_word_data
+         (Integer (C.On_Bus.FD), C.Address, R);
    begin
       if Value < 0 then
          raise Ada.IO_Exceptions.Device_Error
@@ -125,7 +127,7 @@ package body I2C is
       Status : Integer;
    begin
       Status := i2c_interface_c.write_word_data
-        (Integer (C.On_Bus.FD), R, To);
+        (Integer (C.On_Bus.FD), C.Address, R, To);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
             with "writing to chip" & Chip_Address'Image (C.Address)
@@ -139,7 +141,7 @@ package body I2C is
       Status : Integer;
    begin
       Status := i2c_interface_c.write_i2c_block_data
-        (Integer (C.On_Bus.FD), R, Values'Length, Values);
+        (Integer (C.On_Bus.FD), C.Address, R, Values'Length, Values);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
             with "writing to register " & Register'Image (R)
@@ -154,7 +156,7 @@ package body I2C is
       Values : Byte_Array (0 .. L - 1);
    begin
       Status := i2c_interface_c.read_i2c_block_data
-        (Integer (C.On_Bus.FD), R, Byte (L), Values);
+        (Integer (C.On_Bus.FD), C.Address, R, Byte (L), Values);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
             with "reading from register " & Register'Image (R)
@@ -164,6 +166,24 @@ package body I2C is
          return Values;
       end if;
    end Read_Array_Data;
+
+   procedure Set_Slave_Address_To (C : in Chip) is
+      I2C_SLAVE : constant := 16#0703#;
+      function ioctl (FD : Interfaces.C.int;
+                      Request : Interfaces.C.unsigned_long;
+                      Address : Interfaces.C.int) return Interfaces.C.int;
+      pragma Import (C, ioctl, "ioctl");
+      use type Interfaces.C.int;
+   begin
+      if ioctl (Interfaces.C.int (C.On_Bus.FD),
+                I2C_SLAVE,
+                Interfaces.C.int (C.Address)) < 0
+      then
+         raise Ada.IO_Exceptions.Use_Error
+            with "unable to set slave address to"
+            & Chip_Address'Image (C.Address);
+      end if;
+   end Set_Slave_Address_To;
 
    overriding
    procedure Initialize (B : in out Bus)
@@ -209,8 +229,7 @@ package body I2C is
       I2C_SLAVE : constant := 16#0703#;
       function ioctl (FD : Interfaces.C.int;
                       Request : Interfaces.C.unsigned_long;
-                      Address : Interfaces.C.int)
-         return Interfaces.C.int;
+                      Address : Interfaces.C.int) return Interfaces.C.int;
       pragma Import (C, ioctl, "ioctl");
       use type Interfaces.C.int;
    begin

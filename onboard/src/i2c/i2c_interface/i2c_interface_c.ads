@@ -1,5 +1,5 @@
 pragma Ada_2005;
-pragma Style_Checks (Off);
+pragma Style_Checks (On);
 
 with Interfaces; use Interfaces;
 
@@ -37,35 +37,52 @@ package i2c_interface_c is
    pragma Convention (C, Byte_Array);
    subtype Word is Interfaces.Unsigned_16;
 
-   function write_quick (file : Integer; value : Interfaces.Unsigned_8) return Integer;  -- i2c_interface.c:35
+   function write_quick
+      (file : Integer;
+       address : Interfaces.Unsigned_8;
+       value : Interfaces.Unsigned_8) return Integer;  -- i2c_interface.c:35
    pragma Import (C, write_quick, "write_quick");
 
-   function read_byte (file : Integer) return Integer;  -- i2c_interface.c:40
+   function read_byte
+      (file : Integer;
+       address : Interfaces.Unsigned_8) return Integer;  -- i2c_interface.c:40
    pragma Import (C, read_byte, "read_byte");
 
-   function write_byte (file : Integer; value : Interfaces.Unsigned_8) return Integer;  -- i2c_interface.c:44
+   function write_byte
+      (file : Integer;
+       address : Interfaces.Unsigned_8;
+       value : Interfaces.Unsigned_8) return Integer;  -- i2c_interface.c:44
    pragma Import (C, write_byte, "write_byte");
 
-   function read_byte_data (file : Integer; command : Interfaces.Unsigned_8) return Integer;  -- i2c_interface.c:49
+   function read_byte_data
+      (file : Integer;
+       address : Interfaces.Unsigned_8;
+       command : Interfaces.Unsigned_8) return Integer;  -- i2c_interface.c:49
    pragma Import (C, read_byte_data, "read_byte_data");
 
    function write_byte_data
-     (file : Integer;
-      command : Interfaces.Unsigned_8;
-      value : Interfaces.Unsigned_8) return Integer;  -- i2c_interface.c:54
+      (file : Integer;
+       address : Interfaces.Unsigned_8;
+       command : Interfaces.Unsigned_8;
+       value : Interfaces.Unsigned_8) return Integer;  -- i2c_interface.c:54
    pragma Import (C, write_byte_data, "write_byte_data");
 
-   function read_word_data (file : Integer; command : Interfaces.Unsigned_8) return Integer;  -- i2c_interface.c:59
+   function read_word_data
+      (file : Integer;
+       address : Interfaces.Unsigned_8;
+       command : Interfaces.Unsigned_8) return Integer;  -- i2c_interface.c:59
    pragma Import (C, read_word_data, "read_word_data");
 
    function write_word_data
      (file : Integer;
+      address : Interfaces.Unsigned_8;
       command : Interfaces.Unsigned_8;
       value : Word) return Integer;  -- i2c_interface.c:64
    pragma Import (C, write_word_data, "write_word_data");
 
    function process_call
      (file : Integer;
+      address : Interfaces.Unsigned_8;
       command : Interfaces.Unsigned_8;
       value : Word) return Integer;  -- i2c_interface.c:69
    pragma Import (C, process_call, "process_call");
@@ -73,12 +90,14 @@ package i2c_interface_c is
   -- Returns the number of read bytes  
    function read_block_data
      (file : Integer;
+      address : Interfaces.Unsigned_8;
       command : Interfaces.Unsigned_8;
       values : Byte_Array) return Integer;  -- i2c_interface.c:75
    pragma Import (C, read_block_data, "read_block_data");
 
    function write_block_data
      (file : Integer;
+      address : Interfaces.Unsigned_8;
       command : Interfaces.Unsigned_8;
       length : Interfaces.Unsigned_8;
       values : Byte_Array) return Integer;  -- i2c_interface.c:80
@@ -91,6 +110,7 @@ package i2c_interface_c is
 
    function read_i2c_block_data
      (file : Integer;
+      address : Interfaces.Unsigned_8;
       command : Interfaces.Unsigned_8;
       length : Interfaces.Unsigned_8;
       values : Byte_Array) return Integer;  -- i2c_interface.c:92
@@ -98,6 +118,7 @@ package i2c_interface_c is
 
    function write_i2c_block_data
      (file : Integer;
+      address : Interfaces.Unsigned_8;
       command : Interfaces.Unsigned_8;
       length : Interfaces.Unsigned_8;
       values : Byte_Array) return Integer;  -- i2c_interface.c:100
@@ -106,6 +127,7 @@ package i2c_interface_c is
   -- Returns the number of read bytes  
    function block_process_call
      (file : Integer;
+      address : Interfaces.Unsigned_8;
       command : Interfaces.Unsigned_8;
       length : Interfaces.Unsigned_8;
       values : Byte_Array) return Integer;  -- i2c_interface.c:109
