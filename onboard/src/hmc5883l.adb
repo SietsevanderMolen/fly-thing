@@ -18,7 +18,7 @@ package body HMC5883L is
    procedure Set_Gain (C : in Chip; G : in Gain) is
       Settings : ConfigB;
    begin
-      Settings.Gain := Integer (LSb_Per_Gauss_List (Gain'Pos (G)));
+      Settings.Gain := Gain'Pos (G);
       C.Write_Byte_Data (ConfigB_Address, Pack (Settings));
    end Set_Gain;
 
