@@ -5,16 +5,21 @@ with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 
 package body HMC5883L is
    procedure Reset (C : in Chip) is
+      Settings : ConfigA;
    begin
-      C.Write_Byte_Data (ConfigurationA, 16#70#);
+      Settings.Averaged_Samples := 3;
+      Settings.Data_Output_Rate := 4;
+      Settings.Measurement_Mode := 0;
+      C.Write_Byte_Data (ConfigA_Address, Pack (Settings));
       C.Set_Gain (Gain_1);
-      C.Write_Byte_Data (Mode, 16#00#); --  Continous mode
+      C.Write_Byte_Data (Mode_Address, 16#00#); --  Continous mode
    end Reset;
 
    procedure Set_Gain (C : in Chip; G : in Gain) is
-      Data : constant Byte := Shift_Left (Gain'Pos (G), 5);
+      Settings : ConfigB;
    begin
-      C.Write_Byte_Data (ConfigurationB, Data);
+      Settings.Gain := Integer (LSb_Per_Gauss_List (Gain'Pos (G)));
+      C.Write_Byte_Data (ConfigB_Address, Pack (Settings));
    end Set_Gain;
 
    procedure Set_Declination (C : in Chip;
@@ -39,12 +44,12 @@ package body HMC5883L is
    --  values will be subtracted from the second acquisition, and the net
    --  measurement will be placed into the data output registers
    function Self_Test (C : in Chip) return Boolean is
-      Old_A : constant Byte := C.Read_Byte_Data (ConfigurationA);
-      Old_B : constant Byte := C.Read_Byte_Data (ConfigurationB);
-      Old_Mode : constant Byte := C.Read_Byte_Data (Mode);
+      Old_A : constant Byte := C.Read_Byte_Data (ConfigA_Address);
+      Old_B : constant Byte := C.Read_Byte_Data (ConfigB_Address);
+      Old_Mode : constant Byte := C.Read_Byte_Data (Mode_Address);
    begin
-      C.Write_Byte_Data (ConfigurationA, 16#71#); --  8avg, 15hz, test
-      C.Write_Byte_Data (Mode, 16#00#); --  continuous mode, init selftest
+      C.Write_Byte_Data (ConfigA_Address, 16#71#); --  8avg, 15hz, test
+      C.Write_Byte_Data (Mode_Address, 16#00#); --  continuous, init selftest
 
       for G in Gain'Range loop
          declare
@@ -66,9 +71,9 @@ package body HMC5883L is
                (Values.y >= Lo_Limit and Values.y <= Hi_Limit) and
                (Values.z >= Lo_Limit and Values.z <= Hi_Limit)
             then
-               C.Write_Byte_Data (ConfigurationA, Old_A);
-               C.Write_Byte_Data (ConfigurationB, Old_B);
-               C.Write_Byte_Data (Mode, Old_Mode);
+               C.Write_Byte_Data (ConfigA_Address, Old_A);
+               C.Write_Byte_Data (ConfigB_Address, Old_B);
+               C.Write_Byte_Data (Mode_Address, Old_Mode);
                return True; --  Self test complete
             end if;
          end;
@@ -104,9 +109,9 @@ package body HMC5883L is
       Y.H := Values (4);
       Y.L := Values (5);
 
-      Output.x := Integer (To_Integer (X));
-      Output.z := Integer (To_Integer (Z));
-      Output.y := Integer (To_Integer (Y));
+      Output.x := Integer (Pack (X));
+      Output.z := Integer (Pack (Z));
+      Output.y := Integer (Pack (Y));
       return Output;
    end Get_Axes;
 
@@ -118,11 +123,11 @@ package body HMC5883L is
       Taken_Time : Duration;
    begin
       loop
-         Ready := C.Read_Bit_Data (Status, 0);
+         Ready := C.Read_Bit_Data (Status_Address, 0);
          exit when Ready = 0;
       end loop;
       loop
-         Ready := C.Read_Bit_Data (Status, 0);
+         Ready := C.Read_Bit_Data (Status_Address, 0);
          exit when Ready = 1;
       end loop;
       Finish_Time := Clock;

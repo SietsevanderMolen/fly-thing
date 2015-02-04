@@ -23,11 +23,14 @@ package HMC5883L is
    --  Return the current heading in deg as a Float
    function Get_Heading (C : in Chip) return Float;
    --  Set the current declination
+   --  Magnetic declination or variation is the angle on the horizontal plane
+   --  between magnetic north and true north . This angle varies depending on
+   --  position on the Earth's surface, and changes over time.
    procedure Set_Declination (C : in Chip;
                               Degrees : in Degree;
                               Minutes : in Minute);
 private
-   --  One magnetometer axis reading, eg X, Y or Z.
+   --  One magnetometer axis reading, eg X, Y or Z
    type Axis_Reading is
       record
          L : Byte;
@@ -38,24 +41,68 @@ private
          L at 0 range 0 .. 7;
          H at 0 range 8 .. 15;
       end record;
+   function Pack is
+      new Ada.Unchecked_Conversion (Source => Axis_Reading,
+                                    Target => Interfaces.Integer_16);
 
-   ConfigurationA  : constant Register := 16#00#;
-   ConfigurationB  : constant Register := 16#01#;
-   Mode            : constant Register := 16#02#;
-   X_L             : constant Register := 16#03#;
-   Status          : constant Register := 16#09#;
-   IdentificationA : constant Register := 16#10#;
-   IdentificationB : constant Register := 16#11#;
-   IdentificationC : constant Register := 16#12#;
+   --  Configuration register a
+   type ConfigA is
+      record
+         Pad : Integer range 0 .. 0;
+         Averaged_Samples : Integer range 0 .. 3;
+         Data_Output_Rate : Integer range 0 .. 6;
+         Measurement_Mode : Integer range 0 .. 2;
+      end record;
+   for ConfigA use
+      record
+         Pad at 0 range 7 .. 7;
+         Averaged_Samples at 0 range 5 .. 6;
+         Data_Output_Rate at 0 range 2 .. 4;
+         Measurement_Mode at 0 range 0 .. 1;
+      end record;
+   ConfigA_Address : constant Register := 16#00#;
+   function Pack is new Ada.Unchecked_Conversion (Source => ConfigA,
+                                                  Target => Byte);
+
+   --  Configuration register b
+   type ConfigB is
+      record
+         Gain : Integer range 0 .. 7;
+         Pad : Integer range 0 .. 0;
+      end record;
+   for ConfigB use
+      record
+         Gain at 0 range 5 .. 7;
+         Pad at 0 range 0 .. 4;
+      end record;
+   ConfigB_Address : constant Register := 16#01#;
+   function Pack is new Ada.Unchecked_Conversion (Source => ConfigB,
+                                                  Target => Byte);
+
+   --  Mode register
+   type Mode is
+      record
+         High_Speed_Enable : Integer range 0 .. 1;
+         Pad : Integer range 0 .. 0;
+         Mode_Select : Integer range 0 .. 3;
+      end record;
+   for Mode use
+      record
+         High_Speed_Enable at 0 range 7 .. 7;
+         Pad at 0 range 2 .. 6;
+         Mode_Select at 0 range 0 .. 1;
+      end record;
+   Mode_Address : constant Register := 16#02#;
+   function Pack is new Ada.Unchecked_Conversion (Source => Mode,
+                                                  Target => Byte);
+
+   X_L : constant Register := 16#03#;
+   Status_Address : constant Register := 16#09#;
 
    Declination : Float;
 
    --  Get the axes' raw values
    function Get_Axes (C : in Chip) return Vector_Math.Int3;
-   --  Convert a raw axis reading into it's two's complement representation
-   function To_Integer is
-      new Ada.Unchecked_Conversion (Source => Axis_Reading,
-                                    Target => Interfaces.Integer_16);
    --  Read the RDY register. It turns high when new values are written to the
    --  data registers
    procedure Wait_Ready (C : in Chip;
