@@ -8,34 +8,38 @@ package body MPU6050 is
       null;
    end Reset;
 
-   procedure Initialize (C : in out Chip) is
-   begin
-      null;
-   end Initialize;
-
    function Test_Connection (C : in out Chip) return Boolean is
       Device_ID : constant Byte := C.Get_Device_Id;
    begin
       return Integer (Device_ID) = 16#34#;
    end Test_Connection;
 
-   function Get_Motion_6 (C : in out Chip) return MPU6050_6DOF_Output is
+   function Get_Motion_6 (C : in out Chip) return MPU6050_Output is
       Output : MPU6050_Output;
-:     Data : constant Byte_Array :=
+      Data : constant Byte_Array :=
          C.Read_Array_Data (MPU6050_RA_ACCEL_XOUT_H, 12);
+      A_X, A_Y, A_Z : Axis_Reading;
+      G_X, G_Y, G_Z : Axis_Reading;
    begin
-      Output.Accelerometer_Output.X.H := Integer (To_2_Complement (Data (0)));
-      Output.Accelerometer_Output.X.L := Integer (To_2_Complement (Data (1)));
-      Output.Accelerometer_Output.Y.H := Integer (To_2_Complement (Data (2)));
-      Output.Accelerometer_Output.Y.L := Integer (To_2_Complement (Data (3)));
-      Output.Accelerometer_Output.Z.H := Integer (To_2_Complement (Data (4)));
-      Output.Accelerometer_Output.Z.L := Integer (To_2_Complement (Data (5)));
-      Output.Gyroscope_Output.X.H := Integer (To_2_Complement (Data (6)));
-      Output.Gyroscope_Output.X.L := Integer (To_2_Complement (Data (7)));
-      Output.Gyroscope_Output.Y.H := Integer (To_2_Complement (Data (8)));
-      Output.Gyroscope_Output.Y.L := Integer (To_2_Complement (Data (9)));
-      Output.Gyroscope_Output.Z.H := Integer (To_2_Complement (Data (10)));
-      Output.Gyroscope_Output.Z.L := Integer (To_2_Complement (Data (11)));
+      A_X.H := Data (0);
+      A_X.L := Data (1);
+      A_Y.H := Data (2);
+      A_Y.L := Data (3);
+      A_Z.H := Data (4);
+      A_Z.L := Data (5);
+      G_X.H := Data (6);
+      G_X.L := Data (7);
+      G_Y.H := Data (8);
+      G_Y.L := Data (9);
+      G_Z.H := Data (10);
+      G_Z.L := Data (11);
+
+      Output.Accelerometer_Output.X := Integer (Pack (A_X));
+      Output.Accelerometer_Output.Y := Integer (Pack (A_Y));
+      Output.Accelerometer_Output.Z := Integer (Pack (A_Z));
+      Output.Gyroscope_Output.X := Integer (Pack (G_X));
+      Output.Gyroscope_Output.Y := Integer (Pack (G_Y));
+      Output.Gyroscope_Output.Z := Integer (Pack (G_Z));
       return Output;
    end Get_Motion_6;
 

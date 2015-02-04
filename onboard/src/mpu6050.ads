@@ -1,3 +1,6 @@
+with Ada.Unchecked_Conversion;
+with Interfaces;
+
 with I2C; use I2C;
 with Vector_Math; use Vector_Math;
 
@@ -15,29 +18,27 @@ package MPU6050 is
          H at 0 range 8 .. 15;
       end record;
    --  Convert a raw axis reading into it's two's complement representation
-   function Unpack is new Ada.Unchecked_Conversion
-      (Source => Axis_Reading,
-       Target => Interfaces.Integer_16);
+   function Pack is new
+      Ada.Unchecked_Conversion (Source => Axis_Reading,
+                                Target => Interfaces.Integer_16);
 
-   type 3_Axis_Reading is record
-      X : Axis_Reading;
-      Y : Axis_Reading;
-      Z : Axis_Reading;
+   type Triple_Axis_Reading is record
+      X : Integer;
+      Y : Integer;
+      Z : Integer;
    end record;
 
    type MPU6050_Output is record
-      Accelerometer_Output : 3_Axis_Reading;
-      Gyroscope_Output : 3_Axis_Reading;
+      Accelerometer_Output : Triple_Axis_Reading;
+      Gyroscope_Output : Triple_Axis_Reading;
    end record;
 
    --  Reset the chip to the power-on reset state.
    procedure Reset (C : in out Chip);
 
-   procedure Initialize (C : in out Chip);
-
    function Test_Connection (C : in out Chip) return Boolean;
 
-   function Get_Motion_6 (C : in out Chip) return MPU6050_6DOF_Output;
+   function Get_Motion_6 (C : in out Chip) return MPU6050_Output;
 
    function Get_Device_Id (C : in out Chip) return I2C.Byte;
 private
