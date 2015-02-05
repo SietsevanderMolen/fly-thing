@@ -20,9 +20,10 @@ package body MPU6050 is
    function Get_Motion_6 (C : in Chip) return MPU6050_Output is
       Output : MPU6050_Output;
       Data : constant Byte_Array :=
-         C.Read_Array_Data (MPU6050_RA_ACCEL_XOUT_H, 12);
+         C.Read_Array_Data (MPU6050_RA_ACCEL_XOUT_H, 14);
       A_X, A_Y, A_Z : Axis_Reading;
       G_X, G_Y, G_Z : Axis_Reading;
+      Tmp           : Axis_Reading;
    begin
       A_X.H := Data (0);
       A_X.L := Data (1);
@@ -30,16 +31,19 @@ package body MPU6050 is
       A_Y.L := Data (3);
       A_Z.H := Data (4);
       A_Z.L := Data (5);
-      G_X.H := Data (6);
-      G_X.L := Data (7);
-      G_Y.H := Data (8);
-      G_Y.L := Data (9);
-      G_Z.H := Data (10);
-      G_Z.L := Data (11);
+      Tmp.H := Data (6);
+      Tmp.L := Data (7);
+      G_X.H := Data (8);
+      G_X.L := Data (9);
+      G_Y.H := Data (10);
+      G_Y.L := Data (11);
+      G_Z.H := Data (12);
+      G_Z.L := Data (13);
 
       Output.Accelerometer_Output.X := Integer (Pack (A_X));
       Output.Accelerometer_Output.Y := Integer (Pack (A_Y));
       Output.Accelerometer_Output.Z := Integer (Pack (A_Z));
+      Output.Thermometer_Output := Integer (Pack (Tmp));
       Output.Gyroscope_Output.X := Integer (Pack (G_X));
       Output.Gyroscope_Output.Y := Integer (Pack (G_Y));
       Output.Gyroscope_Output.Z := Integer (Pack (G_Z));

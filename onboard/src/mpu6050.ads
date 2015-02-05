@@ -34,6 +34,7 @@ package MPU6050 is
    type MPU6050_Output is record
       Accelerometer_Output : Triple_Axis_Reading;
       Gyroscope_Output : Triple_Axis_Reading;
+      Thermometer_Output : Integer;
    end record;
 
    --  Reset the chip to the power-on reset state.
@@ -75,7 +76,7 @@ private
          Cycle        : Integer range 0 .. 1;
          Pad          : Integer range 0 .. 0;
          Temp_Dis     : Integer range 0 .. 1;
-         Clock_Sel    : Integer range 0 .. 7;
+         Clock_Sel    : Clock_Source range 0 .. 7;
       end record;
    for PWR_MGMT_1 use
       record
@@ -94,9 +95,9 @@ private
 
    type GYRO_CONFIG is
       record
-         XG_ST  : Integer range 0 .. 1;
-         YG_ST  : Integer range 0 .. 1;
-         ZG_ST  : Integer range 0 .. 1;
+         XG_ST  : Gyro_Scale_Range range 0 .. 1;
+         YG_ST  : Gyro_Scale_Range range 0 .. 1;
+         ZG_ST  : Gyro_Scale_Range range 0 .. 1;
          FS_SEL : Integer range 0 .. 3;
          Pad : Integer range 0 .. 0;
       end record;
@@ -116,10 +117,10 @@ private
 
    type ACCEL_CONFIG is
       record
-         XA_ST   : Integer range 0 .. 1;
-         YA_ST   : Integer range 0 .. 1;
-         ZA_ST   : Integer range 0 .. 1;
-         AFS_SEL : Integer range 0 .. 3;
+         XA_ST   : Accel_Scale_Range range 0 .. 1;
+         YA_ST   : Accel_Scale_Range range 0 .. 1;
+         ZA_ST   : Accel_Scale_Range range 0 .. 1;
+         AFS_SEL : Accel_Scale_Range range 0 .. 3;
          Pad : Integer range 0 .. 0;
       end record;
    for ACCEL_CONFIG use

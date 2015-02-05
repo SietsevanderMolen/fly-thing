@@ -29,6 +29,44 @@ package HMC5883L is
    procedure Set_Declination (C : in Chip;
                               Degrees : in Degree;
                               Minutes : in Minute);
+
+   HMC5883L_CRA_AVERAGE_BIT     : constant Integer := 16#06#;
+   HMC5883L_CRA_AVERAGE_LENGTH  : constant Integer := 16#02#;
+   HMC5883L_CRA_RATE_BIT        : constant Integer := 16#04#;
+   HMC5883L_CRA_RATE_LENGTH     : constant Integer := 16#03#;
+   HMC5883L_CRA_BIAS_BIT        : constant Integer := 16#01#;
+   HMC5883L_CRA_BIAS_LENGTH     : constant Integer := 16#02#;
+   HMC5883L_AVERAGING_1         : constant Integer := 16#00#;
+   HMC5883L_AVERAGING_2         : constant Integer := 16#01#;
+   HMC5883L_AVERAGING_4         : constant Integer := 16#02#;
+   HMC5883L_AVERAGING_8         : constant Integer := 16#03#;
+   HMC5883L_RATE_0P75           : constant Integer := 16#00#;
+   HMC5883L_RATE_1P5            : constant Integer := 16#01#;
+   HMC5883L_RATE_3              : constant Integer := 16#02#;
+   HMC5883L_RATE_7P5            : constant Integer := 16#03#;
+   HMC5883L_RATE_15             : constant Integer := 16#04#;
+   HMC5883L_RATE_30             : constant Integer := 16#05#;
+   HMC5883L_RATE_75             : constant Integer := 16#06#;
+   HMC5883L_BIAS_NORMAL         : constant Integer := 16#00#;
+   HMC5883L_BIAS_POSITIVE       : constant Integer := 16#01#;
+   HMC5883L_BIAS_NEGATIVE       : constant Integer := 16#02#;
+   HMC5883L_CRB_GAIN_BIT        : constant Integer := 16#07#;
+   HMC5883L_CRB_GAIN_LENGTH     : constant Integer := 16#03#;
+   HMC5883L_GAIN_1370           : constant Integer := 16#00#;
+   HMC5883L_GAIN_1090           : constant Integer := 16#01#;
+   HMC5883L_GAIN_820            : constant Integer := 16#02#;
+   HMC5883L_GAIN_660            : constant Integer := 16#03#;
+   HMC5883L_GAIN_440            : constant Integer := 16#04#;
+   HMC5883L_GAIN_390            : constant Integer := 16#05#;
+   HMC5883L_GAIN_330            : constant Integer := 16#06#;
+   HMC5883L_GAIN_220            : constant Integer := 16#07#;
+   HMC5883L_MODEREG_BIT         : constant Integer := 16#01#;
+   HMC5883L_MODEREG_LENGTH      : constant Integer := 16#02#;
+   HMC5883L_MODE_CONTINUOUS     : constant Integer := 16#00#;
+   HMC5883L_MODE_SINGLE         : constant Integer := 16#01#;
+   HMC5883L_MODE_IDLE           : constant Integer := 16#02#;
+   HMC5883L_STATUS_LOCK_BIT     : constant Integer := 16#01#;
+   HMC5883L_STATUS_READY_BIT    : constant Integer := 16#00#;
 private
    --  One magnetometer axis reading, eg X, Y or Z
    type Axis_Reading is

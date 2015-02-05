@@ -15,7 +15,7 @@ procedure Ravn is
    Compass : HMC5883L.Chip (On_Bus => I2C_Bus'Access,
                             Address => 16#1E#);  --  default address
    IMU : MPU6050.Chip (On_Bus => I2C_Bus'Access,
-                       Address => 16#69#); --  default address
+                       Address => 16#68#); --  default address
 begin
    PWM_Driver.Reset;
    PWM_Driver.SetPWMFreq (1000.0); --  Max frequency as per datasheet
@@ -39,7 +39,7 @@ begin
                IMU_Output : MPU6050.MPU6050_Output;
             begin
 
-               for j in Integer range 0 .. 1000 loop
+               for j in Integer range 0 .. 100 loop
                   I2C.Write_Array_Data (C => PWM_Driver,
                                         R => I2C.Register (50), --  Pin 11-15
                                         Values => bytes);
@@ -49,7 +49,7 @@ begin
 
                Finish_Time := Clock;
                Ada.Float_Text_IO.Put (
-                  1000.0 / Float (To_Duration (Finish_Time - Start_Time)),
+                  100.0 / Float (To_Duration (Finish_Time - Start_Time)),
                   Fore => 4, Aft => 2, Exp => 0
                );
                Ada.Text_IO.New_Line;
@@ -64,6 +64,14 @@ begin
                   IMU_Output.Gyroscope_Output.Y));
                Put_Line ("GZ " & Integer'Image (
                   IMU_Output.Gyroscope_Output.Z));
+               Put_Line ("Tmp " & Integer'Image (
+                  IMU_Output.Thermometer_Output));
+               Put_Line ("AX " & Integer'Image (
+                  IMU_Output.Accelerometer_Output.X));
+               Put_Line ("AY " & Integer'Image (
+                  IMU_Output.Accelerometer_Output.Y));
+               Put_Line ("AZ " & Integer'Image (
+                  IMU_Output.Accelerometer_Output.Z));
             end;
          end loop;
       end;
