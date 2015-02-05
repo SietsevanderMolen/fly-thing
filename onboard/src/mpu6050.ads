@@ -7,6 +7,10 @@ with Vector_Math; use Vector_Math;
 package MPU6050 is
    type Chip is new I2C.Chip with null record;
 
+   subtype Clock_Source is Integer range 0 .. 7;
+   subtype Gyro_Scale_Range is Integer range 0 .. 3;
+   subtype Accel_Scale_Range is Integer range 0 .. 3;
+
    type Axis_Reading is
       record
          L : Byte;
@@ -17,7 +21,6 @@ package MPU6050 is
          L at 0 range 0 .. 7;
          H at 0 range 8 .. 15;
       end record;
-   --  Convert a raw axis reading into it's two's complement representation
    function Pack is new
       Ada.Unchecked_Conversion (Source => Axis_Reading,
                                 Target => Interfaces.Integer_16);
@@ -36,12 +39,103 @@ package MPU6050 is
    --  Reset the chip to the power-on reset state.
    procedure Reset (C : in out Chip);
 
-   function Test_Connection (C : in out Chip) return Boolean;
+   function Test_Connection (C : in Chip) return Boolean;
 
-   function Get_Motion_6 (C : in out Chip) return MPU6050_Output;
+   function Get_Motion_6 (C : in Chip) return MPU6050_Output;
 
-   function Get_Device_Id (C : in out Chip) return I2C.Byte;
+   function Get_Device_Id (C : in Chip) return I2C.Byte;
+
+   procedure Set_Clock_Source (C : in out Chip; S : Clock_Source);
+   procedure Set_Full_Scale_Gyro_Range (C : in out Chip; R : Gyro_Scale_Range);
+   procedure Set_Full_Scale_Accel_Range
+      (C : in out Chip; R : Accel_Scale_Range);
+   procedure Set_Sleep (C : in out Chip; S : Boolean);
+
+   MPU6050_CLOCK_INTERNAL : constant Clock_Source := 16#00#;
+   MPU6050_CLOCK_PLL_XGYRO : constant Clock_Source := 16#01#;
+   MPU6050_CLOCK_PLL_YGYRO : constant Clock_Source := 16#02#;
+   MPU6050_CLOCK_PLL_ZGYRO : constant Clock_Source := 16#03#;
+   MPU6050_CLOCK_PLL_EXT32K : constant Clock_Source := 16#04#;
+   MPU6050_CLOCK_PLL_EXT19M : constant Clock_Source := 16#05#;
+   MPU6050_CLOCK_KEEP_RESET : constant Clock_Source := 16#07#;
+   MPU6050_GYRO_FS_250 : constant Gyro_Scale_Range := 16#00#;
+   MPU6050_GYRO_FS_500 : constant Gyro_Scale_Range := 16#01#;
+   MPU6050_GYRO_FS_1000 : constant Gyro_Scale_Range := 16#02#;
+   MPU6050_GYRO_FS_2000 : constant Gyro_Scale_Range := 16#03#;
+   MPU6050_ACCEL_FS_2 : constant Accel_Scale_Range := 16#00#;
+   MPU6050_ACCEL_FS_4 : constant Accel_Scale_Range := 16#01#;
+   MPU6050_ACCEL_FS_8 : constant Accel_Scale_Range := 16#02#;
+   MPU6050_ACCEL_FS_16 : constant Accel_Scale_Range := 16#03#;
+
 private
+   type PWR_MGMT_1 is
+      record
+         Device_Reset : Integer range 0 .. 1;
+         Sleep        : Integer range 0 .. 1;
+         Cycle        : Integer range 0 .. 1;
+         Pad          : Integer range 0 .. 0;
+         Temp_Dis     : Integer range 0 .. 1;
+         Clock_Sel    : Integer range 0 .. 7;
+      end record;
+   for PWR_MGMT_1 use
+      record
+         Device_Reset at 0 range 7 .. 7;
+         Sleep at 0 range 6 .. 6;
+         Cycle at 0 range 5 .. 5;
+         Pad at 0 range 4 .. 4;
+         Temp_Dis at 0 range 3 .. 3;
+         Clock_Sel at 0 range 0 .. 2;
+      end record;
+   PWR_MGMT_1_Address : constant Register := 16#6B#;
+   function Pack is new Ada.Unchecked_Conversion (Source => PWR_MGMT_1,
+                                                  Target => Byte);
+   function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
+                                                    Target => PWR_MGMT_1);
+
+   type GYRO_CONFIG is
+      record
+         XG_ST  : Integer range 0 .. 1;
+         YG_ST  : Integer range 0 .. 1;
+         ZG_ST  : Integer range 0 .. 1;
+         FS_SEL : Integer range 0 .. 3;
+         Pad : Integer range 0 .. 0;
+      end record;
+   for GYRO_CONFIG use
+      record
+         XG_ST  at 0 range 7 .. 7;
+         YG_ST  at 0 range 6 .. 6;
+         ZG_ST  at 0 range 5 .. 5;
+         FS_SEL at 0 range 3 .. 4;
+         Pad at 0 range 0 .. 2;
+      end record;
+   GYRO_CONFIG_Address : constant Register := 16#1B#;
+   function Pack is new Ada.Unchecked_Conversion (Source => GYRO_CONFIG,
+                                                  Target => Byte);
+   function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
+                                                    Target => GYRO_CONFIG);
+
+   type ACCEL_CONFIG is
+      record
+         XA_ST   : Integer range 0 .. 1;
+         YA_ST   : Integer range 0 .. 1;
+         ZA_ST   : Integer range 0 .. 1;
+         AFS_SEL : Integer range 0 .. 3;
+         Pad : Integer range 0 .. 0;
+      end record;
+   for ACCEL_CONFIG use
+      record
+         XA_ST   at 0 range 7 .. 7;
+         YA_ST   at 0 range 6 .. 6;
+         ZA_ST   at 0 range 5 .. 5;
+         AFS_SEL at 0 range 3 .. 4;
+         Pad at 0 range 0 .. 2;
+      end record;
+   ACCEL_CONFIG_Address : constant Register := 16#1C#;
+   function Pack is new Ada.Unchecked_Conversion (Source => ACCEL_CONFIG,
+                                                  Target => Byte);
+   function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
+                                                    Target => ACCEL_CONFIG);
+
    --  Name the chip's registers
    MPU6050_ADDRESS_AD0_LOW : constant Register := 16#68#;
    MPU6050_ADDRESS_AD0_HIGH : constant Register := 16#69#;
@@ -145,8 +239,6 @@ private
    MPU6050_RA_SIGNAL_PATH_RESET : constant Register := 16#68#;
    MPU6050_RA_MOT_DETECT_CTRL : constant Register := 16#69#;
    MPU6050_RA_USER_CTRL : constant Register := 16#6A#;
-   MPU6050_RA_PWR_MGMT_1 : constant Register := 16#6B#;
-   MPU6050_RA_PWR_MGMT_2 : constant Register := 16#6C#;
    MPU6050_RA_BANK_SEL : constant Register := 16#6D#;
    MPU6050_RA_MEM_START_ADDR : constant Register := 16#6E#;
    MPU6050_RA_MEM_R_W : constant Register := 16#6F#;
@@ -189,24 +281,6 @@ private
 
    MPU6050_GCONFIG_FS_SEL_BIT : constant Register := 4;
    MPU6050_GCONFIG_FS_SEL_LENGTH : constant Register := 2;
-
-   MPU6050_GYRO_FS_250 : constant Register := 16#00#;
-   MPU6050_GYRO_FS_500 : constant Register := 16#01#;
-   MPU6050_GYRO_FS_1000 : constant Register := 16#02#;
-   MPU6050_GYRO_FS_2000 : constant Register := 16#03#;
-
-   MPU6050_ACONFIG_XA_ST_BIT : constant Register := 7;
-   MPU6050_ACONFIG_YA_ST_BIT : constant Register := 6;
-   MPU6050_ACONFIG_ZA_ST_BIT : constant Register := 5;
-   MPU6050_ACONFIG_AFS_SEL_BIT : constant Register := 4;
-   MPU6050_ACONFIG_AFS_SEL_LENGTH : constant Register := 2;
-   MPU6050_ACONFIG_ACCEL_HPF_BIT : constant Register := 2;
-   MPU6050_ACONFIG_ACCEL_HPF_LENGTH : constant Register := 3;
-
-   MPU6050_ACCEL_FS_2 : constant Register := 16#00#;
-   MPU6050_ACCEL_FS_4 : constant Register := 16#01#;
-   MPU6050_ACCEL_FS_8 : constant Register := 16#02#;
-   MPU6050_ACCEL_FS_16 : constant Register := 16#03#;
 
    MPU6050_DHPF_RESET : constant Register := 16#00#;
    MPU6050_DHPF_5 : constant Register := 16#01#;
@@ -357,14 +431,6 @@ private
    MPU6050_PWR1_TEMP_DIS_BIT : constant Register := 3;
    MPU6050_PWR1_CLKSEL_BIT : constant Register := 2;
    MPU6050_PWR1_CLKSEL_LENGTH : constant Register := 3;
-
-   MPU6050_CLOCK_INTERNAL : constant Register := 16#00#;
-   MPU6050_CLOCK_PLL_XGYRO : constant Register := 16#01#;
-   MPU6050_CLOCK_PLL_YGYRO : constant Register := 16#02#;
-   MPU6050_CLOCK_PLL_ZGYRO : constant Register := 16#03#;
-   MPU6050_CLOCK_PLL_EXT32K : constant Register := 16#04#;
-   MPU6050_CLOCK_PLL_EXT19M : constant Register := 16#05#;
-   MPU6050_CLOCK_KEEP_RESET : constant Register := 16#07#;
 
    MPU6050_PWR2_LP_WAKE_CTRL_BIT : constant Register := 7;
    MPU6050_PWR2_LP_WAKE_CTRL_LENGTH : constant Register := 2;

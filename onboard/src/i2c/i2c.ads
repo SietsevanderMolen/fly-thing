@@ -37,11 +37,11 @@ package I2C is
    --  Read a byte from a specific register
    function Read_Byte_Data (C : Chip'class; R : Register) return Byte;
    --  Write a byte to a specific register
-   procedure Write_Byte_Data (C : Chip'class; R : Register; To : Byte);
+   procedure Write_Byte_Data (C : Chip'class; R : Register; D : Byte);
    --  Read a word from a specific register
    function Read_Word_Data (C : Chip'class; R : Register) return Word;
    --  Write a word to a specific register
-   procedure Write_Word_Data (C : Chip'class; R : Register; To : Word);
+   procedure Write_Word_Data (C : Chip'class; R : Register; D : Word);
    --  Read an array of bytes from a specific register
    function Read_Array_Data (C : Chip'class;
                              R : Register;

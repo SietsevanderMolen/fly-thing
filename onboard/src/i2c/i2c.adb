@@ -94,13 +94,13 @@ package body I2C is
       end if;
    end Read_Byte_Data;
 
-   procedure Write_Byte_Data (C : Chip'class; R : Register; To : Byte)
+   procedure Write_Byte_Data (C : Chip'class; R : Register; D : Byte)
    is
       Status : Integer;
    begin
       Status :=
          i2c_interface_c.write_byte_data
-            (Integer (C.On_Bus.FD), C.Address, R, To);
+            (Integer (C.On_Bus.FD), C.Address, R, D);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
             with "writing to chip " & Chip_Address'Image (C.Address)
@@ -122,12 +122,12 @@ package body I2C is
       end if;
    end Read_Word_Data;
 
-   procedure Write_Word_Data (C : Chip'class; R : Register; To : Word)
+   procedure Write_Word_Data (C : Chip'class; R : Register; D : Word)
    is
       Status : Integer;
    begin
       Status := i2c_interface_c.write_word_data
-        (Integer (C.On_Bus.FD), C.Address, R, To);
+        (Integer (C.On_Bus.FD), C.Address, R, D);
       if Status < 0 then
          raise Ada.IO_Exceptions.Device_Error
             with "writing to chip" & Chip_Address'Image (C.Address)
