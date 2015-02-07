@@ -178,8 +178,8 @@ package body MPU6050 is
       end loop;
       --  Write remainder
       Chunk_Rem_Buffer :=
-         Data (Data'First + (Chunks * Chunk_Size) ..
-               Data'First + (Chunks * Chunk_Size) + Rem_Bytes);
+         Data (Data'First + (Chunks - 1 * Chunk_Size) ..
+               Data'First + (Chunks - 1* Chunk_Size) + Rem_Bytes);
       C.Write_Array_Data (R => MPU6050_RA_MEM_R_W,
                           Values => Chunk_Rem_Buffer);
    end Write_Memory_Block;
