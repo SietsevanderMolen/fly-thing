@@ -106,7 +106,7 @@ package body MPU6050 is
    end Set_Full_Scale_Accel_Range;
 
    procedure Set_Memory_Bank (C : in Chip;
-                              Bank : Natural;
+                              Bank : Memory_Bank;
                               Prefetch : Boolean := False;
                               User_Bank : Boolean := False) is
       B : BANK_SEL;
@@ -119,7 +119,7 @@ package body MPU6050 is
    end Set_Memory_Bank;
 
    procedure Set_Memory_Start_Address (C : in Chip;
-                                       Address : Natural) is
+                                       Address : Memory_Address) is
    begin
       C.Write_Byte_Data (R => MPU6050_RA_MEM_START_ADDR, D => Byte (Address));
    end Set_Memory_Start_Address;
@@ -134,53 +134,54 @@ package body MPU6050 is
       Power_Management : PWR_MGMT_1 :=
          Unpack (C.Read_Byte_Data (PWR_MGMT_1_Address));
    begin
-      if S then
-         Power_Management.Sleep := 1;
-      else
-         Power_Management.Sleep := 0;
-      end if;
+      Power_Management.Sleep := Boolean'Pos (S);
       C.Write_Byte_Data (R => PWR_MGMT_1_Address,
                          D => Pack (Power_Management));
    end Set_Sleep;
 
    procedure Write_Memory_Block (C : in Chip;
                                  Data : in Byte_Array;
-                                 Bank : in Natural := 0;
-                                 Address : in Natural := 0;
+                                 Bank : in Memory_Bank := 0;
+                                 Address : in Memory_Address := 0;
                                  Verify : in Boolean := False;
                                  Use_Prog : in Boolean := False) is
+      Not_Implemented : exception;
       Chunk_Size : constant Natural := MPU6050_DMP_MEMORY_CHUNK_SIZE;
-      Chunk_Buffer : Byte_Array (0 .. Chunk_Size);
       Chunks : constant Natural := Data'Length / Chunk_Size;
       Rem_Bytes : constant Natural := Data'Length mod Chunk_Size;
-      Chunk_Rem_Buffer : Byte_Array (0 .. Rem_Bytes);
-      Current_Bank : Natural := Bank;
-      Current_Address : Natural := Address;
+      Current_Bank : Memory_Bank := Bank;
+      Current_Address : Memory_Address := Address;
    begin
+      if not Use_Prog then
+         raise Not_Implemented;
+      end if;
+      if Verify then
+         raise Not_Implemented;
+      end if;
+
       C.Set_Memory_Bank (Current_Bank);
       C.Set_Memory_Start_Address (Current_Address);
 
       for I in 0 .. Chunks - 1 loop
-         C.Write_Array_Data
-            (R => MPU6050_RA_MEM_R_W,
-             Values => Data (
-                (I * Chunk_Size) + Data'First ..
-                (I * Chunk_Size) + Data'First
-                  + Chunk_Size));
-
-         Current_Address := Current_Address + 1;
-         C.Set_Memory_Start_Address (Current_Address);
-         if Current_Address = 256 then
+         --  Write current chunk
+         C.Write_Array_Data (R => MPU6050_RA_MEM_R_W,
+                             Values => Data ((I * Chunk_Size) + Data'First ..
+                                             (I * Chunk_Size) + Data'First
+                                                + Chunk_Size));
+         --  Update address and bank
+         if Current_Address + Chunk_Size < 256 then
+            Current_Address := Current_Address + Chunk_Size;
+            C.Set_Memory_Start_Address (Current_Address);
+         else --  Handle overflow to next bank
             Current_Address := 0;
+            C.Set_Memory_Start_Address (Current_Address);
             Current_Bank := Current_Bank + 1;
             C.Set_Memory_Bank (Current_Bank);
          end if;
       end loop;
       --  Write remainder
-      Chunk_Rem_Buffer :=
-         Data (Data'First + (Chunks * Chunk_Size) ..
-               Data'First + (Chunks * Chunk_Size) + Rem_Bytes);
       C.Write_Array_Data (R => MPU6050_RA_MEM_R_W,
-                          Values => Chunk_Rem_Buffer);
+         Values => Data (Data'First + (Chunks - 1 * Chunk_Size) ..
+            Data'First + (Chunks - 1* Chunk_Size) + Rem_Bytes));
    end Write_Memory_Block;
 end MPU6050;

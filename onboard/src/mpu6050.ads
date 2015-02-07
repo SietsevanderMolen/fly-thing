@@ -156,21 +156,22 @@ private
    function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
                                                     Target => BANK_SEL);
 
+   subtype Memory_Bank is Integer range 0 .. 31;
+   subtype Memory_Address is Integer range 0 .. 255;
+
    procedure Set_Memory_Bank (C : in Chip;
-                              Bank : Natural;
+                              Bank : Memory_Bank;
                               Prefetch : Boolean := False;
-                              User_Bank : Boolean := False) with
-   PRE => Bank < 32;
+                              User_Bank : Boolean := False);
 
    procedure Set_Memory_Start_Address (C : in Chip;
-                                       Address : Natural) with
-   PRE => Address < 128;
+                                       Address : Memory_Address);
 
    function Read_Memory_Byte (C : in Chip) return Byte;
    procedure Write_Memory_Block (C : in Chip;
                                  Data : in Byte_Array;
-                                 Bank : in Natural := 0;
-                                 Address : in Natural := 0;
+                                 Bank : in Memory_Bank := 0;
+                                 Address : in Memory_Address := 0;
                                  Verify : in Boolean := False;
                                  Use_Prog : in Boolean := False);
 
