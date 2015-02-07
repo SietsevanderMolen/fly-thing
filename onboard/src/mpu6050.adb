@@ -149,9 +149,10 @@ package body MPU6050 is
                                  Address : in Natural := 0;
                                  Verify : in Boolean := False;
                                  Use_Prog : in Boolean := False) is
-      Chunk_Buffer : Byte_Array (0 .. MPU6050_DMP_MEMORY_CHUNK_SIZE);
-      Chunks : Positive := Data'Length / MPU6050_DMP_MEMORY_CHUNK_SIZE;
-      Rem_Bytes : Natural := Data'Length mod MPU6050_DMP_MEMORY_CHUNK_SIZE;
+      Chunk_Size : constant Natural := MPU6050_DMP_MEMORY_CHUNK_SIZE;
+      Chunk_Buffer : Byte_Array (0 .. Chunk_Size);
+      Chunks : constant Natural := Data'Length / Chunk_Size;
+      Rem_Bytes : constant Natural := Data'Length mod Chunk_Size;
       Chunk_Rem_Buffer : Byte_Array (0 .. Rem_Bytes);
       Current_Bank : Natural := Bank;
       Current_Address : Natural := Address;
@@ -160,13 +161,12 @@ package body MPU6050 is
       C.Set_Memory_Start_Address (Current_Address);
 
       for I in 0 .. Chunks - 1 loop
-         --  Write current chunk
          C.Write_Array_Data
             (R => MPU6050_RA_MEM_R_W,
-             Values => Chunk_Buffer (
-                I * MPU6050_DMP_MEMORY_CHUNK_SIZE ..
-               (I * MPU6050_DMP_MEMORY_CHUNK_SIZE)
-                  + MPU6050_DMP_MEMORY_CHUNK_SIZE));
+             Values => Data (
+                (I * Chunk_Size) + Data'First ..
+                (I * Chunk_Size) + Data'First
+                  + Chunk_Size));
 
          Current_Address := Current_Address + 1;
          C.Set_Memory_Start_Address (Current_Address);
@@ -177,6 +177,9 @@ package body MPU6050 is
          end if;
       end loop;
       --  Write remainder
+      Chunk_Rem_Buffer :=
+         Data (Data'First + (Chunks * Chunk_Size) ..
+               Data'First + (Chunks * Chunk_Size) + Rem_Bytes);
       C.Write_Array_Data (R => MPU6050_RA_MEM_R_W,
                           Values => Chunk_Rem_Buffer);
    end Write_Memory_Block;
