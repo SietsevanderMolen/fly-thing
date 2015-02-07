@@ -158,8 +158,8 @@ private
 
    procedure Set_Memory_Bank (C : in Chip;
                               Bank : Natural;
-                              Prefetch : Boolean;
-                              User_Bank : Boolean) with
+                              Prefetch : Boolean := False;
+                              User_Bank : Boolean := False) with
    PRE => Bank < 32;
 
    procedure Set_Memory_Start_Address (C : in Chip;
@@ -167,6 +167,12 @@ private
    PRE => Address < 128;
 
    function Read_Memory_Byte (C : in Chip) return Byte;
+   procedure Write_Memory_Block (C : in Chip;
+                                 Data : in Byte_Array;
+                                 Bank : in Natural := 0;
+                                 Address : in Natural := 0;
+                                 Verify : in Boolean := False;
+                                 Use_Prog : in Boolean := False);
 
    --  Name the chip's registers
    MPU6050_ADDRESS_AD0_LOW : constant Register := 16#68#;
@@ -490,8 +496,7 @@ private
    MPU6050_DMP_MEMORY_BANK_SIZE : constant Integer := 256;
    MPU6050_DMP_MEMORY_CHUNK_SIZE : constant Integer := 16;
 
-   type Progmem is array (Integer range <>) of Byte;
-   MPU_Progmem : Progmem := (
+   MPU_Progmem : Byte_Array := (
       16#FB#, 16#00#, 16#00#, 16#3E#, 16#00#, 16#0B#, 16#00#, 16#36#, 16#00#,
       16#01#, 16#00#, 16#02#, 16#00#, 16#03#, 16#00#, 16#00#, 16#00#, 16#65#,
       16#00#, 16#54#, 16#FF#, 16#EF#, 16#00#, 16#00#, 16#FA#, 16#80#, 16#00#,
@@ -708,7 +713,7 @@ private
       16#A3#, 16#A3#, 16#DC#, 16#B9#, 16#A7#, 16#F1#, 16#26#, 16#26#, 16#26#,
       16#D8#, 16#D8#, 16#FF#);
 
-   MPU_Config : Progmem := (
+   MPU_Config : Byte_Array := (
       16#03#, 16#7B#, 16#03#, 16#4C#, 16#CD#, 16#6C#, 16#03#, 16#AB#, 16#03#,
       16#36#, 16#56#, 16#76#, 16#00#, 16#68#, 16#04#, 16#02#, 16#CB#, 16#47#,
       16#A2#, 16#02#, 16#18#, 16#04#, 16#00#, 16#05#, 16#8B#, 16#C1#, 16#01#,
@@ -732,7 +737,7 @@ private
       16#07#, 16#6C#, 16#04#, 16#F1#, 16#28#, 16#30#, 16#38#, 16#02#, 16#16#,
       16#02#, 16#00#, 16#01#); --  Last 1 sets dmp fifo rate. 0=200hz 1=100hz
 
-   MPU_Updates : Progmem := (
+   MPU_Updates : Byte_Array := (
       16#01#, 16#B2#, 16#02#, 16#FF#, 16#FF#, 16#01#, 16#90#, 16#04#, 16#09#,
       16#23#, 16#A1#, 16#35#, 16#01#, 16#6A#, 16#02#, 16#06#, 16#00#, 16#01#,
       16#60#, 16#08#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#,
