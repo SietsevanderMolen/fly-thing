@@ -17,8 +17,11 @@ package body MPU6050 is
    procedure Initialize_DMP (C : in out Chip) is
       HW_Revision : Byte := 0;
    begin
-      C.Set_Memory_Bank (Bank => 16#00#, Prefetch => True, User_Bank => True);
+      C.Set_Memory_Bank (Bank => 16#10#, Prefetch => True, User_Bank => True);
       C.Set_Memory_Start_Address (Address => 16#06#);
+      HW_Revision := C.Read_Memory_Byte;
+      Ada.Text_IO.Put_Line ("HW Revision: " & Byte'Image (HW_Revision));
+      C.Set_Memory_Bank (Bank => 0, Prefetch => False, User_Bank => False);
       HW_Revision := C.Read_Memory_Byte;
       Ada.Text_IO.Put_Line ("HW Revision: " & Byte'Image (HW_Revision));
    end Initialize_DMP;

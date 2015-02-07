@@ -141,7 +141,7 @@ private
          Pad : Integer range 0 .. 0;
          PRFTCH_EN : Integer range 0 .. 1;
          CFG_USER_BANK : Integer range 0 .. 1;
-         MEM_SEL : Integer range 0 .. 15;
+         MEM_SEL : Integer range 0 .. 31;
       end record;
    for BANK_SEL use
       record
@@ -160,7 +160,7 @@ private
                               Bank : Natural;
                               Prefetch : Boolean;
                               User_Bank : Boolean) with
-   PRE => Bank < 16;
+   PRE => Bank < 32;
 
    procedure Set_Memory_Start_Address (C : in Chip;
                                        Address : Natural) with
