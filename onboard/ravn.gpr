@@ -9,11 +9,12 @@ project Ravn is
       for Driver ("Ada") use "colorgcc";
       Standard_Switches :=
          (
-            "-O3",      --  standard optimisation
-            "-gnatqQ",  --  to keep ALI files even if there are compilation errors
+            "-gnat2012",   --  use ada12
+            "-O3",         --  standard optimisation
+            "-gnatqQ",     --  to keep ALI files even if there are compilation errors
             "-t",
-            "-gnatafo", --  assertions, full reports, integer overflow
-            "-gnatwaL"  --  all standard warnings except for elaboration
+            "-gnatafo",    --  assertions, full reports, integer overflow
+            "-gnatwaL"     --  all standard warnings except for elaboration
             );
 
       --  Generated code
