@@ -1,4 +1,5 @@
 with Interfaces; use Interfaces;
+with Ada.Text_IO;
 
 package body MPU6050 is
 
@@ -9,7 +10,18 @@ package body MPU6050 is
       C.Set_Full_Scale_Gyro_Range (R => MPU6050_GYRO_FS_250);
       C.Set_Full_Scale_Accel_Range (R => MPU6050_ACCEL_FS_2);
       C.Set_Sleep (S => False);
+      C.Initialize_DMP;
    end Reset;
+
+   --  Reset the chip to the power-on reset state.
+   procedure Initialize_DMP (C : in out Chip) is
+      HW_Revision : Byte := 0;
+   begin
+      C.Set_Memory_Bank (Bank => 16#10#, Prefetch => True, User_Bank => True);
+      C.Set_Memory_Start_Address (Address => 16#06#);
+      HW_Revision := C.Read_Memory_Byte;
+      Ada.Text_IO.Put_Line ("HW Revision: " & Byte'Image (HW_Revision));
+   end Initialize_DMP;
 
    function Test_Connection (C : in Chip) return Boolean is
       Device_ID : constant Byte := C.Get_Device_Id;
@@ -88,6 +100,30 @@ package body MPU6050 is
       C.Write_Byte_Data (R => ACCEL_CONFIG_Address,
                          D => Pack (Accel_Setting));
    end Set_Full_Scale_Accel_Range;
+
+   procedure Set_Memory_Bank (C : in Chip;
+                              Bank : Natural;
+                              Prefetch : Boolean;
+                              User_Bank : Boolean) is
+      B : BANK_SEL;
+   begin
+      B.MEM_SEL := Bank;
+      B.PRFTCH_EN := 0; --  bank &= 0x1F
+      B.CFG_USER_BANK := Boolean'Pos (User_Bank);
+      B.PRFTCH_EN := Boolean'Pos (Prefetch);
+      C.Write_Byte_Data (R => MPU6050_RA_BANK_SEL, D => Pack (B));
+   end Set_Memory_Bank;
+
+   procedure Set_Memory_Start_Address (C : in Chip;
+                                       Address : Natural) is
+   begin
+      C.Write_Byte_Data (R => MPU6050_RA_MEM_START_ADDR, D => Byte (Address));
+   end Set_Memory_Start_Address;
+
+   function Read_Memory_Byte (C : in Chip) return Byte is
+   begin
+      return C.Read_Byte_Data (MPU6050_RA_MEM_R_W);
+   end Read_Memory_Byte;
 
    procedure Set_Sleep (C : in out Chip;
                         S : Boolean) is
