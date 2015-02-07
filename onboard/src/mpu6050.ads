@@ -160,7 +160,7 @@ private
                               Bank : Natural;
                               Prefetch : Boolean;
                               User_Bank : Boolean) with
-   PRE => Bank < 15;
+   PRE => Bank < 16;
 
    procedure Set_Memory_Start_Address (C : in Chip;
                                        Address : Natural) with
