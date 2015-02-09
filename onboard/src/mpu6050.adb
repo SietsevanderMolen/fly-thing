@@ -250,10 +250,6 @@ package body MPU6050 is
       Verify_Buffer : Byte_Array (0 .. Chunk_Size);
       Verification_Failed : exception;
    begin
-      if Verify then
-         raise Not_Implemented;
-      end if;
-
       C.Set_Memory_Bank (Current_Bank);
       C.Set_Memory_Start_Address (Current_Address);
 
@@ -288,7 +284,7 @@ package body MPU6050 is
       --  Write remainder
       C.Write_Array_Data (R => MPU6050_RA_MEM_R_W,
          Values => Data (Data'First + (Chunks - 1 * Chunk_Size) ..
-            Data'First + (Chunks - 1* Chunk_Size) + Rem_Bytes));
+                         Data'First + (Chunks - 1* Chunk_Size) + Rem_Bytes));
    end Write_Memory_Block;
 
    procedure Write_DMP_Configuration (C : in Chip;
