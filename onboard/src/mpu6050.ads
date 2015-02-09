@@ -173,7 +173,7 @@ private
                                  Data : in Byte_Array;
                                  Bank : in Memory_Bank := 0;
                                  Address : in Memory_Address := 0;
-                                 Verify : in Boolean := False);
+                                 Verify : in Boolean := True);
 
    procedure Write_DMP_Configuration (C : in Chip;
                                       Data : in Byte_Array);

@@ -8,7 +8,6 @@ package body MPU6050 is
    --  Reset the chip to the power-on reset state.
    procedure Reset (C : in out Chip) is
    begin
-      C.Set_Clock_Source (S => MPU6050_CLOCK_PLL_XGYRO);
       C.Set_Full_Scale_Gyro_Range (R => MPU6050_GYRO_FS_250);
       C.Set_Full_Scale_Accel_Range (R => MPU6050_ACCEL_FS_2);
       C.Set_Sleep (S => False);
@@ -30,6 +29,8 @@ package body MPU6050 is
       C.Write_Memory_Block (Data => MPU_Progmem);
       --  write dmp config
       C.Write_DMP_Configuration (Data => MPU_Config);
+
+      C.Set_Clock_Source (S => MPU6050_CLOCK_PLL_ZGYRO);
    end Initialize_DMP;
 
    function Test_Connection (C : in Chip) return Boolean is
