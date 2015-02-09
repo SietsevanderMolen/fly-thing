@@ -29,8 +29,10 @@ package body MPU6050 is
       C.Write_Memory_Block (Data => MPU_Progmem);
       --  write dmp config
       C.Write_DMP_Configuration (Data => MPU_Config);
-
       C.Set_Clock_Source (S => MPU6050_CLOCK_PLL_ZGYRO);
+      C.Set_DMP_Interrupt (True);
+      C.Set_Fifo_Overflow_Interrupt (True);
+      C.Set_Sample_Rate_Divider (4); --  1khz / (1+4) = 200hz
    end Initialize_DMP;
 
    function Test_Connection (C : in Chip) return Boolean is
@@ -144,6 +146,63 @@ package body MPU6050 is
       C.Write_Byte_Data (R => PWR_MGMT_1_Address,
                          D => Pack (Power_Management));
    end Set_Sleep;
+
+   procedure Set_Motion_Detect_Interrupt (C : in out Chip;
+                                          S : Boolean) is
+      Interrupts : INT_ENABLE :=
+         Unpack (C.Read_Byte_Data (INT_ENABLE_Address));
+   begin
+      Interrupts.MOT_EN := Boolean'Pos (S);
+      C.Write_Byte_Data (R => INT_ENABLE_Address,
+                         D => Pack (Interrupts));
+   end Set_Motion_Detect_Interrupt;
+
+   procedure Set_Fifo_Overflow_Interrupt (C : in out Chip;
+                                          S : Boolean) is
+      Interrupts : INT_ENABLE :=
+         Unpack (C.Read_Byte_Data (INT_ENABLE_Address));
+   begin
+      Interrupts.FIFO_OFLOW_EN := Boolean'Pos (S);
+      C.Write_Byte_Data (R => INT_ENABLE_Address,
+                         D => Pack (Interrupts));
+   end Set_Fifo_Overflow_Interrupt;
+
+   procedure Set_I2C_Master_Interrupt (C : in out Chip;
+                                       S : Boolean) is
+      Interrupts : INT_ENABLE :=
+         Unpack (C.Read_Byte_Data (INT_ENABLE_Address));
+   begin
+      Interrupts.I2C_MST_EN := Boolean'Pos (S);
+      C.Write_Byte_Data (R => INT_ENABLE_Address,
+                         D => Pack (Interrupts));
+   end Set_I2C_Master_Interrupt;
+
+   procedure Set_DMP_Interrupt (C : in out Chip;
+                                S : Boolean) is
+      Interrupts : INT_ENABLE :=
+         Unpack (C.Read_Byte_Data (INT_ENABLE_Address));
+   begin
+      Interrupts.DMP_EN := Boolean'Pos (S);
+      C.Write_Byte_Data (R => INT_ENABLE_Address,
+                         D => Pack (Interrupts));
+   end Set_DMP_Interrupt;
+
+   procedure Set_Data_Ready_Interrupt (C : in out Chip;
+                                       S : Boolean) is
+      Interrupts : INT_ENABLE :=
+         Unpack (C.Read_Byte_Data (INT_ENABLE_Address));
+   begin
+      Interrupts.DATA_RDY_EN := Boolean'Pos (S);
+      C.Write_Byte_Data (R => INT_ENABLE_Address,
+                         D => Pack (Interrupts));
+   end Set_Data_Ready_Interrupt;
+
+   procedure Set_Sample_Rate_Divider (C : in out Chip;
+                                      D : in Byte) is
+   begin
+      C.Write_Byte_Data (R => SMPLRT_DIV_Address,
+                         D => D);
+   end Set_Sample_Rate_Divider;
 
    procedure Write_Memory_Block (C : in Chip;
                                  Data : in Byte_Array;

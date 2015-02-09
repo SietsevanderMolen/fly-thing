@@ -51,6 +51,18 @@ package MPU6050 is
    procedure Set_Full_Scale_Accel_Range
       (C : in out Chip; R : Accel_Scale_Range);
    procedure Set_Sleep (C : in out Chip; S : Boolean);
+   procedure Set_Motion_Detect_Interrupt (C : in out Chip;
+                                          S : Boolean);
+   procedure Set_Fifo_Overflow_Interrupt (C : in out Chip;
+                                          S : Boolean);
+   procedure Set_I2C_Master_Interrupt (C : in out Chip;
+                                       S : Boolean);
+   procedure Set_DMP_Interrupt (C : in out Chip;
+                                       S : Boolean);
+   procedure Set_Data_Ready_Interrupt (C : in out Chip;
+                                       S : Boolean);
+   procedure Set_Sample_Rate_Divider (C : in out Chip;
+                                      D : in Byte);
 
    MPU6050_CLOCK_INTERNAL : constant Clock_Source := 16#00#;
    MPU6050_CLOCK_PLL_XGYRO : constant Clock_Source := 16#01#;
@@ -157,6 +169,36 @@ private
    function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
                                                     Target => BANK_SEL);
 
+   type INT_ENABLE is
+      record
+         Pad : Integer range 0 .. 0;
+         MOT_EN : Integer range 0 .. 1;
+         Pad1 : Integer range 0 .. 0;
+         FIFO_OFLOW_EN : Integer range 0 .. 1;
+         I2C_MST_EN : Integer range 0 .. 1;
+         Pad2 : Integer range 0 .. 0;
+         DMP_EN : Integer range 0 .. 1; --  Sure? Rowberg's code sets it...
+         DATA_RDY_EN : Integer range 0 .. 1;
+      end record;
+   for INT_ENABLE use
+      record
+         Pad at 0 range 7 .. 7;
+         MOT_EN at 0 range 6 .. 6;
+         Pad1 at 0 range 5 .. 5;
+         FIFO_OFLOW_EN at 0 range 4 .. 4;
+         I2C_MST_EN at 0 range 3 .. 3;
+         Pad2 at 0 range 2 .. 2;
+         DMP_EN at 0 range 1 .. 1;
+         DATA_RDY_EN at 0 range 0 .. 0;
+      end record;
+   INT_ENABLE_Address : constant Register := 16#3A#;
+   function Pack is new Ada.Unchecked_Conversion (Source => INT_ENABLE,
+                                                  Target => Byte);
+   function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
+                                                    Target => INT_ENABLE);
+
+   SMPLRT_DIV_Address : constant Register := 16#19#;
+
    subtype Memory_Bank is Integer range 0 .. 31;
    subtype Memory_Address is Integer range 0 .. 255;
 
@@ -200,7 +242,6 @@ private
    MPU6050_RA_YG_OFFS_USRL : constant Register := 16#16#;
    MPU6050_RA_ZG_OFFS_USRH : constant Register := 16#17#;
    MPU6050_RA_ZG_OFFS_USRL : constant Register := 16#18#;
-   MPU6050_RA_SMPLRT_DIV : constant Register := 16#19#;
    MPU6050_RA_CONFIG : constant Register := 16#1A#;
    MPU6050_RA_GYRO_CONFIG : constant Register := 16#1B#;
    MPU6050_RA_ACCEL_CONFIG : constant Register := 16#1C#;
