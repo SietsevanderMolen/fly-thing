@@ -24,7 +24,10 @@ package body MPU6050 is
       Ada.Text_IO.Put_Line ("HW Revision: " & Byte'Image (HW_Revision));
       C.Set_Memory_Bank (Bank => 0, Prefetch => False, User_Bank => False);
 
-      C.Write_Memory_Block (Data => MPU_Progmem, Use_Prog => True);
+      --  write dmp code
+      C.Write_Memory_Block (Data => MPU_Progmem);
+      --  write dmp config
+      C.Write_DMP_Configuration (Data => MPU_Config);
    end Initialize_DMP;
 
    function Test_Connection (C : in Chip) return Boolean is
@@ -143,18 +146,13 @@ package body MPU6050 is
                                  Data : in Byte_Array;
                                  Bank : in Memory_Bank := 0;
                                  Address : in Memory_Address := 0;
-                                 Verify : in Boolean := False;
-                                 Use_Prog : in Boolean := False) is
-      Not_Implemented : exception;
+                                 Verify : in Boolean := False) is
       Chunk_Size : constant Natural := MPU6050_DMP_MEMORY_CHUNK_SIZE;
       Chunks : constant Natural := Data'Length / Chunk_Size;
       Rem_Bytes : constant Natural := Data'Length mod Chunk_Size;
       Current_Bank : Memory_Bank := Bank;
       Current_Address : Memory_Address := Address;
    begin
-      if not Use_Prog then
-         raise Not_Implemented;
-      end if;
       if Verify then
          raise Not_Implemented;
       end if;
@@ -184,4 +182,43 @@ package body MPU6050 is
          Values => Data (Data'First + (Chunks - 1 * Chunk_Size) ..
             Data'First + (Chunks - 1* Chunk_Size) + Rem_Bytes));
    end Write_Memory_Block;
+
+   procedure Write_DMP_Configuration (C : in Chip;
+                                      Data : in Byte_Array) is
+      I : Integer := Data'First; --  Data loop counter
+   begin
+      while I < Data'Length loop
+         declare
+            Bank : constant Memory_Bank := Integer (Data (Data'First + I));
+            Offset : constant Memory_Address :=
+               Integer (Data (Data'First + I + 1));
+            Length : Natural := Integer (Data (Data'First + I + 2));
+         begin
+            I := I + 3; --  Update loop counter to after bank, offset and len
+            if Length > 0 then
+               declare
+                  Prog_Buffer : constant Byte_Array (0 .. Length) :=
+                     Data (Data'First + I .. Data'First + I + Length);
+               begin
+                  C.Write_Memory_Block (Data => Prog_Buffer,
+                                        Bank => Bank,
+                                        Address => Offset);
+               end;
+            else --  Special case according to Rowberg et al
+               Length := 1; --  Length is actually 1 here
+               declare
+                  Magic_Byte : constant Byte := Data (Data'First + I);
+               begin
+                  case Magic_Byte is
+                     when 16#01# => --  Enable DMP related interrupts
+                        C.Write_Byte_Data (R => MPU6050_RA_INT_ENABLE,
+                                           D => 50);
+                     when others => raise Not_Implemented;
+                  end case;
+               end;
+            end if;
+            I := I + Length; -- Set pointer to next block
+         end;
+      end loop;
+   end Write_DMP_Configuration;
 end MPU6050;

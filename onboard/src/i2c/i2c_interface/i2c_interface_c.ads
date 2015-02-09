@@ -33,7 +33,7 @@ package i2c_interface_c is
    -- * so that it can be called from Ada using pragma Import.
    --  
    subtype Byte is Interfaces.Unsigned_8;
-   type Byte_Array is array (Integer range <>) of Interfaces.Unsigned_8;
+   type Byte_Array is array (Natural range <>) of Interfaces.Unsigned_8;
    pragma Convention (C, Byte_Array);
    subtype Word is Interfaces.Unsigned_16;
 

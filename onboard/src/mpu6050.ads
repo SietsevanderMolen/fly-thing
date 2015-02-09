@@ -2,7 +2,6 @@ with Ada.Unchecked_Conversion;
 with Interfaces;
 
 with I2C; use I2C;
-with Vector_Math; use Vector_Math;
 
 package MPU6050 is
    type Chip is new I2C.Chip with null record;
@@ -10,6 +9,8 @@ package MPU6050 is
    subtype Clock_Source is Integer range 0 .. 7;
    subtype Gyro_Scale_Range is Integer range 0 .. 3;
    subtype Accel_Scale_Range is Integer range 0 .. 3;
+
+   Not_Implemented : exception;
 
    type Axis_Reading is
       record
@@ -172,8 +173,10 @@ private
                                  Data : in Byte_Array;
                                  Bank : in Memory_Bank := 0;
                                  Address : in Memory_Address := 0;
-                                 Verify : in Boolean := False;
-                                 Use_Prog : in Boolean := False);
+                                 Verify : in Boolean := False);
+
+   procedure Write_DMP_Configuration (C : in Chip;
+                                      Data : in Byte_Array);
 
    --  Name the chip's registers
    MPU6050_ADDRESS_AD0_LOW : constant Register := 16#68#;
