@@ -260,11 +260,13 @@ package body MPU6050 is
                                              (I * Chunk_Size) + Data'First
                                                 + Chunk_Size));
          if Verify then
+            C.Set_Memory_Bank (Current_Bank);
+            C.Set_Memory_Start_Address (Current_Address);
             Verify_Buffer := C.Read_Array_Data (R => MPU6050_RA_MEM_R_W,
                                                 L => Chunk_Size);
             if Verify_Buffer /= Data ((I * Chunk_Size) + Data'First ..
                                       (I * Chunk_Size) + Data'First
-                                         + Chunk_Size)
+                                         + Chunk_Size - 1)
             then
                raise Verification_Failed;
             end if;
