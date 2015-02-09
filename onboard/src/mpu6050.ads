@@ -69,6 +69,8 @@ package MPU6050 is
                                       P : in External_Frame_Sync_Pin);
    procedure Set_DLPF_Mode (C : in out Chip;
                             S : in Digital_Low_Pass_Filter_Setting);
+   procedure Set_OTP_Bank_Valid (C : in out Chip;
+                                 V : in Boolean);
 
    MPU6050_CLOCK_INTERNAL : constant Clock_Source := 16#00#;
    MPU6050_CLOCK_PLL_XGYRO : constant Clock_Source := 16#01#;
@@ -238,6 +240,24 @@ private
                                                   Target => Byte);
    function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
                                                     Target => INT_ENABLE);
+
+   type XG_OFFS_TC is
+      record
+         Power_Mode : Integer range 0 .. 1;
+         Offset : Integer range 0 .. 63;
+         OTP_Valid : Integer range 0 .. 1;
+      end record;
+   for XG_OFFS_TC use
+      record
+         Power_Mode at 0 range 7 .. 7;
+         Offset at 0 range 1 .. 6;
+         OTP_Valid at 0 range 0 .. 0;
+      end record;
+   XG_OFFS_TC_Address : constant Register := 16#00#;
+   function Pack is new Ada.Unchecked_Conversion (Source => XG_OFFS_TC,
+                                                  Target => Byte);
+   function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
+                                                    Target => XG_OFFS_TC);
 
    SMPLRT_DIV_Address : constant Register := 16#19#;
 

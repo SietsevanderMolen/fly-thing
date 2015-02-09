@@ -35,6 +35,10 @@ package body MPU6050 is
       C.Set_Sample_Rate_Divider (4); --  1khz / (1+4) = 200hz
       C.Set_External_Frame_Sync (MPU6050_EXT_SYNC_TEMP_OUT_L);
       C.Set_DLPF_Mode (MPU6050_DLPF_BW_42); --  42hz
+      C.Set_Full_Scale_Gyro_Range (R => MPU6050_GYRO_FS_2000);
+      C.Write_Byte_Data (R => MPU6050_RA_DMP_CFG_1, D => 16#3#); --  funct unk
+      C.Write_Byte_Data (R => MPU6050_RA_DMP_CFG_2, D => 16#0#); --  funct unk
+      C.Set_OTP_Bank_Valid (True);
    end Initialize_DMP;
 
    function Test_Connection (C : in Chip) return Boolean is
@@ -223,6 +227,15 @@ package body MPU6050 is
       C.Write_Byte_Data (R => CONFIG_Address,
                          D => Pack (Conf));
    end Set_DLPF_Mode;
+
+   procedure Set_OTP_Bank_Valid (C : in out Chip;
+                                 V : in Boolean) is
+      Conf : XG_OFFS_TC := Unpack (C.Read_Byte_Data (XG_OFFS_TC_Address));
+   begin
+      Conf.OTP_Valid := Boolean'Pos (V);
+      C.Write_Byte_Data (R => XG_OFFS_TC_Address,
+                         D => Pack (Conf));
+   end Set_OTP_Bank_Valid;
 
    procedure Write_Memory_Block (C : in Chip;
                                  Data : in Byte_Array;
