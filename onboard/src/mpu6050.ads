@@ -117,7 +117,7 @@ private
          Ext_Sync_Set at 0 range 3 .. 5;
          Dlpf_Cfg at 0 range 0 .. 2;
       end record;
-   CONFIG_Address : constant Register := 16#6B#;
+   CONFIG_Address : constant Register := 16#1A#;
    function Pack is new Ada.Unchecked_Conversion (Source => CONFIG,
                                                   Target => Byte);
    function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
@@ -233,7 +233,7 @@ private
          DMP_EN at 0 range 1 .. 1;
          DATA_RDY_EN at 0 range 0 .. 0;
       end record;
-   INT_ENABLE_Address : constant Register := 16#3A#;
+   INT_ENABLE_Address : constant Register := 16#38#;
    function Pack is new Ada.Unchecked_Conversion (Source => INT_ENABLE,
                                                   Target => Byte);
    function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
