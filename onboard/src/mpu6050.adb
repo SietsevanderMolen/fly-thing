@@ -38,7 +38,7 @@ package body MPU6050 is
       C.Set_Full_Scale_Gyro_Range (R => MPU6050_GYRO_FS_2000);
       C.Write_Byte_Data (R => MPU6050_RA_DMP_CFG_1, D => 16#3#); --  funct unk
       C.Write_Byte_Data (R => MPU6050_RA_DMP_CFG_2, D => 16#0#); --  funct unk
-      C.Set_OTP_Bank_Valid (True);
+      C.Set_OTP_Bank_Valid (False);
    end Initialize_DMP;
 
    function Test_Connection (C : in Chip) return Boolean is
