@@ -10,7 +10,7 @@ package MPU6050 is
    subtype Gyro_Scale_Range is Integer range 0 .. 3;
    subtype Accel_Scale_Range is Integer range 0 .. 3;
    subtype External_Frame_Sync_Pin is Integer range 0 .. 7;
-   subtype Digital_Low_Pass_Filter_Setting is Integer range 0 .. 7;
+   subtype Digital_Low_Pass_Filter_Setting is Integer range 0 .. 6;
 
    Not_Implemented : exception;
 
@@ -110,7 +110,7 @@ private
          Pad          : Integer range 0 .. 0;
          Pad1         : Integer range 0 .. 0;
          Ext_Sync_Set : External_Frame_Sync_Pin;
-         Dlpf_Cfg     : Digital_Low_Pass_Filter_Setting range 0 .. 2;
+         Dlpf_Cfg     : Digital_Low_Pass_Filter_Setting range 0 .. 6;
       end record;
    for CONFIG use
       record

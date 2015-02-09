@@ -282,9 +282,11 @@ package body MPU6050 is
          end if;
       end loop;
       --  Write remainder
-      C.Write_Array_Data (R => MPU6050_RA_MEM_R_W,
-         Values => Data (Data'First + (Chunks - 1 * Chunk_Size) ..
-                         Data'First + (Chunks - 1* Chunk_Size) + Rem_Bytes));
+      if Rem_Bytes > 0 then
+         C.Write_Array_Data (R => MPU6050_RA_MEM_R_W,
+            Values => Data (Data'First + (Chunks * Chunk_Size) ..
+                            Data'Last));
+      end if;
    end Write_Memory_Block;
 
    procedure Write_DMP_Configuration (C : in Chip;
@@ -293,16 +295,16 @@ package body MPU6050 is
    begin
       while I < Data'Length loop
          declare
-            Bank : constant Memory_Bank := Integer (Data (Data'First + I));
+            Bank : constant Memory_Bank := Integer (Data (I));
             Offset : constant Memory_Address :=
-               Integer (Data (Data'First + I + 1));
-            Length : Natural := Integer (Data (Data'First + I + 2));
+               Integer (Data (I + 1));
+            Length : Natural := Integer (Data (I + 2));
          begin
             I := I + 3; --  Update loop counter to after bank, offset and len
             if Length > 0 then
                declare
-                  Prog_Buffer : constant Byte_Array (0 .. Length) :=
-                     Data (Data'First + I .. Data'First + I + Length);
+                  Prog_Buffer : constant Byte_Array (0 .. Length - 1) :=
+                     Data (I .. I + Length - 1);
                begin
                   C.Write_Memory_Block (Data => Prog_Buffer,
                                         Bank => Bank,
@@ -311,7 +313,7 @@ package body MPU6050 is
             else --  Special case according to Rowberg et al
                Length := 1; --  Length is actually 1 here
                declare
-                  Magic_Byte : constant Byte := Data (Data'First + I);
+                  Magic_Byte : constant Byte := Data (I);
                begin
                   case Magic_Byte is
                      when 16#01# => --  Enable DMP related interrupts
