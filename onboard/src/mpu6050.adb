@@ -1,6 +1,8 @@
 with Interfaces; use Interfaces;
 with Ada.Text_IO;
 
+with I2C; use type I2C.Byte_Array;
+
 package body MPU6050 is
 
    --  Reset the chip to the power-on reset state.
@@ -146,12 +148,14 @@ package body MPU6050 is
                                  Data : in Byte_Array;
                                  Bank : in Memory_Bank := 0;
                                  Address : in Memory_Address := 0;
-                                 Verify : in Boolean := False) is
+                                 Verify : in Boolean := True) is
       Chunk_Size : constant Natural := MPU6050_DMP_MEMORY_CHUNK_SIZE;
       Chunks : constant Natural := Data'Length / Chunk_Size;
       Rem_Bytes : constant Natural := Data'Length mod Chunk_Size;
       Current_Bank : Memory_Bank := Bank;
       Current_Address : Memory_Address := Address;
+      Verify_Buffer : Byte_Array (0 .. Chunk_Size);
+      Verification_Failed : exception;
    begin
       if Verify then
          raise Not_Implemented;
@@ -166,6 +170,17 @@ package body MPU6050 is
                              Values => Data ((I * Chunk_Size) + Data'First ..
                                              (I * Chunk_Size) + Data'First
                                                 + Chunk_Size));
+         if Verify then
+            Verify_Buffer := C.Read_Array_Data (R => MPU6050_RA_MEM_R_W,
+                                                L => Chunk_Size);
+            if Verify_Buffer /= Data ((I * Chunk_Size) + Data'First ..
+                                      (I * Chunk_Size) + Data'First
+                                         + Chunk_Size)
+            then
+               raise Verification_Failed;
+            end if;
+         end if;
+
          --  Update address and bank
          if Current_Address + Chunk_Size < 256 then
             Current_Address := Current_Address + Chunk_Size;
