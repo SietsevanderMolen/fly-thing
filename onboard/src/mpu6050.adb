@@ -219,7 +219,7 @@ package body MPU6050 is
                             S : in Digital_Low_Pass_Filter_Setting) is
       Conf : CONFIG := Unpack (C.Read_Byte_Data (CONFIG_Address));
    begin
-      Conf.Dlpf_Cfg := P;
+      Conf.Dlpf_Cfg := S;
       C.Write_Byte_Data (R => CONFIG_Address,
                          D => Pack (Conf));
    end Set_DLPF_Mode;
