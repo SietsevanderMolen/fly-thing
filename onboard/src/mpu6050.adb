@@ -33,6 +33,8 @@ package body MPU6050 is
       C.Set_DMP_Interrupt (True);
       C.Set_Fifo_Overflow_Interrupt (True);
       C.Set_Sample_Rate_Divider (4); --  1khz / (1+4) = 200hz
+      C.Set_External_Frame_Sync (MPU6050_EXT_SYNC_TEMP_OUT_L);
+      C.Set_DLPF_Mode (MPU6050_DLPF_BW_42); --  42hz
    end Initialize_DMP;
 
    function Test_Connection (C : in Chip) return Boolean is
@@ -203,6 +205,24 @@ package body MPU6050 is
       C.Write_Byte_Data (R => SMPLRT_DIV_Address,
                          D => D);
    end Set_Sample_Rate_Divider;
+
+   procedure Set_External_Frame_Sync (C : in out Chip;
+                                      P : in External_Frame_Sync_Pin) is
+      Conf : CONFIG := Unpack (C.Read_Byte_Data (CONFIG_Address));
+   begin
+      Conf.Ext_Sync_Set := P;
+      C.Write_Byte_Data (R => CONFIG_Address,
+                         D => Pack (Conf));
+   end Set_External_Frame_Sync;
+
+   procedure Set_DLPF_Mode (C : in out Chip;
+                            S : in Digital_Low_Pass_Filter_Setting) is
+      Conf : CONFIG := Unpack (C.Read_Byte_Data (CONFIG_Address));
+   begin
+      Conf.Dlpf_Cfg := P;
+      C.Write_Byte_Data (R => CONFIG_Address,
+                         D => Pack (Conf));
+   end Set_DLPF_Mode;
 
    procedure Write_Memory_Block (C : in Chip;
                                  Data : in Byte_Array;

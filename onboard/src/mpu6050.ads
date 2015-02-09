@@ -9,6 +9,8 @@ package MPU6050 is
    subtype Clock_Source is Integer range 0 .. 7;
    subtype Gyro_Scale_Range is Integer range 0 .. 3;
    subtype Accel_Scale_Range is Integer range 0 .. 3;
+   subtype External_Frame_Sync_Pin is Integer range 0 .. 7;
+   subtype Digital_Low_Pass_Filter_Setting is Integer range 0 .. 7;
 
    Not_Implemented : exception;
 
@@ -63,6 +65,10 @@ package MPU6050 is
                                        S : Boolean);
    procedure Set_Sample_Rate_Divider (C : in out Chip;
                                       D : in Byte);
+   procedure Set_External_Frame_Sync (C : in out Chip;
+                                      P : in External_Frame_Sync_Pin);
+   procedure Set_DLPF_Mode (C : in out Chip;
+                            S : in Digital_Low_Pass_Filter_Setting);
 
    MPU6050_CLOCK_INTERNAL : constant Clock_Source := 16#00#;
    MPU6050_CLOCK_PLL_XGYRO : constant Clock_Source := 16#01#;
@@ -80,7 +86,43 @@ package MPU6050 is
    MPU6050_ACCEL_FS_8 : constant Accel_Scale_Range := 16#02#;
    MPU6050_ACCEL_FS_16 : constant Accel_Scale_Range := 16#03#;
 
+   MPU6050_EXT_SYNC_DISABLED : constant External_Frame_Sync_Pin := 16#0#;
+   MPU6050_EXT_SYNC_TEMP_OUT_L : constant External_Frame_Sync_Pin := 16#1#;
+   MPU6050_EXT_SYNC_GYRO_XOUT_L : constant External_Frame_Sync_Pin := 16#2#;
+   MPU6050_EXT_SYNC_GYRO_YOUT_L : constant External_Frame_Sync_Pin := 16#3#;
+   MPU6050_EXT_SYNC_GYRO_ZOUT_L : constant External_Frame_Sync_Pin := 16#4#;
+   MPU6050_EXT_SYNC_ACCEL_XOUT_L : constant External_Frame_Sync_Pin := 16#5#;
+   MPU6050_EXT_SYNC_ACCEL_YOUT_L : constant External_Frame_Sync_Pin := 16#6#;
+   MPU6050_EXT_SYNC_ACCEL_ZOUT_L : constant External_Frame_Sync_Pin := 16#7#;
+
+   MPU6050_DLPF_BW_256 : constant Digital_Low_Pass_Filter_Setting := 16#00#;
+   MPU6050_DLPF_BW_188 : constant Digital_Low_Pass_Filter_Setting := 16#01#;
+   MPU6050_DLPF_BW_98 : constant Digital_Low_Pass_Filter_Setting := 16#02#;
+   MPU6050_DLPF_BW_42 : constant Digital_Low_Pass_Filter_Setting := 16#03#;
+   MPU6050_DLPF_BW_20 : constant Digital_Low_Pass_Filter_Setting := 16#04#;
+   MPU6050_DLPF_BW_10 : constant Digital_Low_Pass_Filter_Setting := 16#05#;
+   MPU6050_DLPF_BW_5 : constant Digital_Low_Pass_Filter_Setting := 16#06#;
 private
+   type CONFIG is
+      record
+         Pad          : Integer range 0 .. 0;
+         Pad1         : Integer range 0 .. 0;
+         Ext_Sync_Set : External_Frame_Sync_Pin;
+         Dlpf_Cfg     : Digital_Low_Pass_Filter_Setting range 0 .. 2;
+      end record;
+   for CONFIG use
+      record
+         Pad at 0 range 7 .. 7;
+         Pad1 at 0 range 6 .. 6;
+         Ext_Sync_Set at 0 range 3 .. 5;
+         Dlpf_Cfg at 0 range 0 .. 2;
+      end record;
+   CONFIG_Address : constant Register := 16#6B#;
+   function Pack is new Ada.Unchecked_Conversion (Source => CONFIG,
+                                                  Target => Byte);
+   function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
+                                                    Target => CONFIG);
+
    type PWR_MGMT_1 is
       record
          Device_Reset : Integer range 0 .. 1;
@@ -344,23 +386,6 @@ private
    MPU6050_CFG_EXT_SYNC_SET_LENGTH : constant Register := 3;
    MPU6050_CFG_DLPF_CFG_BIT : constant Register := 2;
    MPU6050_CFG_DLPF_CFG_LENGTH : constant Register := 3;
-
-   MPU6050_EXT_SYNC_DISABLED : constant Register := 16#0#;
-   MPU6050_EXT_SYNC_TEMP_OUT_L : constant Register := 16#1#;
-   MPU6050_EXT_SYNC_GYRO_XOUT_L : constant Register := 16#2#;
-   MPU6050_EXT_SYNC_GYRO_YOUT_L : constant Register := 16#3#;
-   MPU6050_EXT_SYNC_GYRO_ZOUT_L : constant Register := 16#4#;
-   MPU6050_EXT_SYNC_ACCEL_XOUT_L : constant Register := 16#5#;
-   MPU6050_EXT_SYNC_ACCEL_YOUT_L : constant Register := 16#6#;
-   MPU6050_EXT_SYNC_ACCEL_ZOUT_L : constant Register := 16#7#;
-
-   MPU6050_DLPF_BW_256 : constant Register := 16#00#;
-   MPU6050_DLPF_BW_188 : constant Register := 16#01#;
-   MPU6050_DLPF_BW_98 : constant Register := 16#02#;
-   MPU6050_DLPF_BW_42 : constant Register := 16#03#;
-   MPU6050_DLPF_BW_20 : constant Register := 16#04#;
-   MPU6050_DLPF_BW_10 : constant Register := 16#05#;
-   MPU6050_DLPF_BW_5 : constant Register := 16#06#;
 
    MPU6050_GCONFIG_FS_SEL_BIT : constant Register := 4;
    MPU6050_GCONFIG_FS_SEL_LENGTH : constant Register := 2;
