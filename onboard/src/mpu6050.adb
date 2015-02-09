@@ -247,7 +247,7 @@ package body MPU6050 is
       Rem_Bytes : constant Natural := Data'Length mod Chunk_Size;
       Current_Bank : Memory_Bank := Bank;
       Current_Address : Memory_Address := Address;
-      Verify_Buffer : Byte_Array (0 .. Chunk_Size);
+      Verify_Buffer : Byte_Array (0 .. Chunk_Size - 1);
       Verification_Failed : exception;
    begin
       C.Set_Memory_Bank (Current_Bank);
