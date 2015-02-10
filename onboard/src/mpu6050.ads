@@ -102,6 +102,8 @@ package MPU6050 is
    procedure Set_DMP_Enable (C : in out Chip;
                              E : in Boolean);
    procedure Reset_DMP (C : in out Chip);
+   function Get_Fifo_Bytes (C : in Chip;
+                            Length : in Integer) return Byte_Array;
 
    MPU6050_CLOCK_INTERNAL : constant Clock_Source := 16#00#;
    MPU6050_CLOCK_PLL_XGYRO : constant Clock_Source := 16#01#;
@@ -353,6 +355,7 @@ private
                                                   Target => Byte);
    function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
                                                     Target => USER_CTRL);
+
    type FIFO_COUNT is
       record
          H : Integer range 0 .. 7;
@@ -369,12 +372,36 @@ private
                                                   Target => Word);
    function Unpack is new Ada.Unchecked_Conversion (Source => Word,
                                                     Target => FIFO_COUNT);
-   MOT_THR_Address : constant Register := 16#1F#;
-   MOT_DUR_Address : constant Register := 16#20#;
-   ZRMOT_THR_Address : constant Register := 16#21#;
-   ZRMOT_DUR_Address : constant Register := 16#22#;
 
-   SMPLRT_DIV_Address : constant Register := 16#19#;
+   type INT_STATUS is
+      record
+         Free_Fall_Int : Integer range 0 .. 1;
+         Mot_Int : Integer range 0 .. 1;
+         Z_Mot_Int : Integer range 0 .. 1;
+         Fifo_Oflow_Int : Integer range 0 .. 1;
+         I2C_Master_Int : Integer range 0 .. 1;
+         PLL_Ready_Int : Integer range 0 .. 1;
+         DMP_Int : Integer range 0 .. 1;
+         Data_Ready : Integer range 0 .. 1;
+      end record;
+   for INT_STATUS use
+      record
+         Free_Fall_Int at 0 range 7 .. 7;
+         Mot_Int at 0 range 6 .. 6;
+         Z_Mot_Int at 0 range 5 .. 5;
+         Fifo_Oflow_Int at 0 range 4 .. 4;
+         I2C_Master_Int at 0 range 3 .. 3;
+         PLL_Ready_Int at 0 range 2 .. 2;
+         DMP_Int at 0 range 1 .. 1;
+         Data_Ready at 0 range 0 .. 0;
+      end record;
+   INT_STATUS_Address : constant Register := 16#3A#;
+   function Pack is new Ada.Unchecked_Conversion (Source => INT_STATUS,
+                                                  Target => Byte);
+   function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
+                                                    Target => INT_STATUS);
+
+   FIFO_R_W_Address : constant Register := 16#74#;
 
    subtype Memory_Bank is Integer range 0 .. 31;
    subtype Memory_Address is Integer range 0 .. 255;
@@ -383,19 +410,23 @@ private
                               Bank : Memory_Bank;
                               Prefetch : Boolean := False;
                               User_Bank : Boolean := False);
-
    procedure Set_Memory_Start_Address (C : in Chip;
                                        Address : Memory_Address);
-
    function Read_Memory_Byte (C : in Chip) return Byte;
    procedure Write_Memory_Block (C : in Chip;
                                  Data : in Byte_Array;
                                  Bank : in Memory_Bank := 0;
                                  Address : in Memory_Address := 0;
                                  Verify : in Boolean := True);
+   procedure Write_DMP_Update (C : in Chip; Data : in Byte_Array);
+   function Get_Interrupt_Status (C : in Chip) return INT_STATUS;
 
-   procedure Write_DMP_Update (C : in Chip;
-                                      Data : in Byte_Array);
+   MOT_THR_Address : constant Register := 16#1F#;
+   MOT_DUR_Address : constant Register := 16#20#;
+   ZRMOT_THR_Address : constant Register := 16#21#;
+   ZRMOT_DUR_Address : constant Register := 16#22#;
+
+   SMPLRT_DIV_Address : constant Register := 16#19#;
 
    --  Name the chip's registers
    MPU6050_ADDRESS_AD0_LOW : constant Register := 16#68#;
@@ -918,6 +949,7 @@ private
       16#A3#, 16#A3#, 16#DC#, 16#B9#, 16#A7#, 16#F1#, 16#26#, 16#26#, 16#26#,
       16#D8#, 16#D8#, 16#FF#);
 
+   --  [Bank] [Offset] [Length] [n]
    MPU_Config : Byte_Array := (
       16#03#, 16#7B#, 16#03#, 16#4C#, 16#CD#, 16#6C#, 16#03#, 16#AB#, 16#03#,
       16#36#, 16#56#, 16#76#, 16#00#, 16#68#, 16#04#, 16#02#, 16#CB#, 16#47#,
@@ -942,6 +974,7 @@ private
       16#07#, 16#6C#, 16#04#, 16#F1#, 16#28#, 16#30#, 16#38#, 16#02#, 16#16#,
       16#02#, 16#00#, 16#01#); --  Last 1 sets dmp fifo rate. 0=200hz 1=100hz
 
+   --  [Bank] [Offset] [Length] [n]
    MPU_Updates : Byte_Array := (
       16#01#, 16#B2#, 16#02#, 16#FF#, 16#FF#, --  1
       16#01#, 16#90#, 16#04#, 16#09#, 16#23#, 16#A1#, 16#35#, --  2
