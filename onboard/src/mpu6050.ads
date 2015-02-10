@@ -104,6 +104,8 @@ package MPU6050 is
    procedure Reset_DMP (C : in out Chip);
    function Get_Fifo_Bytes (C : in Chip;
                             Length : in Integer) return Byte_Array;
+   procedure Get_Fifo_Bytes (C : in Chip;
+                            Length : in Integer);
 
    MPU6050_CLOCK_INTERNAL : constant Clock_Source := 16#00#;
    MPU6050_CLOCK_PLL_XGYRO : constant Clock_Source := 16#01#;

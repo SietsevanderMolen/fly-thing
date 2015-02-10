@@ -21,7 +21,6 @@ package body MPU6050 is
       YG_Offset : constant Integer := C.Get_YGyro_Offset_TC;
       ZG_Offset : constant Integer := C.Get_ZGyro_Offset_TC;
       Fifo_Cnt : Integer;
-      Fifo_Bytes : Byte_Array (0 .. 127);
       Interrupt_Status : INT_STATUS;
    begin
       C.Set_Sleep (S => False);
@@ -55,7 +54,7 @@ package body MPU6050 is
 
       C.Reset_Fifo;
       Fifo_Cnt := C.Get_Fifo_Count;
-      Fifo_Bytes := C.Get_Fifo_Bytes (Length => Fifo_Cnt);
+      C.Get_Fifo_Bytes (Length => Fifo_Cnt);
       C.Set_Motion_Detect_Threshold (2);
       C.Set_Zero_Motion_Detect_Threshold (156);
       C.Set_Motion_Detect_Duration (80);
@@ -70,7 +69,7 @@ package body MPU6050 is
       while C.Get_Fifo_Count < 3 loop
          null; --  Wait until fifo count is at least 3
       end loop;
-      Fifo_Bytes := C.Get_Fifo_Bytes (Length => C.Get_Fifo_Count);
+      C.Get_Fifo_Bytes (Length => Fifo_Cnt);
       Interrupt_Status := C.Get_Interrupt_Status;
 
       C.Write_DMP_Update (Data => MPU_Updates (35 .. 39)); --  6
@@ -78,7 +77,7 @@ package body MPU6050 is
       while C.Get_Fifo_Count < 3 loop
          null; --  Wait until fifo count is at least 3
       end loop;
-      Fifo_Bytes := C.Get_Fifo_Bytes (Length => C.Get_Fifo_Count);
+      C.Get_Fifo_Bytes (Length => Fifo_Cnt);
       Interrupt_Status := C.Get_Interrupt_Status;
 
       C.Write_DMP_Update (Data => MPU_Updates (40 .. 46)); --  7
@@ -436,6 +435,14 @@ package body MPU6050 is
                                                         L => Length);
    begin
       return Bytes;
+   end Get_Fifo_Bytes;
+
+   procedure Get_Fifo_Bytes (C : in Chip;
+                            Length : in Integer) is
+      Bytes : constant Byte_Array := C.Read_Array_Data (R => FIFO_R_W_Address,
+                                                        L => Length);
+   begin
+      null;
    end Get_Fifo_Bytes;
 
    function Get_Interrupt_Status (C : in Chip) return INT_STATUS is
