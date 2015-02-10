@@ -17,6 +17,9 @@ package body MPU6050 is
    --  Reset the chip to the power-on reset state.
    procedure Initialize_DMP (C : in out Chip) is
       HW_Revision : Byte := 0;
+      XG_Offset : constant Integer := C.Get_XGyro_Offset_TC;
+      YG_Offset : constant Integer := C.Get_YGyro_Offset_TC;
+      ZG_Offset : constant Integer := C.Get_ZGyro_Offset_TC;
    begin
       C.Set_Sleep (S => False);
       C.Set_Memory_Bank (Bank => 16#10#, Prefetch => True, User_Bank => True);
@@ -28,7 +31,8 @@ package body MPU6050 is
       --  write dmp code
       C.Write_Memory_Block (Data => MPU_Progmem);
       --  write dmp config
-      C.Write_DMP_Configuration (Data => MPU_Config);
+      C.Write_DMP_Update (Data => MPU_Config);
+
       C.Set_Clock_Source (S => MPU6050_CLOCK_PLL_ZGYRO);
       C.Set_DMP_Interrupt (True);
       C.Set_Fifo_Overflow_Interrupt (True);
@@ -39,6 +43,24 @@ package body MPU6050 is
       C.Write_Byte_Data (R => MPU6050_RA_DMP_CFG_1, D => 16#3#); --  funct unk
       C.Write_Byte_Data (R => MPU6050_RA_DMP_CFG_2, D => 16#0#); --  funct unk
       C.Set_OTP_Bank_Valid (False);
+      --  Reset offsets
+      C.Set_XGyro_Offset_TC (XG_Offset);
+      C.Set_YGyro_Offset_TC (YG_Offset);
+      C.Set_ZGyro_Offset_TC (ZG_Offset);
+
+      C.Write_DMP_Update (Data => MPU_Updates); --  Lets try to update at once
+
+      C.Reset_Fifo;
+      C.Set_Motion_Detect_Threshold (2);
+      C.Set_Zero_Motion_Detect_Threshold (156);
+      C.Set_Motion_Detect_Duration (80);
+      C.Set_Zero_Motion_Detect_Duration (0);
+      C.Reset_Fifo;
+      C.Set_Fifo_Enable (True);
+      C.Set_DMP_Enable (True);
+      C.Reset_DMP;
+
+      C.Set_DMP_Enable (False);
    end Initialize_DMP;
 
    function Test_Connection (C : in Chip) return Boolean is
@@ -204,10 +226,10 @@ package body MPU6050 is
    end Set_Data_Ready_Interrupt;
 
    procedure Set_Sample_Rate_Divider (C : in out Chip;
-                                      D : in Byte) is
+                                      D : in Integer) is
    begin
       C.Write_Byte_Data (R => SMPLRT_DIV_Address,
-                         D => D);
+                         D => Byte (D));
    end Set_Sample_Rate_Divider;
 
    procedure Set_External_Frame_Sync (C : in out Chip;
@@ -237,6 +259,152 @@ package body MPU6050 is
                          D => Pack (Conf));
    end Set_OTP_Bank_Valid;
 
+   procedure Set_XGyro_Offset_TC (C : in out Chip;
+                                  O : in Integer) is
+      Conf : XG_OFFS_TC := Unpack (C.Read_Byte_Data (XG_OFFS_TC_Address));
+   begin
+      Conf.Offset := O;
+      C.Write_Byte_Data (R => XG_OFFS_TC_Address,
+                         D => Pack (Conf));
+   end Set_XGyro_Offset_TC;
+
+   procedure Set_YGyro_Offset_TC (C : in out Chip;
+                                  O : in Integer) is
+      Conf : YG_OFFS_TC := Unpack (C.Read_Byte_Data (YG_OFFS_TC_Address));
+   begin
+      Conf.Offset := O;
+      C.Write_Byte_Data (R => YG_OFFS_TC_Address,
+                         D => Pack (Conf));
+   end Set_YGyro_Offset_TC;
+
+   procedure Set_ZGyro_Offset_TC (C : in out Chip;
+                                  O : in Integer) is
+      Conf : ZG_OFFS_TC := Unpack (C.Read_Byte_Data (ZG_OFFS_TC_Address));
+   begin
+      Conf.Offset := O;
+      C.Write_Byte_Data (R => ZG_OFFS_TC_Address,
+                         D => Pack (Conf));
+   end Set_ZGyro_Offset_TC;
+
+   function Get_XGyro_Offset_TC (C : in out Chip) return Integer is
+      Conf : constant XG_OFFS_TC :=
+         Unpack (C.Read_Byte_Data (XG_OFFS_TC_Address));
+   begin
+      return Conf.Offset;
+   end Get_XGyro_Offset_TC;
+
+   function Get_YGyro_Offset_TC (C : in out Chip) return Integer is
+      Conf : constant YG_OFFS_TC :=
+         Unpack (C.Read_Byte_Data (YG_OFFS_TC_Address));
+   begin
+      return Conf.Offset;
+   end Get_YGyro_Offset_TC;
+
+   function Get_ZGyro_Offset_TC (C : in out Chip) return Integer is
+      Conf : constant ZG_OFFS_TC :=
+         Unpack (C.Read_Byte_Data (ZG_OFFS_TC_Address));
+   begin
+      return Conf.Offset;
+   end Get_ZGyro_Offset_TC;
+
+   procedure Reset_Fifo (C : in out Chip) is
+      Conf : USER_CTRL := Unpack (C.Read_Byte_Data (USER_CTRL_Address));
+   begin
+      Conf.Fifo_Reset := 1;
+      C.Write_Byte_Data (R => USER_CTRL_Address,
+                         D => Pack (Conf));
+   end Reset_Fifo;
+
+   function Get_Fifo_Count (C : in out Chip) return Integer is
+      H : constant Byte := C.Read_Byte_Data (FIFO_COUNT_H_Address);
+      L : constant Byte := C.Read_Byte_Data (FIFO_COUNT_L_Address);
+      Conf : FIFO_COUNT;
+   begin
+      Conf.H := Integer (H);
+      Conf.L := Integer (L);
+      return Integer (Pack (Conf));
+   end Get_Fifo_Count;
+
+   procedure Set_Motion_Detect_Threshold (C : in out Chip;
+                                          T : in Integer) is
+   begin
+      C.Write_Byte_Data (R => MOT_THR_Address,
+                         D => Byte (T));
+   end Set_Motion_Detect_Threshold;
+
+   function Get_Motion_Detect_Threshold (C : in out Chip) return Integer is
+      T : constant Byte := C.Read_Byte_Data (MOT_THR_Address);
+   begin
+      return Integer (T);
+   end Get_Motion_Detect_Threshold;
+
+   procedure Set_Zero_Motion_Detect_Threshold (C : in out Chip;
+                                               T : in Integer) is
+   begin
+      C.Write_Byte_Data (R => ZRMOT_THR_Address,
+                         D => Byte (T));
+   end Set_Zero_Motion_Detect_Threshold;
+
+   function Get_Zero_Motion_Detect_Threshold (C : in out Chip)
+      return Integer
+   is
+      T : constant Byte := C.Read_Byte_Data (ZRMOT_THR_Address);
+   begin
+      return Integer (T);
+   end Get_Zero_Motion_Detect_Threshold;
+
+   procedure Set_Motion_Detect_Duration (C : in out Chip;
+                                          T : in Integer) is
+   begin
+      C.Write_Byte_Data (R => MOT_DUR_Address,
+                         D => Byte (T));
+   end Set_Motion_Detect_Duration;
+
+   function Get_Zero_Motion_Detect_Duration (C : in out Chip) return Integer is
+      T : constant Byte := C.Read_Byte_Data (MOT_DUR_Address);
+   begin
+      return Integer (T);
+   end Get_Zero_Motion_Detect_Duration;
+
+   procedure Set_Zero_Motion_Detect_Duration (C : in out Chip;
+                                               T : in Integer) is
+   begin
+      C.Write_Byte_Data (R => ZRMOT_DUR_Address,
+                         D => Byte (T));
+   end Set_Zero_Motion_Detect_Duration;
+
+   function Get_Motion_Detect_Duration (C : in out Chip) return Integer is
+      T : constant Byte := C.Read_Byte_Data (ZRMOT_DUR_Address);
+   begin
+      return Integer (T);
+   end Get_Motion_Detect_Duration;
+
+   procedure Set_Fifo_Enable (C : in out Chip;
+                              E : in Boolean) is
+      Conf : USER_CTRL := Unpack (C.Read_Byte_Data (USER_CTRL_Address));
+   begin
+      Conf.Fifo_En := Boolean'Pos (E);
+      C.Write_Byte_Data (R => USER_CTRL_Address,
+                         D => Pack (Conf));
+   end Set_Fifo_Enable;
+
+   procedure Set_DMP_Enable (C : in out Chip;
+                              E : in Boolean) is
+      Conf : USER_CTRL := Unpack (C.Read_Byte_Data (USER_CTRL_Address));
+   begin
+      Conf.DMP_En := Boolean'Pos (E);
+      C.Write_Byte_Data (R => USER_CTRL_Address,
+                         D => Pack (Conf));
+   end Set_DMP_Enable;
+
+   procedure Reset_DMP (C : in out Chip) is
+      Conf : USER_CTRL := Unpack (C.Read_Byte_Data (USER_CTRL_Address));
+   begin
+      Conf.DMP_Reset := 1;
+      C.Write_Byte_Data (R => USER_CTRL_Address,
+                         D => Pack (Conf));
+   end Reset_DMP;
+
    procedure Write_Memory_Block (C : in Chip;
                                  Data : in Byte_Array;
                                  Bank : in Memory_Bank := 0;
@@ -258,7 +426,7 @@ package body MPU6050 is
          C.Write_Array_Data (R => MPU6050_RA_MEM_R_W,
                              Values => Data ((I * Chunk_Size) + Data'First ..
                                              (I * Chunk_Size) + Data'First
-                                                + Chunk_Size));
+                                                + Chunk_Size - 1));
          if Verify then
             C.Set_Memory_Bank (Current_Bank);
             C.Set_Memory_Start_Address (Current_Address);
@@ -291,7 +459,7 @@ package body MPU6050 is
       end if;
    end Write_Memory_Block;
 
-   procedure Write_DMP_Configuration (C : in Chip;
+   procedure Write_DMP_Update (C : in Chip;
                                       Data : in Byte_Array) is
       I : Integer := Data'First; --  Data loop counter
    begin
@@ -328,5 +496,5 @@ package body MPU6050 is
             I := I + Length; -- Set pointer to next block
          end;
       end loop;
-   end Write_DMP_Configuration;
+   end Write_DMP_Update;
 end MPU6050;

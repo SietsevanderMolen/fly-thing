@@ -64,13 +64,44 @@ package MPU6050 is
    procedure Set_Data_Ready_Interrupt (C : in out Chip;
                                        S : Boolean);
    procedure Set_Sample_Rate_Divider (C : in out Chip;
-                                      D : in Byte);
+                                      D : in Integer);
    procedure Set_External_Frame_Sync (C : in out Chip;
                                       P : in External_Frame_Sync_Pin);
    procedure Set_DLPF_Mode (C : in out Chip;
                             S : in Digital_Low_Pass_Filter_Setting);
    procedure Set_OTP_Bank_Valid (C : in out Chip;
                                  V : in Boolean);
+   procedure Set_XGyro_Offset_TC (C : in out Chip;
+                                  O : in Integer);
+   procedure Set_YGyro_Offset_TC (C : in out Chip;
+                                  O : in Integer);
+   procedure Set_ZGyro_Offset_TC (C : in out Chip;
+                                  O : in Integer);
+   function Get_XGyro_Offset_TC (C : in out Chip) return Integer;
+   function Get_YGyro_Offset_TC (C : in out Chip) return Integer;
+   function Get_ZGyro_Offset_TC (C : in out Chip) return Integer;
+   procedure Reset_Fifo (C : in out Chip);
+   function Get_Fifo_Count (C : in out Chip) return Integer;
+   procedure Set_Motion_Detect_Threshold (C : in out Chip;
+                                          T : in Integer);
+   function Get_Motion_Detect_Threshold (C : in out Chip) return Integer;
+
+   procedure Set_Zero_Motion_Detect_Threshold (C : in out Chip;
+                                          T : in Integer);
+   function Get_Zero_Motion_Detect_Threshold (C : in out Chip) return Integer;
+
+   procedure Set_Motion_Detect_Duration (C : in out Chip;
+                                          T : in Integer);
+   function Get_Motion_Detect_Duration (C : in out Chip) return Integer;
+
+   procedure Set_Zero_Motion_Detect_Duration (C : in out Chip;
+                                          T : in Integer);
+   function Get_Zero_Motion_Detect_Duration (C : in out Chip) return Integer;
+   procedure Set_Fifo_Enable (C : in out Chip;
+                              E : in Boolean);
+   procedure Set_DMP_Enable (C : in out Chip;
+                             E : in Boolean);
+   procedure Reset_DMP (C : in out Chip);
 
    MPU6050_CLOCK_INTERNAL : constant Clock_Source := 16#00#;
    MPU6050_CLOCK_PLL_XGYRO : constant Clock_Source := 16#01#;
@@ -241,7 +272,7 @@ private
    function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
                                                     Target => INT_ENABLE);
 
-   type XG_OFFS_TC is
+   type XG_OFFS_TC is --  Undocumented
       record
          Power_Mode : Integer range 0 .. 1;
          Offset : Integer range 0 .. 63;
@@ -258,6 +289,90 @@ private
                                                   Target => Byte);
    function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
                                                     Target => XG_OFFS_TC);
+
+   type YG_OFFS_TC is --  Undocumented
+      record
+         Power_Mode : Integer range 0 .. 1;
+         Offset : Integer range 0 .. 63;
+         OTP_Valid : Integer range 0 .. 1;
+      end record;
+   for YG_OFFS_TC use
+      record
+         Power_Mode at 0 range 7 .. 7;
+         Offset at 0 range 1 .. 6;
+         OTP_Valid at 0 range 0 .. 0;
+      end record;
+   YG_OFFS_TC_Address : constant Register := 16#01#;
+   function Pack is new Ada.Unchecked_Conversion (Source => YG_OFFS_TC,
+                                                  Target => Byte);
+   function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
+                                                    Target => YG_OFFS_TC);
+
+   type ZG_OFFS_TC is --  Undocumented
+      record
+         Power_Mode : Integer range 0 .. 1;
+         Offset : Integer range 0 .. 63;
+         OTP_Valid : Integer range 0 .. 1;
+      end record;
+   for ZG_OFFS_TC use
+      record
+         Power_Mode at 0 range 7 .. 7;
+         Offset at 0 range 1 .. 6;
+         OTP_Valid at 0 range 0 .. 0;
+      end record;
+   ZG_OFFS_TC_Address : constant Register := 16#02#;
+   function Pack is new Ada.Unchecked_Conversion (Source => ZG_OFFS_TC,
+                                                  Target => Byte);
+   function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
+                                                    Target => ZG_OFFS_TC);
+
+   type USER_CTRL is
+      record
+         DMP_En : Integer range 0 .. 1;
+         Fifo_En : Integer range 0 .. 1;
+         I2C_Master_En : Integer range 0 .. 1;
+         I2C_Iface_Disable : Integer range 0 .. 1;
+         DMP_Reset : Integer range 0 .. 1;
+         Fifo_Reset : Integer range 0 .. 1;
+         I2C_Master_Reset : Integer range 0 .. 1;
+         Sig_Cond_Reset : Integer range 0 .. 1;
+      end record;
+   for USER_CTRL use
+      record
+         DMP_En at 0 range 7 .. 7;
+         Fifo_En at 0 range 6 .. 6;
+         I2C_Master_En at 0 range 5 .. 5;
+         I2C_Iface_Disable at 0 range 4 .. 4;
+         DMP_Reset at 0 range 3 .. 3;
+         Fifo_Reset at 0 range 2 .. 2;
+         I2C_Master_Reset at 0 range 1 .. 1;
+         Sig_Cond_Reset at 0 range 0 .. 0;
+      end record;
+   USER_CTRL_Address : constant Register := 16#6A#;
+   function Pack is new Ada.Unchecked_Conversion (Source => USER_CTRL,
+                                                  Target => Byte);
+   function Unpack is new Ada.Unchecked_Conversion (Source => Byte,
+                                                    Target => USER_CTRL);
+   type FIFO_COUNT is
+      record
+         H : Integer range 0 .. 7;
+         L : Integer range 0 .. 7;
+      end record;
+   for FIFO_COUNT use
+      record
+         H at 0 range 0 .. 7;
+         L at 0 range 8 .. 15;
+      end record;
+   FIFO_COUNT_H_Address : constant Register := 16#72#;
+   FIFO_COUNT_L_Address : constant Register := 16#73#;
+   function Pack is new Ada.Unchecked_Conversion (Source => FIFO_COUNT,
+                                                  Target => Word);
+   function Unpack is new Ada.Unchecked_Conversion (Source => Word,
+                                                    Target => FIFO_COUNT);
+   MOT_THR_Address : constant Register := 16#1F#;
+   MOT_DUR_Address : constant Register := 16#20#;
+   ZRMOT_THR_Address : constant Register := 16#21#;
+   ZRMOT_DUR_Address : constant Register := 16#22#;
 
    SMPLRT_DIV_Address : constant Register := 16#19#;
 
@@ -279,7 +394,7 @@ private
                                  Address : in Memory_Address := 0;
                                  Verify : in Boolean := True);
 
-   procedure Write_DMP_Configuration (C : in Chip;
+   procedure Write_DMP_Update (C : in Chip;
                                       Data : in Byte_Array);
 
    --  Name the chip's registers
@@ -828,10 +943,12 @@ private
       16#02#, 16#00#, 16#01#); --  Last 1 sets dmp fifo rate. 0=200hz 1=100hz
 
    MPU_Updates : Byte_Array := (
-      16#01#, 16#B2#, 16#02#, 16#FF#, 16#FF#, 16#01#, 16#90#, 16#04#, 16#09#,
-      16#23#, 16#A1#, 16#35#, 16#01#, 16#6A#, 16#02#, 16#06#, 16#00#, 16#01#,
-      16#60#, 16#08#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#,
-      16#00#, 16#00#, 16#60#, 16#04#, 16#40#, 16#00#, 16#00#, 16#00#, 16#01#,
-      16#62#, 16#02#, 16#00#, 16#00#, 16#00#, 16#60#, 16#04#, 16#00#, 16#40#,
-      16#00#, 16#00#);
+      16#01#, 16#B2#, 16#02#, 16#FF#, 16#FF#, --  1
+      16#01#, 16#90#, 16#04#, 16#09#, 16#23#, 16#A1#, 16#35#, --  2
+      16#01#, 16#6A#, 16#02#, 16#06#, 16#00#, --  3
+      16#01#, 16#60#, 16#08#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#,
+      16#00#, 16#00#, --  4
+      16#00#, 16#60#, 16#04#, 16#40#, 16#00#, 16#00#, 16#00#, --  5
+      16#01#, 16#62#, 16#02#, 16#00#, 16#00#, --  6
+      16#00#, 16#60#, 16#04#, 16#00#, 16#40#, 16#00#, 16#00#); --  7
 end MPU6050;
