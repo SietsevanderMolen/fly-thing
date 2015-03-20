@@ -44,148 +44,125 @@ uint32_t ulMotor4Start;
 
 void calcMotor1()
 {
-  // if the pin is high, its a rising - record its value
-  if(digitalRead(MOTOR_1_IN_PIN) == HIGH)
-  { 
-    ulMotor1Start = micros();
-  }
-  else
-  {
-    // else it's a falling edge -get the time and subtract the time of the
-    // rising edge to get pulse duration
-    unMotor1InShared = (uint16_t)(micros() - ulMotor1Start);
-    // set the appropriate flag to indicate that a signal has been received
-    bUpdateFlagsShared |= MOTOR_1_FLAG; } }
+    // if the pin is high, its a rising - record its value
+    if(digitalRead(MOTOR_1_IN_PIN) == HIGH) {
+        ulMotor1Start = micros();
+    } else {
+        // else it's a falling edge -get the time and subtract the time of the
+        // rising edge to get pulse duration
+        unMotor1InShared = (uint16_t)(micros() - ulMotor1Start);
+        // set the appropriate flag to indicate that a signal has been received
+        bUpdateFlagsShared |= MOTOR_1_FLAG;
+    }
+}
 
 void calcMotor2()
 {
-  if(digitalRead(MOTOR_2_IN_PIN) == HIGH)
-  { 
-    ulMotor2Start = micros();
-  }
-  else
-  {
-    unMotor2InShared = (uint16_t)(micros() - ulMotor2Start);
-    bUpdateFlagsShared |= MOTOR_2_FLAG;
-  }
+    if(digitalRead(MOTOR_2_IN_PIN) == HIGH) {
+        ulMotor2Start = micros();
+    } else {
+        unMotor2InShared = (uint16_t)(micros() - ulMotor2Start);
+        bUpdateFlagsShared |= MOTOR_2_FLAG;
+    }
 }
 
 void calcMotor3()
 {
-  if(digitalRead(MOTOR_3_IN_PIN) == HIGH)
-  { 
-    ulMotor3Start = micros();
-  }
-  else
-  {
-    unMotor3InShared = (uint16_t)(micros() - ulMotor3Start);
-    bUpdateFlagsShared |= MOTOR_3_FLAG;
-  }
+    if(digitalRead(MOTOR_3_IN_PIN) == HIGH) {
+        ulMotor3Start = micros();
+    } else {
+        unMotor3InShared = (uint16_t)(micros() - ulMotor3Start);
+        bUpdateFlagsShared |= MOTOR_3_FLAG;
+    }
 }
 
 void calcMotor4()
 {
-  if(digitalRead(MOTOR_4_IN_PIN) == HIGH)
-  { 
-    ulMotor4Start = micros();
-  }
-  else
-  {
-    unMotor4InShared = (uint16_t)(micros() - ulMotor4Start);
-    bUpdateFlagsShared |= MOTOR_4_FLAG;
-  }
+    if(digitalRead(MOTOR_4_IN_PIN) == HIGH) {
+        ulMotor4Start = micros();
+    } else {
+        unMotor4InShared = (uint16_t)(micros() - ulMotor4Start);
+        bUpdateFlagsShared |= MOTOR_4_FLAG;
+    }
 }
 
 void setup()
 {
-  Serial.begin(9600);
-  
-  Serial.println("multiChannels");
+    Serial.begin(9600);
 
-  escMotor1.attach(MOTOR_1_OUT_PIN);
-  escMotor2.attach(MOTOR_2_OUT_PIN);
-  escMotor3.attach(MOTOR_3_OUT_PIN);
-  escMotor4.attach(MOTOR_4_OUT_PIN);
+    Serial.println("multiChannels");
 
-  PCintPort::attachInterrupt(MOTOR_1_IN_PIN, calcMotor1,CHANGE); 
-  PCintPort::attachInterrupt(MOTOR_2_IN_PIN, calcMotor2,CHANGE); 
-  PCintPort::attachInterrupt(MOTOR_3_IN_PIN, calcMotor3,CHANGE); 
-  PCintPort::attachInterrupt(MOTOR_4_IN_PIN, calcMotor4,CHANGE); 
+    escMotor1.attach(MOTOR_1_OUT_PIN);
+    escMotor2.attach(MOTOR_2_OUT_PIN);
+    escMotor3.attach(MOTOR_3_OUT_PIN);
+    escMotor4.attach(MOTOR_4_OUT_PIN);
+
+    PCintPort::attachInterrupt(MOTOR_1_IN_PIN, calcMotor1,CHANGE);
+    PCintPort::attachInterrupt(MOTOR_2_IN_PIN, calcMotor2,CHANGE);
+    PCintPort::attachInterrupt(MOTOR_3_IN_PIN, calcMotor3,CHANGE);
+    PCintPort::attachInterrupt(MOTOR_4_IN_PIN, calcMotor4,CHANGE);
 }
 
 void loop()
 {
-  static int16_t unMotor1In;
-  static int16_t unMotor2In;
-  static int16_t unMotor3In;
-  static int16_t unMotor4In;
-  static int8_t bUpdateFlags;
+    static int16_t unMotor1In;
+    static int16_t unMotor2In;
+    static int16_t unMotor3In;
+    static int16_t unMotor4In;
+    static int8_t bUpdateFlags;
 
-  // check shared update flags to see if any channels have a new signal
-  if(bUpdateFlagsShared)
-  {
-    noInterrupts(); // turn interrupts off while making local copies
+    // check shared update flags to see if any channels have a new signal
+    if(bUpdateFlagsShared) {
+        noInterrupts(); // turn interrupts off while making local copies
 
-    // copy of updated channels
-    bUpdateFlags = bUpdateFlagsShared;
-    
-    if(bUpdateFlags & MOTOR_1_FLAG)
-    {
-      unMotor1In = unMotor1InShared;
-    }
-    
-    if(bUpdateFlags & MOTOR_2_FLAG)
-    {
-      unMotor2In = unMotor2InShared;
-    }
-    
-    if(bUpdateFlags & MOTOR_3_FLAG)
-    {
-      unMotor3In = unMotor3InShared;
-    }
-     
-    if(bUpdateFlags & MOTOR_4_FLAG)
-    {
-      unMotor4In = unMotor4InShared;
+        // copy of updated channels
+        bUpdateFlags = bUpdateFlagsShared;
+
+        if(bUpdateFlags & MOTOR_1_FLAG) {
+            unMotor1In = unMotor1InShared;
+        }
+
+        if(bUpdateFlags & MOTOR_2_FLAG) {
+            unMotor2In = unMotor2InShared;
+        }
+
+        if(bUpdateFlags & MOTOR_3_FLAG) {
+            unMotor3In = unMotor3InShared;
+        }
+
+        if(bUpdateFlags & MOTOR_4_FLAG) {
+            unMotor4In = unMotor4InShared;
+        }
+
+        // clear shared copy of updated flags
+        bUpdateFlagsShared = 0;
+
+        interrupts();
     }
 
-    // clear shared copy of updated flags
-    bUpdateFlagsShared = 0;
-    
-    interrupts();
-  }
-  
-  if(bUpdateFlags & MOTOR_1_FLAG)
-  {
-    if(escMotor1.readMicroseconds() != unMotor1In)
-    {
-      escMotor1.writeMicroseconds(unMotor1In);
+    if(bUpdateFlags & MOTOR_1_FLAG) {
+        if(escMotor1.readMicroseconds() != unMotor1In) {
+            escMotor1.writeMicroseconds(unMotor1In);
+        }
     }
-  }
-  
-  if(bUpdateFlags & MOTOR_2_FLAG)
-  {
-    if(escMotor2.readMicroseconds() != unMotor2In)
-    {
-      escMotor2.writeMicroseconds(unMotor2In);
+
+    if(bUpdateFlags & MOTOR_2_FLAG) {
+        if(escMotor2.readMicroseconds() != unMotor2In) {
+            escMotor2.writeMicroseconds(unMotor2In);
+        }
     }
-  }
-  
-  if(bUpdateFlags & MOTOR_3_FLAG)
-  {
-    if(escMotor3.readMicroseconds() != unMotor3In)
-    {
-      escMotor3.writeMicroseconds(unMotor3In);
+
+    if(bUpdateFlags & MOTOR_3_FLAG) {
+        if(escMotor3.readMicroseconds() != unMotor3In) {
+            escMotor3.writeMicroseconds(unMotor3In);
+        }
     }
-  }
-  
-  if(bUpdateFlags & MOTOR_4_FLAG)
-  {
-    if(escMotor4.readMicroseconds() != unMotor4In)
-    {
-      escMotor4.writeMicroseconds(unMotor4In);
+
+    if(bUpdateFlags & MOTOR_4_FLAG) {
+        if(escMotor4.readMicroseconds() != unMotor4In) {
+            escMotor4.writeMicroseconds(unMotor4In);
+        }
     }
-  }
-  
-  bUpdateFlags = 0;
+
+    bUpdateFlags = 0;
 }
