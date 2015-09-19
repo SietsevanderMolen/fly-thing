@@ -430,18 +430,23 @@ package body MPU6050 is
 
    function Get_Fifo_Bytes (C : in Chip;
                             Length : in Integer) return Byte_Array is
-      Bytes : constant Byte_Array := C.Read_Array_Data (R => FIFO_R_W_Address,
-                                                        L => Length);
+      Bytes : Byte_Array (0 .. Length) := (others => 0);
    begin
+      if Length > 0 then
+         Bytes := C.Read_Array_Data (R => FIFO_R_W_Address,
+         L => Length);
+      end if;
       return Bytes;
    end Get_Fifo_Bytes;
 
    procedure Get_Fifo_Bytes (C : in Chip;
                             Length : in Integer) is
-      Bytes : constant Byte_Array := C.Read_Array_Data (R => FIFO_R_W_Address,
-                                                        L => Length);
+      Bytes : Byte_Array (0 .. Length) := (others => 0);
    begin
-      null;
+      if Length > 0 then
+         Bytes := C.Read_Array_Data (R => FIFO_R_W_Address,
+         L => Length);
+      end if;
    end Get_Fifo_Bytes;
 
    function Get_Interrupt_Status (C : in Chip) return INT_STATUS is
