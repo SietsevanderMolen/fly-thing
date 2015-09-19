@@ -11,7 +11,6 @@ package body MPU6050 is
       C.Set_Full_Scale_Gyro_Range (R => MPU6050_GYRO_FS_250);
       C.Set_Full_Scale_Accel_Range (R => MPU6050_ACCEL_FS_2);
       C.Set_Sleep (S => False);
-      C.Initialize_DMP;
    end Reset;
 
    --  Reset the chip to the power-on reset state.
@@ -413,7 +412,7 @@ package body MPU6050 is
    end Set_Fifo_Enable;
 
    procedure Set_DMP_Enable (C : in out Chip;
-                              E : in Boolean) is
+                             E : in Boolean) is
       Conf : USER_CTRL := Unpack (C.Read_Byte_Data (USER_CTRL_Address));
    begin
       Conf.DMP_En := Boolean'Pos (E);
