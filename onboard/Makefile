@@ -1,16 +1,14 @@
-UNAME_M := $(shell uname -m)
-ifneq ($(UNAME_M),armv71)
-	dockerstring = docker run -w /source --rm -i -t -v $(shell pwd):/source ada-gnat
-endif
-
 all:
-	$(dockerstring) gprbuild -p -P /source/ravn.gpr
+	docker run -w /source --rm -i -t -v $(shell pwd):/source ada-gnat gprbuild -p -P /source/ravn.gpr
+
+native:
+	gprbuild -p -P ravn.gpr
 
 ctags:
-	$(dockerstring) ctags -R --exclude=./src/i2c/i2c_interface/ .
+	docker run -w /source --rm -i -t -v $(shell pwd):/source ada-gnat ctags -R --exclude=./src/i2c/i2c_interface/ .
 
 clean:
-	$(dockerstring) gprclean ravn.gpr
-	$(dockerstring) rm -rf ./tags
+	docker run -w /source --rm -i -t -v $(shell pwd):/source ada-gnat gprclean ravn.gpr
+	docker run -w /source --rm -i -t -v $(shell pwd):/source ada-gnat rm -rf ./tags
 
-.PHONY: all clean
+.PHONY: all clean native
