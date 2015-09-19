@@ -360,8 +360,8 @@ private
 
    type FIFO_COUNT is
       record
-         H : Integer range 0 .. 7;
-         L : Integer range 0 .. 7;
+         H : Integer range 0 .. 254;
+         L : Integer range 0 .. 254;
       end record;
    for FIFO_COUNT use
       record
