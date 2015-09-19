@@ -1,6 +1,8 @@
 with Ada.Unchecked_Conversion;
 with Interfaces;
 
+with Vector_Math; use Vector_Math;
+
 with I2C; use I2C;
 
 package MPU6050 is
@@ -28,15 +30,9 @@ package MPU6050 is
       Ada.Unchecked_Conversion (Source => Axis_Reading,
                                 Target => Interfaces.Integer_16);
 
-   type Triple_Axis_Reading is record
-      X : Integer;
-      Y : Integer;
-      Z : Integer;
-   end record;
-
    type MPU6050_Output is record
-      Accelerometer_Output : Triple_Axis_Reading;
-      Gyroscope_Output : Triple_Axis_Reading;
+      Accelerometer_Output : Vector_Math.Float3;
+      Gyroscope_Output : Vector_Math.Float3;
       Thermometer_Output : Integer;
    end record;
 

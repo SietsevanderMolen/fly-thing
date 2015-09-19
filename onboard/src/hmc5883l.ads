@@ -140,7 +140,7 @@ private
    Declination : Float;
 
    --  Get the axes' raw values
-   function Get_Axes (C : in Chip) return Vector_Math.Int3;
+   function Get_Axes (C : in Chip) return Vector_Math.Float3;
    --  Read the RDY register. It turns high when new values are written to the
    --  data registers
    procedure Wait_Ready (C : in Chip;

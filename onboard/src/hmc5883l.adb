@@ -53,15 +53,13 @@ package body HMC5883L is
 
       for G in Gain'Range loop
          declare
-            Values : Vector_Math.Int3; --  hold the values that are returned
+            Values : Vector_Math.Float3; --  hold the values that are returned
             --  Take the current Gain setting and finds the right LSb/Gauss
             LSb_Per_Gauss : constant Float :=
                LSb_Per_Gauss_List (Gain'Pos (G));
             --  Minimum value to be considered
-            Lo_Limit : constant Integer :=
-               Integer (243.0 * (LSb_Per_Gauss / 390.0));
-            Hi_Limit : constant Integer :=
-               Integer (575.0 * (LSb_Per_Gauss / 390.0));
+            Lo_Limit : constant Float := 243.0 * (LSb_Per_Gauss / 390.0);
+            Hi_Limit : constant Float := 575.0 * (LSb_Per_Gauss / 390.0);
          begin
             C.Set_Gain (G);
             C.Wait_Ready; --  wait until values with new gain are written
@@ -82,9 +80,9 @@ package body HMC5883L is
    end Self_Test;
 
    function Get_Heading (C : in Chip) return Float is
-      Axes : constant Vector_Math.Int3 := C.Get_Axes;
-      Heading : Float := Arctan (Y => Float (Axes.y),
-                                 X => Float (Axes.x),
+      Axes : constant Vector_Math.Float3 := C.Get_Axes;
+      Heading : Float := Arctan (Y => Axes.y,
+                                 X => Axes.x,
                                  Cycle => 2.0*Ada.Numerics.Pi); --  use radians
    begin
       Heading := Heading + Declination; --  Correct for declination
@@ -97,9 +95,9 @@ package body HMC5883L is
       return Heading * (180.0/Ada.Numerics.Pi);
    end Get_Heading;
 
-   function Get_Axes (C : in Chip) return Vector_Math.Int3 is
+   function Get_Axes (C : in Chip) return Vector_Math.Float3 is
       Values : constant Byte_Array (0 .. 5) := C.Read_Array_Data (X_L, 6);
-      Output : Vector_Math.Int3;
+      Output : Vector_Math.Float3;
       X, Y, Z : Axis_Reading;
    begin
       X.H := Values (0);
@@ -109,9 +107,9 @@ package body HMC5883L is
       Y.H := Values (4);
       Y.L := Values (5);
 
-      Output.x := Integer (Pack (X));
-      Output.z := Integer (Pack (Z));
-      Output.y := Integer (Pack (Y));
+      Output.x := Float (Pack (X));
+      Output.z := Float (Pack (Z));
+      Output.y := Float (Pack (Y));
       return Output;
    end Get_Axes;
 

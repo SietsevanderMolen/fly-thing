@@ -115,13 +115,13 @@ package body MPU6050 is
       G_Z.H := Data (12);
       G_Z.L := Data (13);
 
-      Output.Accelerometer_Output.X := Integer (Pack (A_X));
-      Output.Accelerometer_Output.Y := Integer (Pack (A_Y));
-      Output.Accelerometer_Output.Z := Integer (Pack (A_Z));
+      Output.Accelerometer_Output.x := Float (Pack (A_X));
+      Output.Accelerometer_Output.y := Float (Pack (A_Y));
+      Output.Accelerometer_Output.z := Float (Pack (A_Z));
       Output.Thermometer_Output := Integer (Pack (Tmp));
-      Output.Gyroscope_Output.X := Integer (Pack (G_X));
-      Output.Gyroscope_Output.Y := Integer (Pack (G_Y));
-      Output.Gyroscope_Output.Z := Integer (Pack (G_Z));
+      Output.Gyroscope_Output.x := Float (Pack (G_X));
+      Output.Gyroscope_Output.y := Float (Pack (G_Y));
+      Output.Gyroscope_Output.z := Float (Pack (G_Z));
       return Output;
    end Get_Motion_6;
 
