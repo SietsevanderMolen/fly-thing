@@ -6,7 +6,7 @@ project Ravn is
    for Languages use ("Ada", "C");
 
    package Compiler is
-      for Driver ("Ada") use "colorgcc";
+      for Driver ("Ada") use "gcc";
       Standard_Switches :=
          (
             "-gnat2012",   --  use ada12
