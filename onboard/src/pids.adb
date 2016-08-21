@@ -5,7 +5,7 @@ package body PIDs is
       return PID
    is
    begin
-      return (KP => Kp, KI => Ki, KD => Kd,
+      return (Kp => Kp, Ki => Ki, Kd => Kd,
              Sample_Time => Seconds (1) / Sample_Rate,
              Setpoint => Setpoint,
 
@@ -21,14 +21,14 @@ package body PIDs is
    is
    begin
       --  Adjust ki and kd for fixed sample rate
-      P.KP := Kp;
-      P.KI := Ki * Float (To_Duration (P.Sample_Time));
-      P.KD := Kd / Float (To_Duration (P.Sample_Time));
+      P.Kp := Kp;
+      P.Ki := Ki * Float (To_Duration (P.Sample_Time));
+      P.Kp := Kd / Float (To_Duration (P.Sample_Time));
 
       if P.Current_Direction = Reversed then
-         P.KP := 0.0 - P.Kp;
-         P.KI := 0.0 - P.Ki;
-         P.KD := 0.0 - P.Kd;
+         P.Kp := 0.0 - P.Kp;
+         P.Ki := 0.0 - P.Ki;
+         P.Kd := 0.0 - P.Kd;
       end if;
    end Tune;
 
@@ -41,8 +41,8 @@ package body PIDs is
       Ratio : constant Float := Float (To_Duration (New_Sample_Time)) /
                                 Float (To_Duration (P.Sample_Time));
    begin
-      P.KI := P.KI * Ratio;
-      P.KD := P.KD / Ratio;
+      P.Ki := P.Ki * Ratio;
+      P.Kd := P.Kd / Ratio;
       P.Sample_Time := New_Sample_Time;
    end Set_Sample_Rate;
 
@@ -58,7 +58,7 @@ package body PIDs is
    procedure Set_Mode (P : out PID; New_Mode : Mode)
    is
    begin
-      --  when switching on
+      --  when switching to automatic
       if New_Mode = Automatic and P.Current_Mode = Manual then
          --  keep derivative from spiking
          P.Last_Input := P.Input;
@@ -74,7 +74,7 @@ package body PIDs is
       P.Current_Direction := New_Direction;
    end Set_Direction;
 
-   procedure Compute (P : in out PID)
+   function Compute (P : in out PID) return Float
    is
       Now : constant Ada.Real_Time.Time := Clock;
       Time_Change : constant Time_Span := Now - P.Last_Time;
@@ -83,14 +83,14 @@ package body PIDs is
          if Time_Change >= P.Sample_Time then
             declare
                Error : constant Float := P.Setpoint - P.Input;
-               I_Term : constant Float := P.I_Term + (P.KI * Error);
+               I_Term : constant Float := P.I_Term + (P.Ki * Error);
                Input_Derivative : constant Float := P.Input - P.Last_Input;
             begin
                --  clamp integral term to avoid reset windup
                P.I_Term := Clamp (I_Term, P.Output_Min, P.Output_Max);
-               P.Output := P.KP * Error +
+               P.Output := P.Kp * Error +
                            P.I_Term -
-                           P.KD * Input_Derivative;
+                           P.Kd * Input_Derivative;
                --  clamp output to avoid reset windup
                P.Output := Clamp (P.Output, P.Output_Min, P.Output_Max);
                P.Last_Input := P.Input;
@@ -98,6 +98,7 @@ package body PIDs is
             end;
          end if;
       end if;
+      return P.Output;
    end Compute;
 
    function Clamp (Num : Float;

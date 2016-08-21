@@ -34,13 +34,13 @@ package PIDs is
    procedure Set_Mode (P : out PID; New_Mode : Mode);
    procedure Set_Direction (P : out PID; New_Direction : Direction);
 
-   procedure Compute (P : in out PID);
+   function Compute (P : in out PID) return Float;
 private
    type PID is tagged
       record
-         KP : Float;
-         KI : Float;
-         KD : Float;
+         Kp : Float;
+         Ki : Float;
+         Kd : Float;
          Sample_Time : Time_Span;
          Output_Min : Float;
          Output_Max : Float;
