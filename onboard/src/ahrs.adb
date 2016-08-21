@@ -47,18 +47,18 @@ package body AHRS is
 
    begin
       --  Normalize accelerometer measurement
-      norm := Sqrt (Accelerometer.x * Accelerometer.x +
-                    Accelerometer.y * Accelerometer.y +
-                    Accelerometer.z * Accelerometer.z);
+      norm := Sqrt ((Accelerometer.x * Accelerometer.x) +
+                    (Accelerometer.y * Accelerometer.y) +
+                    (Accelerometer.z * Accelerometer.z));
       norm := 1.0 / norm; --  use reciprocal for division
       ax := Accelerometer.x * norm;
       ay := Accelerometer.y * norm;
       az := Accelerometer.z * norm;
 
       --  Normalize magnetometer measurement
-      norm := Sqrt (Magnetometer.x * Magnetometer.x +
-                    Magnetometer.y * Magnetometer.y +
-                    Magnetometer.z * Magnetometer.z);
+      norm := Sqrt ((Magnetometer.x * Magnetometer.x) +
+                    (Magnetometer.y * Magnetometer.y) +
+                    (Magnetometer.z * Magnetometer.z));
       norm := 1.0 / norm; --  use reciprocal for division
       mx := Magnetometer.x * norm;
       my := Magnetometer.y * norm;
@@ -107,7 +107,9 @@ package body AHRS is
       q3 := pb + (q1 * gy - pa * gz + pc * gx) * (0.5 * M.Sample_Period);
       q4 := pc + (q1 * gz + pa * gy - pb * gx) * (0.5 * M.Sample_Period);
 
-      M.Output := Normalize ((q1, q2, q3, q4));
+      norm := Sqrt (q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);
+      norm := 1.0 / norm; --  use reciprocal for division
+      M.Output := (q1 * norm, q2 * norm, q3 * norm, q4 * norm);
    end Update;
 
    procedure Update (M : in out Mahony;
