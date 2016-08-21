@@ -8,8 +8,9 @@ package body MPU6050 is
    --  Reset the chip to the power-on reset state.
    procedure Reset (C : in out Chip) is
    begin
-      C.Set_Full_Scale_Gyro_Range (R => MPU6050_GYRO_FS_250);
-      C.Set_Full_Scale_Accel_Range (R => MPU6050_ACCEL_FS_2);
+      C.Set_Full_Scale_Gyro_Range (R => MPU6050_GYRO_FS_2000);
+      C.Set_Full_Scale_Accel_Range (R => MPU6050_ACCEL_FS_16);
+      C.Set_DLPF_Mode(S => MPU6050_DLPF_BW_5);
       C.Set_Sleep (S => False);
    end Reset;
 
